@@ -31,6 +31,11 @@ function Header() {
         )}>
           Profile
         </NavLink>
+        {/* <NavLink to="/dropdown" className={({isActive})=>(
+          isActive ? "text-violet-800 font-bold border-b-2 border-violet-600 pb-1 " : "text-violet-600 hover:text-violet-800" 
+        )}>
+          Dropdown
+        </NavLink> */}
       </div>
 
       <div className="flex justify-around w-1/5 items-center gap-1">

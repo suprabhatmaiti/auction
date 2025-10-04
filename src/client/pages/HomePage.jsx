@@ -52,8 +52,8 @@ function HomePage() {
           </div>
         </div>
 
-        <div className="relative px-8 m-16">
-        <h2 id="featured-items" className="text-2xl font-bold  px-4">Featured Items</h2>
+        <div className="relative m-16">
+        <h2 id="featured-items" className="text-2xl font-bold">Featured Items</h2>
 
         <button
           onClick={scrollLeft}
@@ -62,7 +62,7 @@ function HomePage() {
           <FaChevronLeft />
         </button>
 
-        {/* Cards container */}
+        
         <div
           ref={sliderRef}
           className="flex gap-4 overflow-x-auto scroll-smooth no-scrollbar"

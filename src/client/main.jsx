@@ -6,6 +6,7 @@ import App from "./App";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
+import DropdownPage from "./pages/DropdownPage";
 
 
 const router = createBrowserRouter([
@@ -15,7 +16,8 @@ const router = createBrowserRouter([
     children: [
       { index:true, element: <HomePage/> },
       { path: 'profile', element: <ProfilePage/> },
-      { path: 'dashboard', element: <DashboardPage/> }
+      { path: 'dashboard', element: <DashboardPage/> },
+      { path: 'dropdown', element: <DropdownPage/> }
 
     ]
   }

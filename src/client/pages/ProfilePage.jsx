@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Dropdown from "../components/Dropdown/Dropdown";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -20,13 +21,13 @@ function ProfilePage() {
           </button>
           <button
             className={`px-4 py-2 -mb-px font-semibold border-b-2 ${
-              activeTab === "settings"
+              activeTab === "payment-methods"
                 ? "border-violet-500 text-violet-500"
                 : "border-transparent text-gray-600 hover:text-violet-500"
             }`}
-            onClick={() => setActiveTab("settings")}
+            onClick={() => setActiveTab("payment-methods")}
           >
-            Settings
+            Payment Methods
           </button>
           <button
             className={`px-4 py-2 -mb-px font-semibold border-b-2 ${
@@ -43,28 +44,65 @@ function ProfilePage() {
         <div>
           {activeTab === "profile" && (
             <div>
-              <div className="mb-4">
-                <h2 className="text-xl font-bold mb-2">Contact Information</h2>
-                <label>Email</label>
-                <input type="email" name="email" id="email" className="bg-gray-100 ml-4 rounded h-8 w-1/3" />
-                <p>Here you can update your profile details.</p>
+              <h2 className="text-xl font-bold mb-4">Contact Information</h2>
+
+              <div className="flex gap-4 w-full mb-12">
+                <div className="flex flex-col w-full">
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                  <input type="email" name="email" id="email" className=" bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                </div>
+                <div className="flex flex-col w-full">
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Phone Number</label>
+                  <input type="text" name="phone-number" id="phone-number" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                </div>
               </div>
-              <div>
-                  <h2 className="text-xl font-bold mb-2">Profile Information</h2>
-                  <p>Here you can update your profile details.</p>
+
+              <div className="border-b border-gray-400 pb-8">
+                  <h2 className="text-xl font-bold mb-4">Profile Information</h2>
+                    <div className="flex gap-4 w-full mb-4">
+                      <div className="flex flex-col w-full">
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+                        <input type="text" name="full-name" id="full-name" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                      </div>
+                      <div className="flex flex-col w-full">
+                        <label className="block text-sm font-medium text-gray-600 mb-1">User Name</label>
+                        <input type="text" name="username" id="username" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                      </div>
+                    </div>
+                    <div className="flex gap-4 w-full">
+                      <div className="flex flex-col w-full">
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
+                        <input type="date" name="DOB" id="DOB" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3" />
+                      </div>
+                      <div className="flex flex-col w-full">
+                        <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
+                        <select className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3">
+                          <option value="">Select</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+              </div>
+              <div className="flex gap-4 my-4 justify-end">
+                  <button className="bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
+                      Cancel
+                  </button>
+                  <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                      Save Changes
+                  </button>
               </div>
             </div>
           )}
-          {activeTab === "settings" && (
+          {activeTab === "payment-methods" && (
             <div>
               <h2 className="text-xl font-bold mb-2">Settings</h2>
-              <p>Update your account settings here.</p>
             </div>
           )}
           {activeTab === "address" && (
             <div>
               <h2 className="text-xl font-bold mb-2">Address</h2>
-              <p>Manage your saved addresses here.</p>
             </div>
           )}
         </div>
