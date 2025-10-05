@@ -4,17 +4,19 @@ import Button from "../Button/Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AuthPage from "../../pages/AuthPage";
+import { RiAuctionLine } from "react-icons/ri";
+
 
 function Header() {
   const [IsAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode,setAuthMode] = useState('login');
 
   return (
-    <div className="bg-black/10 flex justify-between items-center h-15 px-4">
+    <header className="border-b border-gray-300 flex justify-between items-center h-15 p-4">
 
       <div className="w-1/5 flex items-center gap-2">
-        <IoLogoCss3 className="size-10 text-violet-500" />
-        <h3 className="font-bold text-lg">E-Auction</h3>
+        <RiAuctionLine className="size-8 " />
+        <h3 className="font-bold text-lg">Auction Central</h3>
       </div>
 
 
@@ -51,7 +53,7 @@ function Header() {
       </div>
 
       <AuthPage isOpen={IsAuthModalOpen} onClose={()=>setIsAuthModalOpen(false)} mode={authMode} onModeChange={setAuthMode}/>
-    </div>
+    </header>
 
   );
 }

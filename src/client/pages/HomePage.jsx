@@ -1,8 +1,13 @@
 import { useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaSearch } from "react-icons/fa";
 import Card from "../components/Card/Card";
 import HeadImage from '../assets/img2.svg'
 import AuthPage from "./AuthPage";
+import Input from "../components/Input/Input";
+import { IoDiamondOutline,IoPricetagOutline } from "react-icons/io5";
+import { MdSecurity, MdOutlineSupportAgent } from "react-icons/md";
+
+
 
 function HomePage() {
   const [authMode,setAuthMode] = useState('signup');
@@ -25,7 +30,7 @@ function HomePage() {
   };
 
   return (
-    <div className="mt-4 min-h-screen pb-4">
+    <div className="min-h-screen pb-60 bg-gray-100">
         <div className="relative">
 
           <img 
@@ -66,6 +71,21 @@ function HomePage() {
           </div>
         </div>
 
+        {/* search-function */}
+
+       <div className="w-full flex justify-center items-center m-8">
+          <form action="" className="w-full max-w-4xl flex relative">
+            <FaSearch className=" absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 text-lg"/>
+            <input
+              type="text"
+              placeholder="Search for Antiques, electronics, vehicles..."
+              className="rounded-4xl w-full focus:outline-none h-16 pl-16 pr-12 bg-white border border-gray-300"
+            />
+            
+          </form>
+        </div>
+
+        {/* featured items */}
         <div className="relative m-16">
         <h2 id="featured-items" className="text-2xl font-bold">Featured Items</h2>
 
@@ -94,6 +114,58 @@ function HomePage() {
         >
           <FaChevronRight />
         </button>
+      </div>
+
+      {/* why choose */}
+      <div className="bg-white text-center mb-16">
+        <h2 className="text-gray-700 font-bold text-2xl pt-10">Why Choose Auction Central</h2>
+        <div className="flex gap-4 justify-around p-8 px-16">
+          <div className="p-4  w-1/4 flex flex-col items-center justify-center">
+          <IoDiamondOutline className="text-4xl text-violet-600"/>
+            <h2 className="text-gray-700 font-bold text-lg py-4">Unique Finds</h2>
+            <p className="text-gray-700">Discover rare and one of a kind items you wont find anywhare else</p>
+          </div>
+          <div className="p-4 w-1/4 flex flex-col items-center justify-center">
+          <MdSecurity className="text-4xl text-violet-600"/>
+            <h2 className="text-gray-700 font-bold text-lg py-4">Secure Bidding</h2>
+            <p className="text-gray-700">Our platform ensure safe and transparant transaction for all user</p>
+          </div>
+          <div className="p-4 w-1/4 flex flex-col items-center justify-center">
+            <IoPricetagOutline className="text-4xl text-violet-600"/>
+            <h2 className="text-gray-700 font-bold text-lg py-4">Easy Selling</h2>
+            <p className="text-gray-700">List your items effortlessly and reach a global audience of buyer</p>
+          </div>
+          <div className="p-4 w-1/4 flex flex-col items-center justify-center">
+          <MdOutlineSupportAgent className="text-4xl text-violet-600"/>
+            <h2 className="text-gray-700 font-bold text-lg py-4">24/7 support</h2>
+            <p className="text-gray-700">Our dadicated support team is hear to help you around the clock</p>
+          </div>
+        </div>
+      </div>
+
+      {/* categories */}
+      <div className="relative m-16">
+        <h2 id="featured-items" className="text-2xl font-bold mb-4">Categories</h2>
+        <div className="flex justify-between gap-4">
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Antiques</h2>
+          </div>
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Electronics</h2>
+          </div>
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Vehicles</h2>
+          </div>
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Art</h2>
+          </div>
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Jewelry</h2>
+          </div>
+          <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex justify-center items-center">
+              <h2 className="font-bold">Collectibles</h2>
+          </div>
+        </div>
       </div>
       <AuthPage isOpen={isAuthOpen} onClose={()=>setIsAuthOpen(false) } mode = {authMode} onModeChange={setAuthMode} />
     </div>

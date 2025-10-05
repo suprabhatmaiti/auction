@@ -7,7 +7,7 @@ function Card({image=tigerImage,name = 'Tiger', currentbid = 90 }){
     <div className="max-w-xs rounded-2xl shadow-lg overflow-hidden 
                 hover:shadow-xl hover:scale-105 
                 transition-transform transition-shadow duration-300 ease-in-out 
-                cursor-pointer active:bg-gray-200 min-w-sm m-4">
+                cursor-pointer active:bg-gray-200 min-w-sm m-4 bg-white">
         <img
             src={image}
             alt={name}

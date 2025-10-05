@@ -4,7 +4,7 @@ import { RiImageAddLine } from "react-icons/ri";
 
 function AddAuctionPage(){
  return (
-    <div className="min-h-screen bg-gray-100 p-6  ">
+    <div className="min-h-screen bg-gray-100 p-6 pb-60  ">
         
         <div className="bg-white p-6 mb-12 shadow-md rounded-lg mx-16 px-12 py-8 ">
             <h2 className="text-3xl mb-2 font-bold">Submit Item for Auction</h2>
