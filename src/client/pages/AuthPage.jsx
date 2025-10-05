@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import Input from "../components/Input/Input";
 
 function AuthPage({ isOpen, onClose, mode = 'login', onModeChange }) {
-  
-  // const [isLoginPageOpen,setIsLoginPageOpen] = useState(mode === 'login');
+
 
   const isLoginPageOpen = mode ==='login';
 
