@@ -2,9 +2,18 @@ import Footer from "../components/Footer/footer";
 import { LiaHandsHelpingSolid } from "react-icons/lia";
 import { GoPlus, GoTrophy } from "react-icons/go";
 
-
+import { useNavigate } from "react-router-dom";
 
 function DashboardPage(){
+    const navigate= useNavigate();
+
+    const handleAddAuctionClick = () => {
+        navigate('/add-auction')
+    }
+    const handleAuctionListClick = () =>{
+        navigate('/auction-list')
+    }
+
     return (
         <div className="min-h-screen flex justify-between pt-12 px-4 bg-gray-100 " >
             <div className="w-3/4">
@@ -34,11 +43,11 @@ function DashboardPage(){
                         <div className="mb-12">
                                 <h2 className="text-xl mx-4 font-medium mb-4">Quick Links</h2>
                                 <div className="flex">
-                                    <div className="w-full mx-4 px-2 py-4 rounded-lg shadow-md bg-white flex flex-col justify-center items-center cursor-pointer  hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                                    <div onClick={handleAuctionListClick} className="w-full mx-4 px-2 py-4 rounded-lg shadow-md bg-white flex flex-col justify-center items-center cursor-pointer  hover:shadow-lg transition-shadow duration-300 ease-in-out">
                                         <LiaHandsHelpingSolid className="size-8 text-violet-600"/>
                                         <h2 className="block text-md mb-1 text ">View Active Bids</h2>
                                     </div>
-                                    <div className="w-full mx-4 px-2 py-4 rounded-lg shadow-md bg-white flex flex-col justify-center items-center cursor-pointer hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                                    <div onClick={handleAddAuctionClick}  className="w-full mx-4 px-2 py-4 rounded-lg shadow-md bg-white flex flex-col justify-center items-center cursor-pointer hover:shadow-lg transition-shadow duration-300 ease-in-out">
                                         <GoPlus className="size-8 text-violet-600"/>
                                         <h2 className="block text-md mb-1 "> List New Items</h2>
                                     </div>
@@ -52,10 +61,10 @@ function DashboardPage(){
                         <div className="mx-4">
                             <h2 className="text-xl font-medium mb-4">Quick Actions</h2>
                             <div className="flex gap-4">
-                                <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+                                <button onClick={handleAuctionListClick} className=" cursor-pointer bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
                                     Place a Bid
                                 </button>
-                                <button className="bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
+                                <button onClick={handleAddAuctionClick} className="cursor-pointer bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
                                     List an Item
                                 </button>
                             </div>

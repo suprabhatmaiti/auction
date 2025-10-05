@@ -1,14 +1,16 @@
 import { useState } from "react";
 import Dropdown from "../components/Dropdown/Dropdown";
 import Input from "../components/Input/Input";
+import { BiEdit } from "react-icons/bi";
+
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 ">
 
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mb-16">
         <div className="flex border-b border-gray-200 mb-6">
           <button
             className={`px-4 py-2 -mb-px font-semibold border-b-2 ${

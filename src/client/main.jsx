@@ -7,6 +7,8 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
 import DropdownPage from "./pages/DropdownPage";
+import AddAuctionPage from "./pages/AddAuctionPage";
+import AuctionListPage from "./pages/AuctionListPage";
 
 
 const router = createBrowserRouter([
@@ -18,6 +20,8 @@ const router = createBrowserRouter([
       { path: 'profile', element: <ProfilePage/> },
       { path: 'dashboard', element: <DashboardPage/> },
       { path: 'dropdown', element: <DropdownPage/> },
+      { path: 'add-auction', element: <AddAuctionPage/> },
+      { path: 'auction-list', element: <AuctionListPage/> },
 
     ]
   }
