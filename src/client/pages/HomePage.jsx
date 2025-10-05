@@ -1,9 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Card from "../components/Card/Card";
 import HeadImage from '../assets/img2.svg'
+import AuthPage from "./AuthPage";
 
 function HomePage() {
+  const [authMode,setAuthMode] = useState('signup');
+  const [isAuthOpen,setIsAuthOpen] = useState(false)
+
   const sliderRef = useRef(null);
 
   const scrollLeft = () => {
@@ -42,10 +46,20 @@ function HomePage() {
               Explore a world of unique items, participate in secure bidding, and experience effortless selling.
             </p>
             <div className="flex gap-4">
-              <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
+              <button onClick={()=>{
+                setAuthMode('signup');
+                setIsAuthOpen(true);
+                
+              }} 
+              className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
                 Sign Up Now
               </button>
-              <button className="bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
+              <button onClick={()=>{
+                setAuthMode('login');
+                setIsAuthOpen(true);
+                
+              }} 
+              className="bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
                 Browse Auctions
               </button>
             </div>
@@ -81,6 +95,7 @@ function HomePage() {
           <FaChevronRight />
         </button>
       </div>
+      <AuthPage isOpen={isAuthOpen} onClose={()=>setIsAuthOpen(false) } mode = {authMode} />
     </div>
   );
 }

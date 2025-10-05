@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Dropdown from "../components/Dropdown/Dropdown";
+import Input from "../components/Input/Input";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -48,12 +49,10 @@ function ProfilePage() {
 
               <div className="flex gap-4 w-full mb-12">
                 <div className="flex flex-col w-full">
-                  <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-                  <input type="email" name="email" id="email" className=" bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                  <Input type='text' label='Email' />
                 </div>
                 <div className="flex flex-col w-full">
-                  <label className="block text-sm font-medium text-gray-600 mb-1">Phone Number</label>
-                  <input type="text" name="phone-number" id="phone-number" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                  <Input type='text' label='Phone Number' />
                 </div>
               </div>
 
@@ -61,12 +60,10 @@ function ProfilePage() {
                   <h2 className="text-xl font-bold mb-4">Profile Information</h2>
                     <div className="flex gap-4 w-full mb-4">
                       <div className="flex flex-col w-full">
-                        <label className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
-                        <input type="text" name="full-name" id="full-name" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                        <Input label='Full Name' type='text' />
                       </div>
                       <div className="flex flex-col w-full">
-                        <label className="block text-sm font-medium text-gray-600 mb-1">User Name</label>
-                        <input type="text" name="username" id="username" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3 py-4" />
+                        <Input label='User Name ' type='text' />
                       </div>
                     </div>
                     <div className="flex gap-4 w-full">
