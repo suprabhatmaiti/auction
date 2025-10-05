@@ -2,19 +2,11 @@
 import { useEffect, useState } from "react";
 import Input from "../components/Input/Input";
 
-function AuthPage({ isOpen, onClose, mode = 'login' }) {
+function AuthPage({ isOpen, onClose, mode = 'login', onModeChange }) {
   
-  const [isLoginPageOpen,setIsLoginPageOpen] = useState(mode === 'login');
+  // const [isLoginPageOpen,setIsLoginPageOpen] = useState(mode === 'login');
 
-  const handleModalClose = () => {
-    onClose();
-  }
-
-  useEffect(()=>{
-    if(isOpen){
-      setIsLoginPageOpen(mode==='login');
-    }
-  },[isOpen])
+  const isLoginPageOpen = mode ==='login';
 
   if (!isOpen) return null;
   return (
@@ -29,9 +21,9 @@ function AuthPage({ isOpen, onClose, mode = 'login' }) {
             <Input type='Password' placeholder='Password' required/>
             {!isLoginPageOpen && <div><Input placeholder='Confirm Password' required/></div>}
             {isLoginPageOpen && <p className="text-violet-600 py-3 cursor-pointer hover:text-violet-800">Forget your password</p>}
-            <button onClick={handleModalClose} type="button" className="bg-violet-600 text-white w-full rounded-lg h-10 font-bold hover:bg-violet-800 cursor-pointer">{!isLoginPageOpen?'Sign up':'Login'}</button>
+            <button onClick={onClose} type="button" className="bg-violet-600 text-white w-full rounded-lg h-10 font-bold hover:bg-violet-800 cursor-pointer">{(!isLoginPageOpen?'Sign up':'Login')}</button>
           </form>
-          <p className="text-center p-4">{!isLoginPageOpen?"Already have an account? ":"Don't have an account? "} <span onClick={()=>setIsLoginPageOpen(!isLoginPageOpen)} className="text-violet-600 cursor-pointer hover:text-violet-900">{!isLoginPageOpen ? "Login" : "Sign up"}</span> </p>
+          <p className="text-center p-4">{!isLoginPageOpen?"Already have an account? ":"Don't have an account? "} <span onClick={()=>onModeChange(isLoginPageOpen?'signup': 'login')} className="text-violet-600 cursor-pointer hover:text-violet-900">{!isLoginPageOpen ? "Login" : "Sign up"}</span> </p>
         </div>
       </div>
   </div>

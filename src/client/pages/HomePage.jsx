@@ -48,7 +48,7 @@ function HomePage() {
             <div className="flex gap-4">
               <button onClick={()=>{
                 setAuthMode('signup');
-                setIsAuthOpen(true);
+                setIsAuthOpen('signup');
                 
               }} 
               className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-semibold transition">
@@ -56,7 +56,7 @@ function HomePage() {
               </button>
               <button onClick={()=>{
                 setAuthMode('login');
-                setIsAuthOpen(true);
+                setIsAuthOpen('login');
                 
               }} 
               className="bg-white hover:bg-gray-100 text-violet-600 px-6 py-3 rounded-lg font-semibold shadow-md transition">
@@ -95,7 +95,7 @@ function HomePage() {
           <FaChevronRight />
         </button>
       </div>
-      <AuthPage isOpen={isAuthOpen} onClose={()=>setIsAuthOpen(false) } mode = {authMode} />
+      <AuthPage isOpen={isAuthOpen} onClose={()=>setIsAuthOpen(false) } mode = {authMode} onModeChange={setAuthMode} />
     </div>
   );
 }
