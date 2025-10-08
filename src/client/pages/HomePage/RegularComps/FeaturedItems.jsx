@@ -19,7 +19,7 @@ function FeaturedItems() {
         Featured Items
       </h2>
 
-      {/* Left Button */}
+      
       <button
         onClick={scrollLeft}
         className="absolute left-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full z-10 hover:bg-gray-100"
@@ -27,20 +27,19 @@ function FeaturedItems() {
         <FaChevronLeft />
       </button>
 
-      {/* Scrollable Row */}
+      
       <div
         ref={sliderRef}
         className="flex gap-6 overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar px-10 py-4"
       >
-        <Card className="w-64 h-80 flex-shrink-0" />
-        <Card className="w-64 h-80 flex-shrink-0" />
-        <Card className="w-64 h-80 flex-shrink-0" />
-        <Card className="w-64 h-80 flex-shrink-0" />
-        <Card className="w-64 h-80 flex-shrink-0" />
-        <Card className="w-64 h-80 flex-shrink-0" />
+        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
       </div>
 
-      {/* Right Button */}
+     
       <button
         onClick={scrollRight}
         className="absolute right-0 top-1/2 -translate-y-1/2 bg-white shadow-md p-2 rounded-full z-10 hover:bg-gray-100"

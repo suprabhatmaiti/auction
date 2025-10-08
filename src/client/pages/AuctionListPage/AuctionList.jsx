@@ -23,9 +23,19 @@ function AuctionList(){
             </div>
             <div className='flex flex-wrap gap-6 p-4'>
                 
-                <Card className='w-50 h-80 '/>
-                <Card className='w-50 h-80 '/>
-                <Card className='w-50 h-80 '/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+                <Card className='w-50 h-80 ' button='Bid Now'/>
+            </div>
+            <div className="flex flex-col items-center pb-40">
+                <button className="cursor-pointer bg-gray-700 hover:bg-gray-600 
+                     text-white px-4 py-2 rounded-lg font-semibold transition">Load More</button>
             </div>
         </>
     )
