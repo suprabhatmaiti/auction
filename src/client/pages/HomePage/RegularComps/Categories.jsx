@@ -4,7 +4,7 @@ import { FaArtstation } from "react-icons/fa";
 
 function Categories(){
     return(
-        <div className="relative m-16">
+      <div className="relative m-16">
         <h2 id="featured-items" className="text-2xl font-bold mb-4">Categories</h2>
         <div className="flex justify-between gap-4">
           <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex flex-col justify-center items-center hover:shadow-lg cursor-pointer">

@@ -5,7 +5,7 @@ function AuctionList(){
     return(
         <>
             <h2 className='font-bold text-2xl'>All Active Auctions</h2>
-            <p className='text-gray-600'>browse through our curated collection of items up for auction</p>
+            <p className='text-gray-600'>Browse through our curated collection of items up for auction</p>
             <div className='p-6 w-full flex flex-wrap gap-4'>
                 <div className='bg-violet-300 rounded-xl px-2 flex justify-center items-center cursor-pointer'>
                     <p className='pr-2'>Categories</p>

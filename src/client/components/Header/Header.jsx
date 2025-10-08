@@ -14,7 +14,7 @@ function Header() {
   return (
     <header className="border-b border-gray-300 flex justify-between items-center h-15 p-4">
 
-      <div on onClick={()=>navigate('/')} className="w-1/5 flex items-center gap-2 cursor-pointer">
+      <div onClick={()=>navigate('/')} className="w-1/5 flex items-center gap-2 cursor-pointer">
         <RiAuctionLine className="size-8 "/>
         <h3 className="font-bold text-lg">Auction Central</h3>
       </div>
