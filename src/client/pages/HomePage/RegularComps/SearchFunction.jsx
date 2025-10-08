@@ -2,7 +2,7 @@ import { FaSearch } from "react-icons/fa";
 
 function SearchFunction(){
  return (
-    <div className="w-full flex justify-center items-center m-8">
+    <div className="w-full flex justify-center items-center py-8">
           <form action="" className="w-full max-w-4xl flex relative">
             <FaSearch className=" absolute left-6 top-1/2 -translate-y-1/2 text-gray-500 text-lg"/>
             <input
