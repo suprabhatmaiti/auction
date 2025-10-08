@@ -3,12 +3,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import App from "./App";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage"
-import DashboardPage from "./pages/DashboardPage"
+import HomePage from "./pages/HomePage/HomePage";
+import ProfilePage from "./pages/ProfilePage/ProfilePage"
+import DashboardPage from "./pages/DashboardPage/DashboardPage"
 import DropdownPage from "./pages/DropdownPage";
 import AddAuctionPage from "./pages/AddAuctionPage";
-import AuctionListPage from "./pages/AuctionListPage";
+import AuctionListPage from "./pages/AuctionListPage/AuctionListPage";
 
 
 const router = createBrowserRouter([

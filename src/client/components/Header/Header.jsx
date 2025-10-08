@@ -1,6 +1,4 @@
 import { CgBell, CgProfile } from "react-icons/cg";
-import { IoLogoCss3 } from "react-icons/io";
-import Button from "../Button/Button";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AuthPage from "../../pages/AuthPage";
@@ -11,11 +9,13 @@ function Header() {
   const [IsAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMode,setAuthMode] = useState('login');
 
+  const navigate = useNavigate();
+
   return (
     <header className="border-b border-gray-300 flex justify-between items-center h-15 p-4">
 
-      <div className="w-1/5 flex items-center gap-2">
-        <RiAuctionLine className="size-8 " />
+      <div on onClick={()=>navigate('/')} className="w-1/5 flex items-center gap-2 cursor-pointer">
+        <RiAuctionLine className="size-8 "/>
         <h3 className="font-bold text-lg">Auction Central</h3>
       </div>
 

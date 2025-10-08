@@ -12,9 +12,13 @@ function AddAuctionPage(){
             <Input label='Item Name' type="text" placeholder='e.g., Vintage Leather Jacket'/>
             <Input mode='desc' label='Description' type= "text" placeholder='Describe your item in details including condition, age and any unique features.' className="h-20" />
             <Input label='Category' />
-            <div className="flex w-full justify-between">
-                <Input label='Starting Bid' type="text" placeholder='e.g., 50.00'  />
-                <Input label='Auction Duration' type="time" />
+            <div className="flex w-full gap-10">
+                <div className="w-full">
+                    <Input label='Starting Bid' type="text" placeholder='e.g., 50.00'  />
+                </div>
+                <div className="w-full">
+                    <Input label='Auction Duration' type="time" />
+                </div>
             </div>
             <div className="relative">
                 <RiImageAddLine className="absolute top-4 w-full left-1/2 -translate-x-1/2 size-10"/>
