@@ -5,30 +5,30 @@ function Categories(){
     const [checkedCategories, setCheckedCategories] = useState({});
 
     const categories=[
-        {id:'Antiques', label:'Antiques'},
-        {id:'Electronics', label:'Electronics'},
-        {id:'Vehicles', label:'Vehicles'},
-        {id:'Art', label:'Art'},
-        {id:'Jewelry', label:'Jewelry'},
-        {id:'Collectibles', label:'Collectibles'},
+        {value:'Antiques', label:'Antiques'},
+        {value:'Electronics', label:'Electronics'},
+        {value:'Vehicles', label:'Vehicles'},
+        {value:'Art', label:'Art'},
+        {value:'Jewelry', label:'Jewelry'},
+        {value:'Collectibles', label:'Collectibles'},
     ]
 
-    const toggleCategories = (id) => {
+    const toggleCategories = (value) => {
         setCheckedCategories((prev) => {
             return ({
                 ...prev,
-                [id]: !prev[id],
+                [value]: !prev[value],
                 })
         });
     };
 
     const renderedCategories = categories.map((category)=>{
         return(
-            <div onClick={()=>toggleCategories(category.id)} key={category.id} 
-                className="flex justify-start items-center cursor-pointer hover:shadow-sm rounded-lg  text-violet-600"
+            <div onClick={()=>toggleCategories(category.value)} key={category.value} 
+                className="flex gap-2 items-center cursor-pointer hover:shadow-sm rounded-lg  text-violet-700"
             >
-                {checkedCategories[category.id]?<MdCheckBox/>:<MdOutlineCheckBoxOutlineBlank/>}
-                <h2 className="text-gray-700">{category.label}</h2>
+                {checkedCategories[category.value]?<MdCheckBox/>:<MdOutlineCheckBoxOutlineBlank/>}
+                <h2 className="text-violet-500">{category.label}</h2>
             </div>
         )
     })
@@ -38,7 +38,9 @@ function Categories(){
             <h2 className="font-bold text-xl mb-8">Filter & Sort</h2>
             <div>
                 <h2 className="font-semibold ">Categories</h2>
-                {renderedCategories}
+                <div className="mt-4">
+                    {renderedCategories}
+                </div>
             </div>
         </div>
     )

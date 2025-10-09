@@ -1,5 +1,5 @@
 import FilterSort from './FilterSort/FilterSort';
-import AuctionList from './AuctionList';
+import AuctionList from './AuctionList/AuctionList';
 
 
 function AuctionListPage({activeBids=false}){

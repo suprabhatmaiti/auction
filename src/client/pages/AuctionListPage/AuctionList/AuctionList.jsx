@@ -1,5 +1,5 @@
 import { RxCross1 } from "react-icons/rx";
-import Card from "../../components/Card/Card";
+import Card from "../../../components/Card/Card";
 
 function AuctionList(){
     return(
