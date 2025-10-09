@@ -19,7 +19,7 @@ function DashboardPage(){
     }
 
     return (
-        <div className="min-h-screen flex justify-between pt-12 px-12 pb-60 bg-gray-100 flex-grow  " >
+        <div className="min-h-screen flex justify-between pt-8 px-12 pb-60 bg-gray-100 flex-grow  " >
             <div className="w-3/4">
                 <h2 className="text-3xl mx-8 mb-4 font-bold">Dashboard</h2>
                 <div className="flex rounded py-4 w-full" >

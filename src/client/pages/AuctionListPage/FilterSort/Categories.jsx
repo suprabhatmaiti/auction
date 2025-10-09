@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { MdOutlineCheckBoxOutlineBlank,MdOutlineCheckBox, MdCheckBox } from "react-icons/md";
+import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-
-function FilterSort(){
+function Categories(){
     const [checkedCategories, setCheckedCategories] = useState({});
 
     const categories=[
@@ -15,18 +14,18 @@ function FilterSort(){
     ]
 
     const toggleCategories = (id) => {
-    setCheckedCategories((prev) => {
-        return ({
-            ...prev,
-            [id]: !prev[id],
-            })
-    });
-  };
+        setCheckedCategories((prev) => {
+            return ({
+                ...prev,
+                [id]: !prev[id],
+                })
+        });
+    };
 
     const renderedCategories = categories.map((category)=>{
         return(
             <div onClick={()=>toggleCategories(category.id)} key={category.id} 
-                className="flex justify-start items-center px-2 cursor-pointer hover:shadow-sm rounded-lg  text-violet-600"
+                className="flex justify-start items-center cursor-pointer hover:shadow-sm rounded-lg  text-violet-600"
             >
                 {checkedCategories[category.id]?<MdCheckBox/>:<MdOutlineCheckBoxOutlineBlank/>}
                 <h2 className="text-gray-700">{category.label}</h2>
@@ -35,7 +34,7 @@ function FilterSort(){
     })
 
     return(
-        <div>
+        <div className="border-b border-gray-200 pb-2">
             <h2 className="font-bold text-xl mb-8">Filter & Sort</h2>
             <div>
                 <h2 className="font-semibold ">Categories</h2>
@@ -45,4 +44,4 @@ function FilterSort(){
     )
 }
 
-export default FilterSort;
+export default Categories;
