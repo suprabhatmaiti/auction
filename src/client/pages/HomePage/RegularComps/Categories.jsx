@@ -24,7 +24,7 @@ function Categories(){
 
   const renderedCategories = categories.map((category)=>{
     return (
-      <div className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex flex-col justify-center items-center hover:shadow-lg cursor-pointer">
+      <div key={category.value} className="bg-white shadow-md rounded-lg px-8 py-4 w-1/6 flex flex-col justify-center items-center hover:shadow-lg cursor-pointer">
             <div className="bg-gray-200 p-2 text-2xl text-blue-600 rounded-3xl">
               {iconMap[category.value]}
             </div>

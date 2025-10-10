@@ -19,7 +19,7 @@ function AuthPage({ isOpen, onClose, mode = 'login', onModeChange }) {
             <Input type='Email' placeholder='Email' required/>
             <Input type='Password' placeholder='Password' required/>
             {!isLoginPageOpen && <div><Input placeholder='Confirm Password' required/></div>}
-            {isLoginPageOpen && <p className="text-violet-600 py-3 cursor-pointer hover:text-violet-800">Forget your password</p>}
+            {isLoginPageOpen && <p className="text-violet-600 py-3 cursor-pointer hover:text-violet-800">Forget your password?</p>}
             <button onClick={onClose} type="button" className="bg-violet-600 text-white w-full rounded-lg h-10 font-bold hover:bg-violet-800 cursor-pointer">{(!isLoginPageOpen?'Sign up':'Login')}</button>
           </form>
           <p className="text-center p-4">{!isLoginPageOpen?"Already have an account? ":"Don't have an account? "} <span onClick={()=>onModeChange(isLoginPageOpen?'signup': 'login')} className="text-violet-600 cursor-pointer hover:text-violet-900">{!isLoginPageOpen ? "Login" : "Sign up"}</span> </p>
