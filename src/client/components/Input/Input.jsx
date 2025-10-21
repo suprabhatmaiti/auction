@@ -1,5 +1,5 @@
 function Input({ label, className, mode="input", ...rest}){
-    const classes=`mt-1 mb-8 border border-gray-300 bg-gray-100 rounded h-10 w-full focus:outline-none px-3 py-4 ${className}`
+    const classes=`border border-gray-300 bg-gray-100 rounded h-10 w-full focus:outline-none px-2 py-4 ${className}`
 
     return (
         <div>

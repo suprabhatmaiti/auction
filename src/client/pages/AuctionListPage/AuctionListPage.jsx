@@ -1,17 +1,21 @@
 import FilterSort from './FilterSort/FilterSort';
 import AuctionList from './AuctionList/AuctionList';
+import { useState } from 'react';
 
 
-function AuctionListPage({activeBids=false}){
+
+function AuctionListPage(){
+    const [selectedCategories, setSelectedCategories] = useState({});
+
     return(
-        <div className="min-h-screen px-12 pb-60">
+        <div className="min-h-screen px-12">
             <div className="flex gap-4">
                 <div className="w-1/4 border-r border-gray-200 pt-8">
-                    <FilterSort />
+                    <FilterSort selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}/>
                 </div>
 
-                <div className="w-3/4 pt-8">
-                    <AuctionList />
+                <div className="w-full pt-8">
+                    <AuctionList selectedCategories={selectedCategories} />
                 </div>
             </div>
         </div>

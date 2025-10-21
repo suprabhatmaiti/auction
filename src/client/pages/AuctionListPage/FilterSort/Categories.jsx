@@ -1,33 +1,34 @@
 import { useState } from "react";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 
-function Categories(){
-    const [checkedCategories, setCheckedCategories] = useState({});
+function Categories({selectedCategories, setSelectedCategories}){
 
     const categories=[
-        {value:'Antiques', label:'Antiques'},
-        {value:'Electronics', label:'Electronics'},
-        {value:'Vehicles', label:'Vehicles'},
-        {value:'Art', label:'Art'},
-        {value:'Jewelry', label:'Jewelry'},
-        {value:'Collectibles', label:'Collectibles'},
+        {value:'antiques', label:'Antiques'},
+        {value:'electronics', label:'Electronics'},
+        {value:'vehicles', label:'Vehicles'},
+        {value:'art', label:'Art'},
+        {value:'jewelry', label:'Jewelry'},
+        {value:'collectibles', label:'Collectibles'},
     ]
 
     const toggleCategories = (value) => {
-        setCheckedCategories((prev) => {
+        setSelectedCategories((prev) => {
             return ({
                 ...prev,
                 [value]: !prev[value],
                 })
         });
+        
     };
+    
 
     const renderedCategories = categories.map((category)=>{
         return(
             <div onClick={()=>toggleCategories(category.value)} key={category.value} 
                 className="flex gap-2 items-center cursor-pointer hover:shadow-sm rounded-lg  text-violet-700"
             >
-                {checkedCategories[category.value]?<MdCheckBox/>:<MdOutlineCheckBoxOutlineBlank/>}
+                {selectedCategories[category.value]?<MdCheckBox/>:<MdOutlineCheckBoxOutlineBlank/>}
                 <h2 className="text-violet-500">{category.label}</h2>
             </div>
         )

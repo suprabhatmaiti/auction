@@ -1,59 +1,43 @@
-import { CgBell, CgProfile } from "react-icons/cg";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import AuthPage from "../../pages/AuthPage";
-import { RiAuctionLine } from "react-icons/ri";
+
+import { useReducer, useState } from "react";
+import AuthPage from "../../pages/AuthPage/AuthPage";
+import useAuth from "../../hooks/useAuth";
+import RightSection from "./RightSection";
+import NavBar from "./NavBar";
+import LogoSection from "./LogoSection";
+import MobileMenu from "./MobileMenu";
+import {initialState, reducer} from './hooks/useAuthReducer'
 
 
 function Header() {
-  const [IsAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authMode,setAuthMode] = useState('login');
+  const [state, dispatch] = useReducer(reducer,initialState);
 
-  const navigate = useNavigate();
+  const {user,isLoggedIn,logout} = useAuth();
+
+  const HandleLoginClick = ()=>{
+    dispatch({
+      type:"OPEN_AUTH_MODAL",
+      payload: "login",
+      
+    });
+  }
 
   return (
-    <header className="border-b border-gray-300 flex justify-between items-center h-15 p-4">
+    <div>
+      <header className="relative z-50 border-b border-gray-300 flex justify-between items-center h-15 p-4">
+          <LogoSection/>
+          <NavBar/>
+          <RightSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+          <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+      </header>
 
-      <div onClick={()=>navigate('/')} className="w-1/5 flex items-center gap-2 cursor-pointer">
-        <RiAuctionLine className="size-8 "/>
-        <h3 className="font-bold text-lg">Auction Central</h3>
-      </div>
-
-
-
-      <div className="w-2/5 flex justify-around text-violet-600 font-medium">
-        
-        <NavLink to="/" className={({isActive})=>(
-          isActive ? "text-violet-800 font-bold border-b-2 border-violet-600 pb-1 " : "text-violet-600 hover:text-violet-800" 
-        )}>
-          Home
-        </NavLink>
-        <NavLink to="/dashboard" className={({isActive})=>(
-          isActive ? "text-violet-800 font-bold border-b-2 border-violet-600 pb-1 " : "text-violet-600 hover:text-violet-800" 
-        )}>
-          Dashboard
-        </NavLink>
-        <NavLink to="/profile" className={({isActive})=>(
-          isActive ? "text-violet-800 font-bold border-b-2 border-violet-600 pb-1 " : "text-violet-600 hover:text-violet-800" 
-        )}>
-          Profile
-        </NavLink>
-        
-      </div>
-
-      <div className="flex justify-around w-1/5 items-center gap-1">
-        <CgBell className="size-6 cursor-pointer" />
-        <CgProfile className="size-6 cursor-pointer" />
-        <button onClick={()=>{
-          setIsAuthModalOpen(true);
-          setAuthMode('login');
-        }} 
-        className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-bold transition">Login</button>
-        {/* <button className="cursor-pointer bg-white hover:bg-gray-100 text-violet-500 px-6 py-3 rounded-lg font-bold transition shadow-md">Sign Up</button> */} 
-      </div>
-
-      <AuthPage isOpen={IsAuthModalOpen} onClose={()=>setIsAuthModalOpen(false)} mode={authMode} onModeChange={setAuthMode}/>
-    </header>
+      <AuthPage
+          isOpen={state.isAuthModalOpen}
+          onClose={() => dispatch({ type: "CLOSE_AUTH_MODAL" })}
+          mode={state.authMode}
+          onModeChange={(mode) => dispatch({ type: "SET_AUTH_MODE", payload: mode })}
+        />
+    </div>
 
   );
 }

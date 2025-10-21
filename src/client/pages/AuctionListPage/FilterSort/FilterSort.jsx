@@ -4,10 +4,10 @@ import Categories from "./Categories";
 import PriceRange from "./PriceRange";
 import SortBy from "./SortBy";
 
-function FilterSort(){
+function FilterSort({selectedCategories , setSelectedCategories }){
    return(
     <div>
-        <Categories/>
+        <Categories selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
         <PriceRange/>
         <SortBy/>
     </div>

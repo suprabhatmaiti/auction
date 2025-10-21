@@ -1,40 +1,66 @@
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
+function Footer() {
+  return (
+    <footer className="bg-slate-900 text-white py-10">
+      {/* Container */}
+      <div className="max-w-7xl mx-auto px-6 md:px-12">
+        
+        {/* Flexbox Layout */}
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between border-b border-gray-700 pb-8 gap-8">
+          
+          {/* Section 1 */}
+          <div className="flex-1 min-w-[200px]">
+            <h2 className="text-2xl font-bold mb-3 text-white">Auction Central</h2>
+            <ul className="space-y-1 text-gray-300">
+              <li className="hover:text-white transition">Live Auctions</li>
+              <li className="hover:text-white transition">Past Auctions</li>
+              <li className="hover:text-white transition">Categories</li>
+            </ul>
+          </div>
 
-function Footer(){
-    return(
-        <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-center text-white py-8">
-            <div className="flex justify-between w-5/6 border-b pb-10 ml-8 border-white">
-                <div>
-                   <h2 className="text-lg font-bold mb-2 ">Auction Central</h2>
-                   
-                    <p className="text-sm text-start">Live Auctions</p>
-                    <p className="text-sm text-start">Past Auctions</p>
-                    <p className="text-sm text-start">Categories</p>
-                </div>
-                <div>
-                    <h2 className="text-lg font-bold mb-2 ">About Us</h2>
-                    <p className="text-sm text-start">Our Story</p>
-                    <p className="text-sm text-start">Careers</p>
-                </div>
-                <div>
-                    <h2 className="text-lg font-bold  mb-2">Support</h2>
-                    <p className="text-sm text-start">FAQ</p>
-                    <p className="text-sm text-start">Contact Us</p>
-                </div>
-                <div>
-                    <h2 className="text-lg font-bold mb-2 ">Follow Us</h2>
-                    <div className="flex gap-4 text-3xl">
-                        <FaGithub/>
-                        <FaLinkedin/>
-                    </div>
-                </div>
+          {/* Section 2 */}
+          <div className="flex-1 min-w-[200px]">
+            <h2 className="text-xl font-semibold mb-3 text-white">About Us</h2>
+            <ul className="space-y-1 text-gray-300">
+              <li className="hover:text-white transition">Our Story</li>
+              <li className="hover:text-white transition">Careers</li>
+            </ul>
+          </div>
+
+          {/* Section 3 */}
+          <div className="flex-1 min-w-[200px]">
+            <h2 className="text-xl font-semibold mb-3 text-white">Support</h2>
+            <ul className="space-y-1 text-gray-300">
+              <li className="hover:text-white transition">FAQ</li>
+              <li className="hover:text-white transition">Contact Us</li>
+            </ul>
+          </div>
+
+          {/* Section 4 */}
+          <div className="flex-1 min-w-[200px]">
+            <h2 className="text-xl font-semibold mb-3 text-white">Follow Us</h2>
+            <div className="flex gap-5 text-3xl">
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
+                <FaGithub />
+              </a>
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
+                <FaLinkedin />
+              </a>
             </div>
-            <div className="text-start mx-8 mt-4 .">
-                @ 2025 Auction Central. All Rights Reserved
-            </div>
-        </footer>
-    )
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-gray-400 text-sm">
+          <p>© 2025 Auction Central. All Rights Reserved.</p>
+          {/* <p className="mt-2 sm:mt-0">
+            Built with ❤️ by <span className="text-amber-400">us</span>
+          </p> */}
+        </div>
+      </div>
+    </footer>
+  );
 }
 
 export default Footer;

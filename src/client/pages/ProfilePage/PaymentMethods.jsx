@@ -1,6 +1,8 @@
 function PaymentMethods(){
     return(
-        <div></div>
+        <div>
+            
+        </div>
     )
 }
 

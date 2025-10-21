@@ -14,7 +14,7 @@ function FeaturedItems() {
   };
 
   return (
-    <div className="relative m-16">
+    <div className="relative m-8">
       <h2 id="featured-items" className="text-2xl font-bold mb-6">
         Featured Items
       </h2>
@@ -32,11 +32,11 @@ function FeaturedItems() {
         ref={sliderRef}
         className="flex gap-6 overflow-x-auto overflow-y-hidden scroll-smooth no-scrollbar px-10 py-4"
       >
-        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
-        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
-        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
-        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
-        <Card className='w-70 h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='h-60 md:w-70 md:h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='h-60 md:w-70 md:h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='h-60 md:w-70 md:h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='h-60 md:w-70 md:h-90 flex-shrink-0 hover:scale-105 duration-300'/>
+        <Card className='h-60 md:w-70 md:h-90 flex-shrink-0 hover:scale-105 duration-300'/>
       </div>
 
      

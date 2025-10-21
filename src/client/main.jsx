@@ -9,6 +9,8 @@ import DashboardPage from "./pages/DashboardPage/DashboardPage"
 import DropdownPage from "./pages/DropdownPage";
 import AddAuctionPage from "./pages/AddAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage/AuctionListPage";
+import { AuthProvider } from "./hooks/useAuth";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 
 const router = createBrowserRouter([
@@ -20,8 +22,8 @@ const router = createBrowserRouter([
       { path: 'profile', element: <ProfilePage/> },
       { path: 'dashboard', element: <DashboardPage/> },
       { path: 'dropdown', element: <DropdownPage/> },
-      { path: 'add-auction', element: <AddAuctionPage/> },
-      { path: 'auction-list', element: <AuctionListPage/> },
+      { path: 'add-auction', element:  <AddAuctionPage/>  },
+      { path: 'auction-list', element: <AuctionListPage/>  },
 
     ]
   }
@@ -30,6 +32,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+    
   </React.StrictMode>,
 );

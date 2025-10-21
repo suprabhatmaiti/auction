@@ -1,5 +1,5 @@
 import {useState } from "react";
-import AuthPage from "../AuthPage";
+import AuthPage from "../AuthPage/AuthPage";
 import Banner from "./LandingComps/Banner";
 import SearchFunction from "./RegularComps/SearchFunction";
 import FeaturedItems from "./RegularComps/FeaturedItems";
@@ -13,7 +13,7 @@ function HomePage() {
   
 
   return (
-    <div className="min-h-screen pb-60 bg-gray-100">
+    <div className="min-h-screen pb-10 bg-gray-100">
       <Banner authMode={setAuthMode} authControl={setIsAuthOpen}/>
 
       <SearchFunction/>
