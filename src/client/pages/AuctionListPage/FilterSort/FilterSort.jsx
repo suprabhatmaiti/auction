@@ -6,7 +6,7 @@ import SortBy from "./SortBy";
 
 function FilterSort({selectedCategories , setSelectedCategories }){
    return(
-    <div>
+    <div className="w-full px-8 py-6 ">
         <Categories selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
         <PriceRange/>
         <SortBy/>

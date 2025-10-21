@@ -25,7 +25,7 @@ function AuctionList({ selectedCategories }) {
   ));
 
   return (
-    <div className="px-8 md:px-8 py-6">
+    <div className="px-8 py-6">
       {/* Header */}
       <div className="mb-4">
         <h2 className="font-bold text-xl md:text-2xl mb-1">All Active Auctions</h2>
@@ -39,14 +39,14 @@ function AuctionList({ selectedCategories }) {
 
       {/* Auction Cards using Flexbox */}
       <div className="flex flex-wrap justify-start gap-4">
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
-        <Card className="flex-1 min-w-[120px] max-w-[180px] h-60 md:h-80" button="Bid Now" />
+        <Card button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
+        <Card  button="Bid Now" />
       </div>
 
       {/* Load More Button */}

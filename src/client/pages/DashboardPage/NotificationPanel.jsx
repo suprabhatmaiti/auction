@@ -2,7 +2,7 @@ function NotificationPanel({ isMobile = false }) {
   return (
     <div
       className={`px-4 pt-4 rounded-lg shadow-md bg-white ${
-        isMobile ? "h-full" : "h-96"
+        isMobile ? "h-full" : "h-100"
       } w-full relative`}
     >
       {!isMobile && (
@@ -22,13 +22,14 @@ function NotificationPanel({ isMobile = false }) {
         <p className="text-gray-600 text-sm">You received a new message</p>
         <p className="text-gray-600 text-sm">Payment completed successfully</p>
         <p className="text-gray-600 text-sm">Your profile was updated</p>
+        <p className="text-gray-600 text-sm">You received a new message</p>
+        <p className="text-gray-600 text-sm">Payment completed successfully</p>
+        <p className="text-gray-600 text-sm">Your profile was updated</p>
+        <p className="text-gray-600 text-sm">You received a new message</p>
+        
       </div>
 
-      {!isMobile && (
-        <div className="absolute bottom-3 left-4 text-violet-600 cursor-pointer hover:text-violet-800">
-          <button type="button">See all Notifications</button>
-        </div>
-      )}
+      
     </div>
   );
 }
