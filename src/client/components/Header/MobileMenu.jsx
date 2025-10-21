@@ -21,7 +21,7 @@ function MobileMenu({ isLoggedIn, onLoginClick}){
         <>
         
             <button
-                className="md:hidden p-1 text-gray-700"
+                className="md:hidden p-1 text-gray-700 cursor-pointer"
                 onClick={() => dispatch({ type: "TOGGLE_MENU" }) }
                 >
                 {state.isMenuOpen ? <CgClose size={24} /> : <CgMenu size={24} />}

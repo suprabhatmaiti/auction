@@ -7,39 +7,39 @@ function Footer() {
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         
         {/* Flexbox Layout */}
-        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between border-b border-gray-700 pb-8 gap-8">
+        <div className="flex sm:flex-row flex-wrap justify-between border-b border-gray-700 pb-8 gap-8">
           
           {/* Section 1 */}
           <div className="flex-1 min-w-[200px]">
-            <h2 className="text-2xl font-bold mb-3 text-white">Auction Central</h2>
+            <h2 className="md:text-xl font-bold mb-3 text-white">Auction Central</h2>
             <ul className="space-y-1 text-gray-300">
-              <li className="hover:text-white transition">Live Auctions</li>
-              <li className="hover:text-white transition">Past Auctions</li>
-              <li className="hover:text-white transition">Categories</li>
+              <li className="hover:text-white transition text-sm md:text-base">Live Auctions</li>
+              <li className="hover:text-white transition text-sm md:text-base">Past Auctions</li>
+              <li className="hover:text-white transition text-sm md:text-base">Categories</li>
             </ul>
           </div>
 
           {/* Section 2 */}
           <div className="flex-1 min-w-[200px]">
-            <h2 className="text-xl font-semibold mb-3 text-white">About Us</h2>
+            <h2 className="md:text-xl font-semibold mb-3 text-white ">About Us</h2>
             <ul className="space-y-1 text-gray-300">
-              <li className="hover:text-white transition">Our Story</li>
-              <li className="hover:text-white transition">Careers</li>
+              <li className="hover:text-white transition text-sm md:text-base">Our Story</li>
+              <li className="hover:text-white transition text-sm md:text-base">Careers</li>
             </ul>
           </div>
 
           {/* Section 3 */}
           <div className="flex-1 min-w-[200px]">
-            <h2 className="text-xl font-semibold mb-3 text-white">Support</h2>
+            <h2 className="md:text-xl font-semibold mb-3 text-white">Support</h2>
             <ul className="space-y-1 text-gray-300">
-              <li className="hover:text-white transition">FAQ</li>
-              <li className="hover:text-white transition">Contact Us</li>
+              <li className="hover:text-white transition text-sm md:text-base">FAQ</li>
+              <li className="hover:text-white transition text-sm md:text-base">Contact Us</li>
             </ul>
           </div>
 
           {/* Section 4 */}
           <div className="flex-1 min-w-[200px]">
-            <h2 className="text-xl font-semibold mb-3 text-white">Follow Us</h2>
+            <h2 className="md:text-xl font-semibold mb-3 text-white">Follow Us</h2>
             <div className="flex gap-5 text-3xl">
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
                 <FaGithub />
