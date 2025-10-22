@@ -19,11 +19,11 @@ const router = createBrowserRouter([
     element: <App/>,
     children: [
       { index:true, element: <HomePage/> },
-      { path: 'profile', element: <ProfilePage/> },
-      { path: 'dashboard', element: <DashboardPage/> },
+      { path: 'profile', element: <ProtectedRoutes><ProfilePage/></ProtectedRoutes> },
+      { path: 'dashboard', element: <ProtectedRoutes><DashboardPage/></ProtectedRoutes> },
       { path: 'dropdown', element: <DropdownPage/> },
-      { path: 'add-auction', element:  <AddAuctionPage/>  },
-      { path: 'auction-list', element: <AuctionListPage/>  },
+      { path: 'add-auction', element:  <ProtectedRoutes><AddAuctionPage/></ProtectedRoutes>  },
+      { path: 'auction-list', element: <ProtectedRoutes><AuctionListPage/></ProtectedRoutes>  },
 
     ]
   }

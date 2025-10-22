@@ -14,8 +14,8 @@ function FeaturedItems() {
   };
 
   return (
-    <div className="relative m-8">
-      <h2 id="featured-items" className="text-2xl font-bold mb-6">
+    <div className="relative md:mx-8 mx-4">
+      <h2 id="featured-items" className="md:text-2xl text-xl font-bold mb-4 text-slate-800">
         Featured Items
       </h2>
 

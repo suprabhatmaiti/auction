@@ -18,11 +18,13 @@ function ProfilePage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6 " >
+    <div className="min-h-screen md:bg-gray-100 md:py-6 " >
 
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg px-12 py-6 mb-16 w-3/5">
+      <div className="max-w-4xl md:mx-auto md:bg-white md:shadow-lg rounded-lg md:px-12 md:py-6 mb-16 md:w-3/5">
 
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs}/>
+        <div className=" w-full ">
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs}/>
+        </div>
 
         <div>
           {activeTab === "profile" && (

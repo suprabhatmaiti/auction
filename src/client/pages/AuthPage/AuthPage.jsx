@@ -30,7 +30,7 @@ function AuthPage({ isOpen, onClose, mode = "login", onModeChange }) {
 
         <h2 className="text-violet-600 font-bold text-2xl px-12">
           {!isLoginPageOpen
-            ? "Sign up to E-Auction"
+            ? "Sign up to Auction Central"
             : "Sign in to your Account"}
         </h2>
 

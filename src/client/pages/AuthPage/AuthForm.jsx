@@ -2,6 +2,7 @@
 import { useReducer, useEffect } from "react";
 import Input from "../../components/Input/Input";
 import axios from "axios";
+import useAuth from "../../hooks/useAuth";
 import {
   formReducer,
   initialState,
@@ -12,6 +13,7 @@ import {
 
 function AuthForm({ isLoginPageOpen, onClose }) {
   const [formData, dispatch] = useReducer(formReducer, initialState);
+  const { login } = useAuth();
 
   useEffect(() => {
     if (
@@ -55,9 +57,8 @@ function AuthForm({ isLoginPageOpen, onClose }) {
       );
       
       const {messege,token,user} = response.data;
-
-      localStorage.setItem("token",token);
-      localStorage.setItem("user",JSON.stringify(user));
+      console.log(messege);
+      login(user, token);
 
 
     } catch (error) {

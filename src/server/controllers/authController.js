@@ -15,9 +15,17 @@ export const register = async(req,res) =>{
 
         const newUser = await pool.query("INSERT INTO users (name,email,password,role) VALUES ($1,$2,$3,$4) RETURNING id, name, email, role",
             [name,email,hashedPassword,role||'buyer']);
+        const user = newUser.rows[0];
         
-         res.status(201).json({messege:"user registered successfully", user: newUser.rows[0]});   
 
+        const token = jwt.sign(
+            {id:user.id,email:user.email, role:user.role},
+            process.env.JWT_SECRET,
+            {expiresIn:"1d"}
+        );
+
+        res.status(201).json({messege:"user registered successfully",token, user});   
+        console.log(newUser.rows[0]);
     } catch (err){
         console.log(err);
         res.status(500).json({error:"Server error during registration"});

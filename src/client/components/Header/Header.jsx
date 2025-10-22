@@ -12,7 +12,7 @@ import {initialState, reducer} from './hooks/useAuthReducer'
 function Header() {
   const [state, dispatch] = useReducer(reducer,initialState);
 
-  const {user,isLoggedIn,logout} = useAuth();
+  const {isLoggedIn} = useAuth();
 
   const HandleLoginClick = ()=>{
     dispatch({
@@ -26,9 +26,15 @@ function Header() {
     <div>
       <header className="relative z-50 border-b border-gray-300 flex justify-between items-center h-15 p-4">
           <LogoSection/>
-          <NavBar/>
+          {isLoggedIn && <NavBar/>}
           <RightSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
-          <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+          {isLoggedIn 
+            ? <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+            :<button className="md:hidden block text-white bg-violet-600 rounded-lg px-2 py-1 font-semibold"
+              onClick={HandleLoginClick}>
+              Login
+            </button>
+          }
       </header>
 
       <AuthPage

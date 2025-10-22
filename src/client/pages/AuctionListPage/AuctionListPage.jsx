@@ -1,7 +1,6 @@
 import FilterSort from './FilterSort/FilterSort';
 import AuctionList from './AuctionList/AuctionList';
 import { useState } from 'react';
-import { RiMenuFold2Line, RiMenuFoldLine } from "react-icons/ri";
 
 function AuctionListPage() {
   const [selectedCategories, setSelectedCategories] = useState({});

@@ -4,7 +4,7 @@ import useAuth from "../../hooks/useAuth";
 function RightSection({isLoggedIn,onLoginClick}){
     const {logout}= useAuth();
     return(
-        <form className="hidden md:flex justify-around items-center gap-8">
+        <div className="hidden md:flex justify-around items-center gap-8">
             <CgBell className="size-6 cursor-pointer" />
             
             {isLoggedIn
@@ -15,7 +15,7 @@ function RightSection({isLoggedIn,onLoginClick}){
                     </button>  
                 </div>
             }
-        </form>
+        </div>
     )
 }
 
