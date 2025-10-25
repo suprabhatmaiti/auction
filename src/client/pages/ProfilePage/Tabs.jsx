@@ -2,6 +2,7 @@ function Tabs({ activeTab, setActiveTab,tabs }){
     const RenderedTabs = tabs.map((tab)=>{
                 return(
                     <button
+                        key={tab.id}
                         className={`px-4 py-2 font-semibold border-b-2 cursor-pointer ${
                         activeTab === tab.id
                             ? "border-violet-500 text-violet-500"
