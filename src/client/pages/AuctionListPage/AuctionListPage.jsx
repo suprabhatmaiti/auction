@@ -9,7 +9,7 @@ function AuctionListPage() {
   return (
     <div className="min-h-screen  relative bg-gray-50">
      
-      {/* div for small screens */}
+      {/* Mobile Filter & Sort Button */}
       <div className="md:hidden w-full text-white flex items-center justify-end px-4 py-1 shadow-md">
             <button
             onClick={() => setFilterSortMenuOpen(true)}
@@ -19,10 +19,9 @@ function AuctionListPage() {
             </button>
         </div>
 
-         {/* Container */}
       <div className="flex gap-4">
 
-        {/* Desktop filter panel */}
+        {/* Filter & Sort sidebar */}
         <div className="hidden md:block w-1/4 border-r border-gray-200 pt-8">
           <FilterSort
             selectedCategories={selectedCategories}
@@ -31,12 +30,12 @@ function AuctionListPage() {
         </div>
 
         {/* Auction list */}
-        <div className="w-full pt-8">
+        <div className="w-full md:pt-8">
           <AuctionList selectedCategories={selectedCategories} />
         </div>
       </div>
 
-      {/* Mobile filter drawer */}
+      {/* Mobile Filter & Sort Drawer */}
       {filterSortMenuOpen && (
         <div className="absolute inset-0 backdrop-blur-sm bg-opacity-30 z-40 flex justify-start">
           <div className="bg-white w-3/4 max-w-xs h-full shadow-lg p-4 relative transform transition-transform duration-300">

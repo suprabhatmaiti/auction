@@ -25,7 +25,7 @@ function AuctionList({ selectedCategories }) {
   ));
 
   return (
-    <div className="px-8 py-6">
+    <div className="px-4 md:px-8 py-6">
       {/* Header */}
       <div className="mb-4">
         <h2 className="font-bold text-xl md:text-2xl mb-1">All Active Auctions</h2>
@@ -38,7 +38,7 @@ function AuctionList({ selectedCategories }) {
       <div className="flex flex-wrap gap-2 md:gap-4 mb-6">{renderedSelectedCategories}</div>
 
       {/* Auction Cards using Flexbox */}
-      <div className="flex flex-wrap justify-start gap-4">
+      <div className="flex flex-wrap justify-center  gap-6">
         <Card button="Bid Now" />
         <Card  button="Bid Now" />
         <Card  button="Bid Now" />

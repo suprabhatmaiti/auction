@@ -2,7 +2,7 @@
 import { useReducer, useState } from "react";
 import AuthPage from "../../pages/AuthPage/AuthPage";
 import useAuth from "../../hooks/useAuth";
-import RightSection from "./RightSection";
+import RightSection from "./UserControlSection/UserControlSection";
 import NavBar from "./NavBar";
 import LogoSection from "./LogoSection";
 import MobileMenu from "./MobileMenu";
