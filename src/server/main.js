@@ -9,6 +9,25 @@ dotenv.config();
 
 const app = express();
 app.use(cors());
+// // ✅ Allow only your frontend
+// const allowedOrigins = [
+//   "http://localhost:3001",   // your React app during development
+//   "https://yourfrontend.com" // your production frontend (optional)
+// ];
+
+// app.use(cors({
+//   origin: function (origin, callback) {
+//     if (!origin || allowedOrigins.includes(origin)) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   credentials: true, // needed for sending cookies or JWTs
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"]
+// }));
+
 app.use(express.json());
 
 app.use("/api/auth",authRoutes);
