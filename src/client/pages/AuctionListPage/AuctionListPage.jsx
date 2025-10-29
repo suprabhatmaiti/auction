@@ -7,7 +7,7 @@ function AuctionListPage() {
   const [filterSortMenuOpen, setFilterSortMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen  relative bg-gray-50">
+    <div className="min-h-screen relative bg-gray-50">
      
       {/* Mobile Filter & Sort Button */}
       <div className="md:hidden w-full text-white flex items-center justify-end px-4 py-1 shadow-md">
