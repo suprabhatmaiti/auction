@@ -80,7 +80,7 @@ export const login = async (req,res) => {
             maxAge: 24 * 60 * 60 * 1000 // 1 day
         });
 
-        res.status(201).json({
+        res.status(200).json({
             messege:"Login successfull",
             accessToken,
             user:{id:user.id,name:user.name, email:user.email, role:user.role}
