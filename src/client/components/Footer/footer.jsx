@@ -53,10 +53,8 @@ function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center mt-6 text-gray-400 text-sm">
-          <p>© 2025 Auction Central. All Rights Reserved.</p>
-          {/* <p className="mt-2 sm:mt-0">
-            Built with ❤️ by <span className="text-amber-400">us</span>
-          </p> */}
+          <p>© 2025 Auction Central. All Rights Reserved.</p> 
+          <p>Designed by Auction Central Team</p>
         </div>
       </div>
     </footer>

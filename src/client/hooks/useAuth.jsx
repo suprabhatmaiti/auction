@@ -20,6 +20,7 @@ export const AuthProvider= ({children})=>{
             setUser(null);
         }
 
+    }
     useEffect(()=>{
         const token = localStorage.getItem("token");
         const storedUser = localStorage.getItem("user");
@@ -67,10 +68,8 @@ export const AuthProvider= ({children})=>{
         </AuthContext.Provider>
     )
 }
-   
+    
 
-
-
-export default function useAuth(){
+export const useAuth = () => {
     return useContext(AuthContext);
 }
