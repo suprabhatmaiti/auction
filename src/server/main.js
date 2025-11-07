@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js'
 import auctionRoutes from './routes/auctionRoutes.js'
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use(cors({
 // }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/auth",authRoutes);
 app.use("/api/auction",auctionRoutes);

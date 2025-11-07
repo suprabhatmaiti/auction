@@ -9,9 +9,9 @@ export const AuthProvider= ({children})=>{
 
     const decodeAndSetUser = (token)=>{
         try{
+            console.log("Decoded user:",token);
             const decoded = jwtDecode(token);
             setUser(decoded);
-            setAccessToken(token);
             
         }catch(error){
             console.log("Error decoding token:",error);
@@ -19,68 +19,35 @@ export const AuthProvider= ({children})=>{
         }
 
     }
-    // useEffect(()=>{
-        
-    //     if(token && storedUser){
-    //         try{
-    //             const decoded = jwtDecode(token);
-    //             const currentTime = Date.now()/1000;
-
-    //             if(decoded.exp && decoded.exp>currentTime){
-    //                 setUser(JSON.parse(storedUser));
-                    
-    //                 const remainingTime = (decoded.exp - currentTime)*1000;
-    //                 const logoutTimer = setTimeout(()=>{
-    //                     logoutUser();
-    //                     setUser(null);
-    //                     alert("Session expaired please login again.");
-    //                     window.location.reload();
-                
-    //                 },remainingTime);
-    //                 return clearTimeout(logoutTimer);
-    //             }else{
-    //                 logoutUser();
-    //             }
-    //         }catch(error){
-    //             console.log(error);
-    //             logoutUser();
-    //         }
-    //     }
-    // },[]);
 
     useEffect(()=>{
-        async ()=> {
+        (async ()=> {
             try{
-                const {accessToken}= await api.post('/api/auth/refresh-token');
-                setAccessToken(accessToken);
-                decodeAndSetUser(accessToken);
+                const {data}= await api.post('/api/auth/refresh-token');
+                setAccessToken(data.accessToken);
+                decodeAndSetUser(data.accessToken);
             }catch(error){
                 console.log("Error refreshing token:",error);
                 setUser(null); 
                 setAccessToken(null);
 
             }
-        }
+        })();
     },[]);
 
     const register = async(payload)=>{
         try{
             const response = await api.post('/api/auth/register',payload);
-            const {accessToken,user} = response.data;
+            
             decodeAndSetUser(accessToken);
             setAccessToken(token);
             setUser(userData);
-            return {accessToken,user};
+            return {accessToken,messege,user};
         }catch(err){
             console.log("Error during registration:",err);
             throw err;
         }
     }
-
-    //  const login = (userData, token) => {
-    //     setAccessToken(token);
-    //     setUser(userData);
-    // };
 
     const login = async(payload)=>{
         try{
@@ -106,7 +73,7 @@ export const AuthProvider= ({children})=>{
     }
 
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn: !!user, login, logout}}>
+        <AuthContext.Provider value={{ user, isLoggedIn: !!user, register, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

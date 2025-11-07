@@ -52,11 +52,7 @@ function AuthForm({ isLoginPageOpen, onClose }) {
 
     try {
       const endpoint = isLoginPageOpen ? login(payload) : register(payload) ;
-      // // const response = await axios.post(endpoint, payload);
-      
-      // const {messege,token,user} = response.data;
-      // console.log(messege);
-      // login(user, token);
+      await endpoint;
 
 
     } catch (error) {
