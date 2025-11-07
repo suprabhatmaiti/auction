@@ -1,25 +1,65 @@
-import { useState } from "react";
-import Input from "../components/Input/Input";
+import { useState, useReducer } from "react";
+import Input from "../../components/Input/Input.jsx";
 import { RiImageAddLine } from "react-icons/ri";
-import axios from "../utils/api.js";
+
+import { initialState, useAuctionPageReducer } from "./reducer/useAuctionPageReducer.js";  
+import api from "../../utils/api.js";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [state, dispatch] = useReducer(useAuctionPageReducer, initialState); 
 
   const handleSetPreview = (event) => {
     const file = event.target.files[0];
     if (file) {
+      dispatch({ type: "SET_IMAGE", file: file });
       setPreview(URL.createObjectURL(file));
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!preview) {
-      alert("Please upload an image before submitting.");
+    const { title, startingBid, imageFile, auctionEndTime, category, description } = state;
+    if (!title.trim() || !startingBid.trim() || !imageFile || !auctionEndTime.trim() || !category.trim()) {
+      alert("Please fill all required fields and upload an image.");
       return;
     }
-    
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("startingBid", startingBid);
+    formData.append("image", imageFile);
+    formData.append("auctionEndTime", auctionEndTime);
+    formData.append("category", category);
+    formData.append("description", description);
+
+    try {
+      setSubmitting(true);
+      const {data} = api.post("/api/auction/create", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+
+      alert(data.message);
+      dispatch({ type: "RESET_FORM" });
+      setPreview(null);
+    }catch (error) {
+      console.error("Error submitting auction:", error);
+      alert("Failed to submit auction. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    dispatch({ type: "UPDATE_FIELD", field: name, value });
+  }
+
+
 
   return (
     <form className="min-h-screen bg-gray-100 p-4 md:p-8 flex flex-col items-center" onSubmit={handleSubmit}>
@@ -38,27 +78,54 @@ function AddAuctionPage() {
         <div className="flex flex-col gap-6">
           <Input
             label="Item Name"
+            name ="title"
             type="text"
             placeholder="e.g., Vintage Leather Jacket"
+            value={state.title}
+            onChange={handleChange} 
           />
 
           <Input
             mode="desc"
             label="Description"
+            name="description"
             type="text"
             placeholder="Describe your item in detail including condition, age, and unique features."
             className="h-24"
+            value={state.description}
+            onChange={handleChange}
           />
 
-          <Input label="Category" type="text" placeholder="e.g., Antiques" />
+          <Input 
+            label="Category" 
+            name="category"
+            type="text" 
+            placeholder="e.g., Antiques" 
+            value ={state.category} 
+            onChange={handleChange}
+          />
 
           {/* Responsive Row for Price & Duration */}
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full">
-              <Input label="Starting Bid" type="text" placeholder="e.g., 50.00" />
+              <Input 
+                label="Starting Bid" 
+                type="text" 
+                name="startingBid"
+                placeholder="e.g., 50.00" 
+                value={state.startingBid} 
+                onChange={handleChange}
+              />
             </div>
             <div className="w-full">
-              <Input label="Auction End Time" type="time" />
+              <Input 
+                label="Auction End Time" 
+                type="time" 
+                name="auctionEndTime"
+                placeholder="Select end time" 
+                value={state.auctionEndTime} 
+                onChange={handleChange}
+              />
             </div>
           </div>
 
@@ -97,7 +164,7 @@ function AddAuctionPage() {
           {/* Submit Button */}
           <button
            className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200"
-           
+            type="submit"
           >
             Submit for Auction
           </button>

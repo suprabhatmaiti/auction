@@ -40,6 +40,8 @@ app.use(cookieParser());
 app.use("/api/auth",authRoutes);
 app.use("/api/auction",auctionRoutes);
 
+app.use('/uploads', express.static('uploads')); // to serve static files
+
 
 app.get("/api", (req, res) => {
   res.send(" Vite + React!");

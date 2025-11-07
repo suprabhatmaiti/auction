@@ -6,7 +6,7 @@ import UserControlSection from "./UserControlSection/UserControlSection";
 import NavBar from "./NavBar";
 import LogoSection from "./LogoSection";
 import MobileMenu from "./MobileMenu";
-import {initialState, reducer} from './hooks/useAuthReducer'
+import {initialState, reducer} from './hooks/useAuthReducer.js'
 
 
 function Header() {

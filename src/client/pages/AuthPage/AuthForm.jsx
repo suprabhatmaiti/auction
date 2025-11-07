@@ -49,7 +49,7 @@ function AuthForm({ isLoginPageOpen, onClose }) {
           password: formData.password,
         };
 
-    console.log(payload);
+    // console.log(payload);
 
     try {
       const endpoint = isLoginPageOpen ? login(payload) : register(payload) ;
