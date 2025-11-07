@@ -44,7 +44,7 @@ function Footer() {
               <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
                 <FaGithub />
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
+              <a href="https://linkedin.com/in/suprabhat-maiti" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition">
                 <FaLinkedin />
               </a>
             </div>

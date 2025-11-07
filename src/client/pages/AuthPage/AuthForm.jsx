@@ -1,7 +1,7 @@
 // src/components/Auth/AuthForm.jsx
 import { useReducer, useEffect } from "react";
 import Input from "../../components/Input/Input";
-import axios from "axios";
+import axios from "../../utils/api";
 import useAuth from "../../hooks/useAuth";
 import {
   formReducer,
@@ -9,11 +9,11 @@ import {
   UPDATE_FIELD,
   RESET_FORM,
   SET_ERROR,
-} from "./authReducer";
+} from "./reducers/authReducer";
 
 function AuthForm({ isLoginPageOpen, onClose }) {
   const [formData, dispatch] = useReducer(formReducer, initialState);
-  const { login } = useAuth();
+  const { login,register } = useAuth();
 
   useEffect(() => {
     if (
@@ -51,14 +51,12 @@ function AuthForm({ isLoginPageOpen, onClose }) {
     console.log(payload);
 
     try {
-      const response = await axios.post(
-        isLoginPageOpen ? "/api/auth/login" : "/api/auth/register",
-        payload
-      );
+      const endpoint = isLoginPageOpen ? login(payload) : register(payload) ;
+      // // const response = await axios.post(endpoint, payload);
       
-      const {messege,token,user} = response.data;
-      console.log(messege);
-      login(user, token);
+      // const {messege,token,user} = response.data;
+      // console.log(messege);
+      // login(user, token);
 
 
     } catch (error) {

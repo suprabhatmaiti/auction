@@ -8,7 +8,12 @@ import auctionRoutes from './routes/auctionRoutes.js'
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",  
+  credentials: true
+}));
+
+// app.use(cors());
 // // ✅ Allow only your frontend
 // const allowedOrigins = [
 //   "http://localhost:3001",   // your React app during development

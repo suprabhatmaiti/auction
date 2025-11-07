@@ -27,6 +27,7 @@ export const register = async(req,res) =>{
 
         const newUser = await pool.query("INSERT INTO users (name,email,password,role) VALUES ($1,$2,$3,$4) RETURNING id, name, email, role",
             [name,email,hashedPassword,role||'buyer']);
+        
         const user = newUser.rows[0];
         
 
@@ -35,7 +36,7 @@ export const register = async(req,res) =>{
 
         res.cookie("refreshToken", refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
+            secure: true,
             sameSite: "Strict",
             maxAge: 24 * 60 * 60 * 1000, // 1 day
         });
@@ -106,3 +107,12 @@ export const refreshToken = async (req, res) => {
     res.status(403).json({ error: "Invalid refresh token" });
   }
 };
+
+export const logout = (req, res) => {
+    res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "Strict",
+    });
+    res.status(200).json({ messege: "Logged out successfully" });
+}

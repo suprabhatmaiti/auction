@@ -3,7 +3,7 @@ import { FiSettings, FiHelpCircle, FiHeart, FiClock } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../../../hooks/useAuth";
 
-function RightSection({ isLoggedIn, onLoginClick }) {
+function UserControlSection({ isLoggedIn, onLoginClick }) {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -93,4 +93,4 @@ function RightSection({ isLoggedIn, onLoginClick }) {
   );
 }
 
-export default RightSection;
+export default UserControlSection;

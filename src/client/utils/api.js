@@ -3,7 +3,7 @@ import axios from "axios";
 let accessToken = null;
 
 const api= axios.create({
-    baseURL:"http://localhost:3000/api",
+    baseURL:"http://localhost:3000/",
     withCredentials:true,
 });
 

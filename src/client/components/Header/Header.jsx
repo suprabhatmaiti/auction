@@ -2,7 +2,7 @@
 import { useReducer, useState } from "react";
 import AuthPage from "../../pages/AuthPage/AuthPage";
 import useAuth from "../../hooks/useAuth";
-import RightSection from "./UserControlSection/UserControlSection";
+import UserControlSection from "./UserControlSection/UserControlSection";
 import NavBar from "./NavBar";
 import LogoSection from "./LogoSection";
 import MobileMenu from "./MobileMenu";
@@ -27,7 +27,7 @@ function Header() {
       <header className="relative z-50 border-b border-gray-300 flex justify-between items-center h-15 p-4">
           <LogoSection/>
           {isLoggedIn && <NavBar/>}
-          <RightSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+          <UserControlSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
           {isLoggedIn 
             ? <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
             :<button className="md:hidden block text-white bg-violet-600 rounded-lg px-2 py-1 font-semibold"
