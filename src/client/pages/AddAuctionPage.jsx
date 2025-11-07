@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "../components/Input/Input";
 import { RiImageAddLine } from "react-icons/ri";
+import axios from "../utils/api.js";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
@@ -11,9 +12,17 @@ function AddAuctionPage() {
       setPreview(URL.createObjectURL(file));
     }
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!preview) {
+      alert("Please upload an image before submitting.");
+      return;
+    }
+    
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8 flex flex-col items-center">
+    <form className="min-h-screen bg-gray-100 p-4 md:p-8 flex flex-col items-center" onSubmit={handleSubmit}>
       <div className="bg-white shadow-md rounded-2xl w-full max-w-3xl p-6 md:p-10">
         {/* Header */}
         <div className="text-center mb-6">
@@ -59,7 +68,7 @@ function AddAuctionPage() {
               <div className="flex flex-col items-center justify-center w-full h-full">
                 <RiImageAddLine className="text-gray-500 text-4xl mb-2" />
                 <p className="text-gray-600 text-sm">Click to upload image</p>
-                <Input
+                <input
                   type="file"
                   accept="image/*"
                   className="absolute inset-0 opacity-0 cursor-pointer"
@@ -86,12 +95,15 @@ function AddAuctionPage() {
           </div>
 
           {/* Submit Button */}
-          <button className="bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200">
+          <button
+           className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200"
+           
+          >
             Submit for Auction
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 

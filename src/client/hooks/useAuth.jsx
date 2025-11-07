@@ -35,14 +35,15 @@ export const AuthProvider= ({children})=>{
         })();
     },[]);
 
+    console.log(" called useAuth: ",user);
+
     const register = async(payload)=>{
         try{
             const response = await api.post('/api/auth/register',payload);
-            
+            const {accessToken,user} = response.data;
             decodeAndSetUser(accessToken);
-            setAccessToken(token);
-            setUser(userData);
-            return {accessToken,messege,user};
+            setAccessToken(accessToken);
+            return {accessToken,user};
         }catch(err){
             console.log("Error during registration:",err);
             throw err;
@@ -54,6 +55,7 @@ export const AuthProvider= ({children})=>{
             const response = await api.post('/api/auth/login',payload);
             const {accessToken,user} = response.data;
             decodeAndSetUser(accessToken);
+            setAccessToken(accessToken);
             return {accessToken,user};
         }catch(err){
             console.log("Error during login:",err);

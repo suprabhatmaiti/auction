@@ -34,6 +34,7 @@ function AuthForm({ isLoginPageOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
 
     if (!isLoginPageOpen && formData.password !== formData.confirmPassword) {
       dispatch({ type: SET_ERROR, value: "Passwords do not match" });

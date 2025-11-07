@@ -1,25 +1,43 @@
 import { CgClose, CgMenu } from "react-icons/cg";
 import { NavLink } from "react-router-dom";
 import {initialState, reducer} from './hooks/useAuthReducer'
-import { useReducer } from "react";
+import { useEffect, useReducer,useRef } from "react";
 import useAuth from "../../hooks/useAuth";
+
+
+
 
 function MobileMenu({ isLoggedIn, onLoginClick}){
     const [state,dispatch] = useReducer(reducer,initialState);
     const {logout}= useAuth();
+
+    const menuRef = useRef();
+
     const handleLoginClick = (e) => {
         onLoginClick();
         e.preventDefault();
         dispatch({type: "TOGGLE_MENU"});
     }
 
-    const handleLogoutClick = (e) => {
-        e.preventDefault();
-        dispatch({type: "TOGGLE_MENU"});
+    const handleOutsideClick = (e) => {
+        if (!menuRef.current?.contains(e.target)) {
+            dispatch({ type: "TOGGLE_MENU" });
+        }  
     }
+    
+    useEffect(() => {
+        if(!state.isMenuOpen) return;
+        document.addEventListener("pointerdown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("pointerdown", handleOutsideClick);
+        };
+    }, [state.isMenuOpen,handleOutsideClick]);
+
+    
     return(
         <>
-        
+
             <button
                 className="md:hidden p-1 text-gray-700 cursor-pointer"
                 onClick={() => dispatch({ type: "TOGGLE_MENU" }) }
@@ -27,7 +45,7 @@ function MobileMenu({ isLoggedIn, onLoginClick}){
                 {state.isMenuOpen ? <CgClose size={24} /> : <CgMenu size={24} />}
             </button>
             {state.isMenuOpen && (
-                <form className="absolute top-16 left-0 w-full bg-white shadow-md border-t border-gray-200 flex flex-col items-center py-4 space-y-3 md:hidden">
+                <form ref={menuRef} className="absolute top-16 left-0 w-full bg-white shadow-md border-t border-gray-200 flex flex-col items-center py-4 space-y-3 md:hidden">
                     <NavLink to="/" onClick={() => dispatch({ type: "TOGGLE_MENU" })} className="text-violet-700 font-medium hover:text-violet-900">
                         Home
                     </NavLink>
