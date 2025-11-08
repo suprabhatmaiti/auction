@@ -27,7 +27,7 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
   }, []);
 
   return (
-    <div className="hidden md:flex justify-end items-center gap -8 w-1/4">
+    <div>
       {isLoggedIn ? (
         <div className="relative flex items-center gap-4" ref={dropdownRef}>
           <CgProfile

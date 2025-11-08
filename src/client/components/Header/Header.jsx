@@ -22,10 +22,16 @@ function Header() {
   return (
     <div>
       <header className="relative w-full z-50 border-b border-gray-300 flex justify-between items-center h-15 p-4 bg-white shadow-md">
-        <LogoSection />
-        {isLoggedIn && <NavBar />}
-        <UserControlSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
-        <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+        <div className="md:w-1/4">
+          <LogoSection />
+        </div>
+        <div className="md:w-2/4">{isLoggedIn && <NavBar />}</div>
+        <div className="hidden md:flex justify-end items-center gap-8 w-1/4">
+          <UserControlSection isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+        </div>
+        <div className=" md:hidden flex justify-end items-center">
+          <MobileMenu isLoggedIn={isLoggedIn} onLoginClick={HandleLoginClick} />
+        </div>
       </header>
 
       <AuthPage
