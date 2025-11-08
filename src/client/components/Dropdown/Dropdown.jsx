@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
-function Dropdown({ options, placeholder, onSelect, selection, label, name }) {
+function Dropdown({ options, placeholder, onSelect, selection, label }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const divRef = useRef();
@@ -11,15 +11,15 @@ function Dropdown({ options, placeholder, onSelect, selection, label, name }) {
         setIsOpen(false);
       }
     };
-    document.addEventListener('click', handler, true);
+    document.addEventListener("click", handler, true);
     return () => {
-      document.removeEventListener('click', handler, true);
+      document.removeEventListener("click", handler, true);
     };
   }, []);
 
   const handleSelectOption = (item) => {
     setIsOpen(false);
-    onSelect(item);
+    onSelect(item.label);
   };
   const handleIsOpen = () => {
     setIsOpen(!isOpen);
@@ -39,13 +39,15 @@ function Dropdown({ options, placeholder, onSelect, selection, label, name }) {
 
   return (
     <div>
-      <label className="text-md font-medium text-gray-600">{label ? label : 'Label'}</label>
+      <label className="text-md font-medium text-gray-600">
+        {label ? label : "Label"}
+      </label>
       <div
         ref={divRef}
         className="relative border border-gray-300 rounded-md p-2 cursor-pointer w-full bg-gray-100 mt-1"
         onClick={handleIsOpen}
       >
-        <div>{selection ? selection : placeholder || 'Select...'}</div>
+        <div>{selection ? selection : placeholder || "Select..."}</div>
 
         {isOpen && (
           <div className="absolute z-10 mt-2 w-full border border-gray-200 bg-white rounded-md shadow">

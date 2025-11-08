@@ -1,55 +1,68 @@
+import { useState } from "react";
 import Input from "../../components/Input/Input";
+import useAuth from "../../hooks/useAuth";
+import { FiEdit3 } from "react-icons/fi";
+import { LiaEditSolid } from "react-icons/lia";
+import tiger from "../../assets/tiger.svg";
 
-function ProfileInformation(){
-    return(
-         <div className="w-full px-4">
-              <h2 className="text-lg md:text-xl font-bold mb-4 text-slate-700">Contact Information</h2>
+import Dropdown from "../../components/Dropdown/Dropdown";
 
-              <div className="md:flex gap-4 w-full md:mb-12 mb-8">
-                <div className="flex flex-col w-full mb-4 md:mb-0">
-                  <Input type='text' label='Email' />
-                </div>
-                <div className="flex flex-col w-full">
-                  <Input type='text' label='Phone Number' />
-                </div>
-              </div>
+function ProfileInformation() {
+  const { user } = useAuth();
 
-              <div className="border-b border-gray-400 pb-8">
-                  <h2 className="text-xl font-bold mb-4">Profile Information</h2>
-                    <div className="md:flex gap-4 w-full mb-4">
-                      <div className="flex flex-col w-full ">
-                        <Input label='Full Name' type='text' />
-                      </div>
-                      <div className="flex flex-col w-full">
-                        <Input label='User Name ' type='text' />
-                      </div>
-                    </div>
-                    <div className="md:flex gap-4 w-full">
-                      <div className="flex flex-col w-full">
-                        <label className="block text-sm font-medium text-gray-600 mb-1">Date of Birth</label>
-                        <input type="date" name="DOB" id="DOB" className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3" />
-                      </div>
-                      <div className="flex flex-col w-full">
-                        <label className="block text-sm font-medium text-gray-600 mb-1">Gender</label>
-                        <select className="bg-gray-100 rounded h-8 w-full focus:outline-none px-3">
-                          <option value="">Select</option>
-                          <option value="male">Male</option>
-                          <option value="female">Female</option>
-                          <option value="other">Other</option>
-                        </select>
-                      </div>
-                    </div>
-              </div>
-              <div className="flex gap-4 my-4 md:justify-end">
-                  <button className="bg-white hover:bg-gray-100 text-violet-600 md:px-6 px-2 md:py-3 py-1 text-sm md:text-base rounded-lg font-semibold shadow-md transition">
-                      Cancel
-                  </button>
-                  <button className="bg-violet-600 hover:bg-violet-700 text-white text-sm md:text-base md:px-6 px-2 md:py-3 py-1 rounded-lg font-semibold transition">
-                      Save Changes
-                  </button>
-              </div>
-            </div>
-    )
+  const [selection, setSelection] = useState(null);
+
+  const options = [
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "Others", value: "others" },
+  ];
+  const date = new Date(user.created_at);
+
+  return (
+    <div className="px-4 md:px-0 md:py-6">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 mb-8">
+        <div className="relative">
+          <img
+            src={tiger}
+            alt="Profile"
+            className="w-32 h-32 md:w-40 md:h-40 rounded-full object-cover border-4 border-violet-600"
+          />
+          <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full cursor-pointer hover:bg-gray-200">
+            <FiEdit3 className="size-5 text-gray-600" />
+          </div>
+        </div>
+        <div className="flex flex-col items-center md:items-start">
+          <div className="flex items-center gap-2 mb-2">
+            <h1 className="text-2xl font-bold">{user?.name || "Username"}</h1>
+            <LiaEditSolid className="size-5 text-gray-600 cursor-pointer hover:text-violet-600" />
+          </div>
+          <p className="text-gray-600 mb-1">{user?.email || "email"}</p>
+          <p className="text-gray-600">Member since: {date.toLocaleString()}</p>
+        </div>
+      </div>
+
+      <hr className="border-gray-300 mb-8" />
+
+      <div className="max-w-2xl mx-auto space-y-6">
+        <Input
+          label="Phone Number"
+          type="tel"
+          placeholder="Enter your phone number"
+        />
+        <Dropdown
+          options={options}
+          placeholder="Select Gender"
+          onSelect={setSelection}
+          selection={selection}
+          label="Gender"
+        />
+        <Input label="Address" type="text" placeholder="Enter your address" />
+        <Input label="City" type="text" placeholder="Enter your city" />
+        <Input label="Country" type="text" placeholder="Enter your country" />
+      </div>
+    </div>
+  );
 }
 
 export default ProfileInformation;

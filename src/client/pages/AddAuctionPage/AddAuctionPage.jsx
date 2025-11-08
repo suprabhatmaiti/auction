@@ -1,10 +1,13 @@
-import { useState, useReducer } from 'react';
-import Input from '../../components/Input/Input.jsx';
-import { RiImageAddLine } from 'react-icons/ri';
+import { useState, useReducer } from "react";
+import Input from "../../components/Input/Input.jsx";
+import { RiImageAddLine } from "react-icons/ri";
 
-import { initialState, useAuctionPageReducer } from './reducer/useAuctionPageReducer.js';
-import api from '../../utils/api.js';
-import Dropdown from '../../components/Dropdown/Dropdown.jsx';
+import {
+  initialState,
+  useAuctionPageReducer,
+} from "./reducer/useAuctionPageReducer.js";
+import api from "../../utils/api.js";
+import Dropdown from "../../components/Dropdown/Dropdown.jsx";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
@@ -15,14 +18,21 @@ function AddAuctionPage() {
     const file = event.target.files[0];
     console.log(URL.createObjectURL(file));
     if (file) {
-      dispatch({ type: 'SET_IMAGE', file: file });
+      dispatch({ type: "SET_IMAGE", file: file });
       setPreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { title, startingBid, imageFile, auctionEndTime, category, description } = state;
+    const {
+      title,
+      startingBid,
+      imageFile,
+      auctionEndTime,
+      category,
+      description,
+    } = state;
     if (
       !title.trim() ||
       !startingBid.trim() ||
@@ -30,34 +40,34 @@ function AddAuctionPage() {
       !auctionEndTime.trim() ||
       !category.trim()
     ) {
-      alert('Please fill all required fields and upload an image.');
+      alert("Please fill all required fields and upload an image.");
       return;
     }
 
     const formData = new FormData();
-    formData.append('title', title);
-    formData.append('description', description);
-    formData.append('category', category);
-    formData.append('start_price', startingBid);
-    formData.append('end_time', auctionEndTime);
-    formData.append('image', imageFile);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("start_price", startingBid);
+    formData.append("end_time", auctionEndTime);
+    formData.append("image", imageFile);
 
     try {
       setSubmitting(true);
-      const { data } = await api.post('/api/auction/create', formData, {
+      const { data } = await api.post("/api/auction/create", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
 
       alert(data.message);
-      console.log('Auction created:', data.auction);
-      dispatch({ type: 'RESET_FORM' });
+      console.log("Auction created:", data.auction);
+      dispatch({ type: "RESET_FORM" });
       setPreview(null);
     } catch (error) {
-      console.error('Error submitting auction:', error);
-      alert('Failed to submit auction. Please try again.');
+      console.error("Error submitting auction:", error);
+      alert("Failed to submit auction. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -65,19 +75,19 @@ function AddAuctionPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    dispatch({ type: 'UPDATE_FIELD', field: name, value });
+    dispatch({ type: "UPDATE_FIELD", field: name, value });
   };
   const handleDropdownChange = (value, name) => {
-    dispatch({ type: 'UPDATE_FIELD', field: name, value: value });
+    dispatch({ type: "UPDATE_FIELD", field: name, value: value });
   };
 
   const categories = [
-    { value: 'antiques', label: 'Antiques' },
-    { value: 'electronics', label: 'Electronics' },
-    { value: 'vehicles', label: 'Vehicles' },
-    { value: 'art', label: 'Art' },
-    { value: 'jewelry', label: 'Jewelry' },
-    { value: 'collectibles', label: 'Collectibles' },
+    { value: "antiques", label: "Antiques" },
+    { value: "electronics", label: "Electronics" },
+    { value: "vehicles", label: "Vehicles" },
+    { value: "art", label: "Art" },
+    { value: "jewelry", label: "Jewelry" },
+    { value: "collectibles", label: "Collectibles" },
   ];
 
   return (
@@ -88,7 +98,9 @@ function AddAuctionPage() {
       <div className="bg-white shadow-md rounded-2xl w-full max-w-3xl p-6 md:p-10">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold mb-1">Submit Item for Auction</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-1">
+            Submit Item for Auction
+          </h2>
           <p className="text-gray-600 text-sm md:text-base">
             Fill out the form below to list your item
           </p>
@@ -121,7 +133,7 @@ function AddAuctionPage() {
             label="Category"
             name="category"
             placeholder="Select Category"
-            onSelect={(value) => handleDropdownChange(value.label, 'category')}
+            onSelect={(value) => handleDropdownChange(value, "category")}
             selection={state.category}
           />
 
@@ -186,7 +198,7 @@ function AddAuctionPage() {
             className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200"
             type="submit"
           >
-            {submitting ? 'Submitting...' : 'Submit for Auction '}
+            {submitting ? "Submitting..." : "Submit for Auction "}
           </button>
         </div>
       </div>

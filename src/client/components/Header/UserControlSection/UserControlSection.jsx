@@ -1,7 +1,7 @@
-import { CgProfile, CgLogOut, CgBell } from 'react-icons/cg';
-import { FiSettings, FiHelpCircle, FiHeart, FiClock } from 'react-icons/fi';
-import { useState, useEffect, useRef } from 'react';
-import useAuth from '../../../hooks/useAuth';
+import { CgProfile, CgLogOut, CgBell } from "react-icons/cg";
+import { FiSettings, FiHelpCircle, FiHeart, FiClock } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import useAuth from "../../../hooks/useAuth";
 
 function UserControlSection({ isLoggedIn, onLoginClick }) {
   const { user, logout } = useAuth();
@@ -10,8 +10,14 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
 
   const handleClick = () => setIsOpen((prev) => !prev);
 
-  const handleLogoutClick = (e) => {
-    logout();
+  const handleLogoutClick = async (e) => {
+    try {
+      await logout();
+      alert("Logged out successfully.");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      alert("Failed to logout. Please try again.");
+    }
     setIsOpen(false);
   };
 
@@ -22,8 +28,8 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -37,7 +43,7 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
 
           {/* Dropdown */}
           <div
-            className={`${isOpen ? 'flex' : 'hidden'} absolute right-0 top-8 
+            className={`${isOpen ? "flex" : "hidden"} absolute right-0 top-8 
               bg-white border border-gray-300 rounded-lg shadow-lg 
               flex-col gap-1 w-52 py-2 transition-all duration-200 z-50`}
           >
