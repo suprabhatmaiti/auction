@@ -1,74 +1,94 @@
-import { useState, useReducer } from "react";
-import Input from "../../components/Input/Input.jsx";
-import { RiImageAddLine } from "react-icons/ri";
+import { useState, useReducer } from 'react';
+import Input from '../../components/Input/Input.jsx';
+import { RiImageAddLine } from 'react-icons/ri';
 
-import { initialState, useAuctionPageReducer } from "./reducer/useAuctionPageReducer.js";  
-import api from "../../utils/api.js";
+import { initialState, useAuctionPageReducer } from './reducer/useAuctionPageReducer.js';
+import api from '../../utils/api.js';
+import Dropdown from '../../components/Dropdown/Dropdown.jsx';
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [state, dispatch] = useReducer(useAuctionPageReducer, initialState); 
+  const [state, dispatch] = useReducer(useAuctionPageReducer, initialState);
 
   const handleSetPreview = (event) => {
     const file = event.target.files[0];
+    console.log(URL.createObjectURL(file));
     if (file) {
-      dispatch({ type: "SET_IMAGE", file: file });
+      dispatch({ type: 'SET_IMAGE', file: file });
       setPreview(URL.createObjectURL(file));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const { title, startingBid, imageFile, auctionEndTime, category, description } = state;
-    if (!title.trim() || !startingBid.trim() || !imageFile || !auctionEndTime.trim() || !category.trim()) {
-      alert("Please fill all required fields and upload an image.");
+    if (
+      !title.trim() ||
+      !startingBid.trim() ||
+      !imageFile ||
+      !auctionEndTime.trim() ||
+      !category.trim()
+    ) {
+      alert('Please fill all required fields and upload an image.');
       return;
     }
 
     const formData = new FormData();
-    formData.append("title", title);
-    formData.append("startingBid", startingBid);
-    formData.append("image", imageFile);
-    formData.append("auctionEndTime", auctionEndTime);
-    formData.append("category", category);
-    formData.append("description", description);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('category', category);
+    formData.append('start_price', startingBid);
+    formData.append('end_time', auctionEndTime);
+    formData.append('image', imageFile);
 
     try {
       setSubmitting(true);
-      const {data} = api.post("/api/auction/create", formData, {
+      const { data } = await api.post('/api/auction/create', formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
         withCredentials: true,
       });
 
       alert(data.message);
-      dispatch({ type: "RESET_FORM" });
+      console.log('Auction created:', data.auction);
+      dispatch({ type: 'RESET_FORM' });
       setPreview(null);
-    }catch (error) {
-      console.error("Error submitting auction:", error);
-      alert("Failed to submit auction. Please try again.");
+    } catch (error) {
+      console.error('Error submitting auction:', error);
+      alert('Failed to submit auction. Please try again.');
     } finally {
       setSubmitting(false);
     }
-  }
+  };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    dispatch({ type: "UPDATE_FIELD", field: name, value });
-  }
+    dispatch({ type: 'UPDATE_FIELD', field: name, value });
+  };
+  const handleDropdownChange = (value, name) => {
+    dispatch({ type: 'UPDATE_FIELD', field: name, value: value });
+  };
 
-
+  const categories = [
+    { value: 'antiques', label: 'Antiques' },
+    { value: 'electronics', label: 'Electronics' },
+    { value: 'vehicles', label: 'Vehicles' },
+    { value: 'art', label: 'Art' },
+    { value: 'jewelry', label: 'Jewelry' },
+    { value: 'collectibles', label: 'Collectibles' },
+  ];
 
   return (
-    <form className="min-h-screen bg-gray-100 p-4 md:p-8 flex flex-col items-center" onSubmit={handleSubmit}>
+    <form
+      className="min-h-screen bg-gray-100 p-4 md:p-8 flex flex-col items-center"
+      onSubmit={handleSubmit}
+    >
       <div className="bg-white shadow-md rounded-2xl w-full max-w-3xl p-6 md:p-10">
         {/* Header */}
         <div className="text-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bold mb-1">
-            Submit Item for Auction
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-1">Submit Item for Auction</h2>
           <p className="text-gray-600 text-sm md:text-base">
             Fill out the form below to list your item
           </p>
@@ -78,11 +98,11 @@ function AddAuctionPage() {
         <div className="flex flex-col gap-6">
           <Input
             label="Item Name"
-            name ="title"
+            name="title"
             type="text"
             placeholder="e.g., Vintage Leather Jacket"
             value={state.title}
-            onChange={handleChange} 
+            onChange={handleInputChange}
           />
 
           <Input
@@ -93,38 +113,38 @@ function AddAuctionPage() {
             placeholder="Describe your item in detail including condition, age, and unique features."
             className="h-24"
             value={state.description}
-            onChange={handleChange}
+            onChange={handleInputChange}
           />
 
-          <Input 
-            label="Category" 
+          <Dropdown
+            options={categories}
+            label="Category"
             name="category"
-            type="text" 
-            placeholder="e.g., Antiques" 
-            value ={state.category} 
-            onChange={handleChange}
+            placeholder="Select Category"
+            onSelect={(value) => handleDropdownChange(value.label, 'category')}
+            selection={state.category}
           />
 
           {/* Responsive Row for Price & Duration */}
           <div className="flex flex-col md:flex-row gap-6">
             <div className="w-full">
-              <Input 
-                label="Starting Bid" 
-                type="text" 
+              <Input
+                label="Starting Bid"
+                type="text"
                 name="startingBid"
-                placeholder="e.g., 50.00" 
-                value={state.startingBid} 
-                onChange={handleChange}
+                placeholder="e.g., 50.00"
+                value={state.startingBid}
+                onChange={handleInputChange}
               />
             </div>
             <div className="w-full">
-              <Input 
-                label="Auction End Time" 
-                type="time" 
+              <Input
+                label="Auction End Time"
+                type="datetime-local"
                 name="auctionEndTime"
-                placeholder="Select end time" 
-                value={state.auctionEndTime} 
-                onChange={handleChange}
+                placeholder="Select end time"
+                value={state.auctionEndTime}
+                onChange={handleInputChange}
               />
             </div>
           </div>
@@ -163,10 +183,10 @@ function AddAuctionPage() {
 
           {/* Submit Button */}
           <button
-           className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200"
+            className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white w-full px-6 py-3 rounded-lg font-semibold transition duration-200"
             type="submit"
           >
-            Submit for Auction
+            {submitting ? 'Submitting...' : 'Submit for Auction '}
           </button>
         </div>
       </div>

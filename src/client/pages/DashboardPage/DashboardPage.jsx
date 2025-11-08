@@ -1,17 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { CgBell } from "react-icons/cg";
-import NotificationPanel from "./NotificationPanel";
-import QuickActionButtons from "./QuickActionButtons";
-import QuickLinksPanel from "./QuickLinksPanel";
-import OverviewPanel from "./OverviewPanel";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { CgBell } from 'react-icons/cg';
+import NotificationPanel from './NotificationPanel';
+import QuickActionButtons from './QuickActionButtons';
+import QuickLinksPanel from './QuickLinksPanel';
+import OverviewPanel from './OverviewPanel';
 
 function DashboardPage() {
   const navigate = useNavigate();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
-  const handleAddAuctionClick = () => navigate("/add-auction");
-  const handleAuctionListClick = () => navigate("/auction-list");
+  const handleAddAuctionClick = () => navigate('/add-auction');
+  const handleAuctionListClick = () => navigate('/auction-list');
 
   return (
     <div className="min-h-screen bg-gray-100 pt-8 px-4 md:px-12 flex flex-col lg:flex-row gap-8 relative">

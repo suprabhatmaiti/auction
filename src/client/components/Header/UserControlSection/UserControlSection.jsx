@@ -1,7 +1,7 @@
-import { CgProfile, CgLogOut, CgBell } from "react-icons/cg";
-import { FiSettings, FiHelpCircle, FiHeart, FiClock } from "react-icons/fi";
-import { useState, useEffect, useRef } from "react";
-import useAuth from "../../../hooks/useAuth";
+import { CgProfile, CgLogOut, CgBell } from 'react-icons/cg';
+import { FiSettings, FiHelpCircle, FiHeart, FiClock } from 'react-icons/fi';
+import { useState, useEffect, useRef } from 'react';
+import useAuth from '../../../hooks/useAuth';
 
 function UserControlSection({ isLoggedIn, onLoginClick }) {
   const { user, logout } = useAuth();
@@ -17,18 +17,17 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      
       if (!dropdownRef.current?.contains(event.target)) {
         setIsOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   return (
-    <div className="hidden md:flex justify-around items-center gap-8">
+    <div className="hidden md:flex justify-end items-center gap -8 w-1/4">
       {isLoggedIn ? (
         <div className="relative flex items-center gap-4" ref={dropdownRef}>
           <CgProfile
@@ -38,7 +37,7 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
 
           {/* Dropdown */}
           <div
-            className={`${isOpen ? "flex" : "hidden"} absolute right-0 top-8 
+            className={`${isOpen ? 'flex' : 'hidden'} absolute right-0 top-8 
               bg-white border border-gray-300 rounded-lg shadow-lg 
               flex-col gap-1 w-52 py-2 transition-all duration-200 z-50`}
           >
