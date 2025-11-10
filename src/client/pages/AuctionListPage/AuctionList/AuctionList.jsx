@@ -1,11 +1,52 @@
-import { RxCross1 } from 'react-icons/rx';
-import Card from '../../../components/Card/Card';
+import { RxCross1 } from "react-icons/rx";
+import Card from "../../../components/Card/Card";
+import api from "../../../utils/api";
+import { data } from "react-router-dom";
+import { use, useEffect, useState } from "react";
 
 function AuctionList({ selectedCategories }) {
-  const activeCategories = Object.keys(selectedCategories).filter((key) => selectedCategories[key]);
+  const [auctions, setAuctions] = useState([]);
+
+  const activeCategories = Object.keys(selectedCategories).filter(
+    (key) => selectedCategories[key]
+  );
+  useEffect(() => {
+    const fetchAuctions = async () => {
+      try {
+        const { data } = await api.get("/api/auction/get-auctions", {
+          params: {
+            categories: activeCategories,
+          },
+          withCredentials: true,
+        });
+        setAuctions(data.auctions);
+        console.log("Fetched auctions:", data.auctions);
+      } catch (error) {
+        console.log("Error fetching auctions:", error);
+      }
+    };
+    fetchAuctions();
+  }, []);
+
+  const BASE_URL = "http://localhost:3000";
+
+  const renderedAuctions = auctions.map(
+    (auction) => (
+      console.log("Auctions state:", `${BASE_URL}/${auction.image_url}`),
+      (
+        <Card
+          key={auction.id}
+          image={`${BASE_URL}/${auction.image_url.replace(/\\/g, "/")}`}
+          name={auction.title}
+          currentbid={auction.current_price}
+          button="Bid Now"
+        />
+      )
+    )
+  );
 
   const handleRemoveCategory = (category) => {
-    console.log('Remove category:', category);
+    console.log("Remove category:", category);
     // Implement actual removal logic here
   };
 
@@ -26,16 +67,20 @@ function AuctionList({ selectedCategories }) {
     <div className="px-4 md:px-8 py-6 ">
       {/* Header */}
       <div className="mb-4">
-        <h2 className="font-bold text-xl md:text-2xl mb-1">All Active Auctions</h2>
+        <h2 className="font-bold text-xl md:text-2xl mb-1">
+          All Active Auctions
+        </h2>
         <p className="text-gray-600 text-sm md:text-base">
           Browse through our curated collection of items up for auction
         </p>
       </div>
 
       {/* Selected Categories */}
-      <div className="flex flex-wrap gap-2 md:gap-4 mb-6">{renderedSelectedCategories}</div>
+      <div className="flex flex-wrap gap-2 md:gap-4 mb-6">
+        {renderedSelectedCategories}
+      </div>
 
-      {/* Auction Cards using Flexbox */}
+      {/* Auction Cards using Flexbox
       <div className="flex flex-wrap  gap-6">
         <Card button="Bid Now" />
         <Card button="Bid Now" />
@@ -47,7 +92,8 @@ function AuctionList({ selectedCategories }) {
         <Card button="Bid Now" />
         <Card button="Bid Now" />
         <Card button="Bid Now" />
-      </div>
+      </div> */}
+      <div className="flex flex-wrap  gap-6">{renderedAuctions}</div>
 
       {/* Load More Button */}
       <div className="flex justify-center mt-8 pb-20">

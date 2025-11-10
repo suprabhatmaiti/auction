@@ -14,6 +14,6 @@ router.post(
   uploadProductImages.single("image"),
   createAuction
 );
-router.get("/get-auctions", getAuctions);
+router.get("/get-auctions", verifyToken, getAuctions);
 
 export default router;

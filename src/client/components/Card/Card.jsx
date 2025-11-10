@@ -2,13 +2,14 @@ import React from "react";
 import tigerImage from "../../assets/tiger.svg";
 
 function Card({
-  image = tigerImage,
+  image = "" || tigerImage,
   name = "Tiger",
   currentbid = 90,
   button,
   className = "",
   ...rest
 }) {
+  console.log("Card component image prop:", image);
   return (
     <div
       {...rest}
@@ -32,8 +33,7 @@ function Card({
         </h3>
 
         <p className="font-bold text-xs sm:text-sm md:text-base">
-          Current Bid:{" "}
-          <span className="text-violet-600">₹{currentbid}</span>
+          Current Bid: <span className="text-violet-600">₹{currentbid}</span>
         </p>
 
         {button && (
