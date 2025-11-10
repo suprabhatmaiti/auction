@@ -79,20 +79,7 @@ function AuctionList({ selectedCategories }) {
       <div className="flex flex-wrap gap-2 md:gap-4 mb-6">
         {renderedSelectedCategories}
       </div>
-
-      {/* Auction Cards using Flexbox
-      <div className="flex flex-wrap  gap-6">
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-        <Card button="Bid Now" />
-      </div> */}
+      {/* Auction Cards */}
       <div className="flex flex-wrap  gap-6">{renderedAuctions}</div>
 
       {/* Load More Button */}

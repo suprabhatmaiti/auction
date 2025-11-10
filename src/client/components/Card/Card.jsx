@@ -9,7 +9,6 @@ function Card({
   className = "",
   ...rest
 }) {
-  console.log("Card component image prop:", image);
   return (
     <div
       {...rest}

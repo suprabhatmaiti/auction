@@ -1,4 +1,6 @@
+import sharp from "sharp";
 import { pool } from "../config/db.js";
+import fs from "fs";
 
 export const createAuction = async (req, res) => {
   try {
@@ -8,9 +10,21 @@ export const createAuction = async (req, res) => {
     if (!title || !category || !start_price || !end_time) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+
     if (!req.file) {
       return res.status(400).json({ error: "Image is required" });
     }
+
+    const originalPath = req.file.path;
+    const compressedPath = originalPath.replace(/(\.\w+)$/, "_compressed$1");
+
+    await sharp(originalPath)
+      .resize(1000)
+      .jpeg({ quality: 80 })
+      .toFile(compressedPath);
+
+    fs.unlinkSync(originalPath); // Delete original file
+    const imageUrl = compressedPath;
 
     const startPrice = Number(start_price);
     if (Number.isNaN(startPrice) || startPrice <= 0) {
@@ -37,8 +51,6 @@ export const createAuction = async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const imageUrl = req.file.path;
-
     const insertSql = `
       INSERT INTO auctions
         (title, description, image_url, category, start_price, current_price, seller_id, start_time, end_time, is_active)
@@ -50,7 +62,7 @@ export const createAuction = async (req, res) => {
       title.trim(),
       (description || "").trim(),
       imageUrl,
-      category.trim(),
+      category.trim().toLowerCase(),
       startPrice,
       startPrice,
       sellerId,
@@ -124,7 +136,7 @@ export const getAuctions = async (req, res) => {
     if (categories) {
       const cats = categories
         .split(",")
-        .map((c) => c.trim())
+        .map((c) => c.trim().toLowerCase())
         .filter(Boolean);
 
       if (cats.length) {
