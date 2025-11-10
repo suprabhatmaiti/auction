@@ -2,11 +2,13 @@ import { CgProfile, CgLogOut, CgBell } from "react-icons/cg";
 import { FiSettings, FiHelpCircle, FiHeart, FiClock } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function UserControlSection({ isLoggedIn, onLoginClick }) {
   const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleClick = () => setIsOpen((prev) => !prev);
 
@@ -32,6 +34,11 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const onSettingClick = () => {
+    setIsOpen(false);
+    navigate("/profile");
+  };
+
   return (
     <div>
       {isLoggedIn ? (
@@ -52,7 +59,10 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
               <span className="font-semibold">{user?.name}</span>
             </div>
 
-            <div className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200">
+            <div
+              onClick={onSettingClick}
+              className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200"
+            >
               <FiSettings className="size-5 text-gray-600" />
               <span className="font-medium">Settings</span>
             </div>
@@ -67,10 +77,10 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
               <span className="font-medium">Saved Items</span>
             </div>
 
-            <div className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200">
+            {/* <div className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200">
               <FiClock className="size-5 text-gray-600" />
               <span className="font-medium">Recent Activity</span>
-            </div>
+            </div> */}
 
             <div className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200">
               <FiHelpCircle className="size-5 text-gray-600" />

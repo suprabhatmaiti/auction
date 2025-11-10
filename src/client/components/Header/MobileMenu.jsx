@@ -1,8 +1,8 @@
-import { CgClose, CgMenu } from 'react-icons/cg';
-import { NavLink } from 'react-router-dom';
-import { initialState, reducer } from './hooks/useAuthReducer';
-import { useEffect, useReducer, useRef } from 'react';
-import useAuth from '../../hooks/useAuth';
+import { CgClose, CgMenu } from "react-icons/cg";
+import { NavLink } from "react-router-dom";
+import { initialState, reducer } from "./hooks/useAuthReducer";
+import { useEffect, useReducer, useRef } from "react";
+import useAuth from "../../hooks/useAuth";
 
 function MobileMenu({ isLoggedIn, onLoginClick }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -17,34 +17,33 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
 
   const handleOutsideClick = (e) => {
     if (!menuRef.current?.contains(e.target)) {
-      dispatch({ type: 'TOGGLE_MENU' });
+      dispatch({ type: "TOGGLE_MENU" });
     }
   };
 
   useEffect(() => {
     if (!state.isMenuOpen) return;
-    document.addEventListener('pointerdown', handleOutsideClick);
+    document.addEventListener("pointerdown", handleOutsideClick);
 
     return () => {
-      document.removeEventListener('pointerdown', handleOutsideClick);
+      document.removeEventListener("pointerdown", handleOutsideClick);
     };
   }, [state.isMenuOpen, handleOutsideClick]);
 
   const handleLogoutClick = async (e) => {
     e.preventDefault();
-    console.log('Logging out...');
     try {
       await logout();
-      alert('Logged out successfully.');
-      dispatch({ type: 'TOGGLE_MENU' });
+      alert("Logged out successfully.");
+      dispatch({ type: "TOGGLE_MENU" });
     } catch (error) {
-      console.error('Logout failed:', error);
-      alert('Failed to logout. Please try again.');
+      console.error("Logout failed:", error);
+      alert("Failed to logout. Please try again.");
     }
   };
 
   const onNavLinkClick = () => {
-    dispatch({ type: 'TOGGLE_MENU' });
+    dispatch({ type: "TOGGLE_MENU" });
   };
 
   return (
@@ -58,7 +57,10 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
         </button>
       ) : (
         <div ref={menuRef}>
-          <button className="md:hidden p-1 text-gray-700 cursor-pointer" onClick={onNavLinkClick}>
+          <button
+            className="md:hidden p-1 text-gray-700 cursor-pointer"
+            onClick={onNavLinkClick}
+          >
             {state.isMenuOpen ? <CgClose size={24} /> : <CgMenu size={24} />}
           </button>
           {state.isMenuOpen && (
