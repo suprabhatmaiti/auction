@@ -1,13 +1,14 @@
-import Dropdown from '../components/Dropdown/Dropdown';
-import { useState } from 'react';
+import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
+import Dropdown from "../components/Dropdown/Dropdown";
+import { useState } from "react";
 
 function DropdownPage() {
   const [selection, setSelection] = useState(null);
 
   const options = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
-    { label: 'Others', value: 'others' },
+    { label: "Male", value: "male" },
+    { label: "Female", value: "female" },
+    { label: "Others", value: "others" },
   ];
   return (
     <div className="min-h-screen">
@@ -18,6 +19,9 @@ function DropdownPage() {
           onSelect={setSelection}
           selection={selection}
         />
+      </div>
+      <div>
+        <Breadcrumb />
       </div>
     </div>
   );
