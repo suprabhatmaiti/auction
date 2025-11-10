@@ -2,7 +2,6 @@ import { pool } from "../config/db.js";
 
 export const createAuction = async (req, res) => {
   try {
-    // Expecting multer.single("image") before this handler
     const { title, description, category, start_price, end_time } = req.body;
 
     // Basic validations
@@ -22,6 +21,16 @@ export const createAuction = async (req, res) => {
     if (Number.isNaN(endTime.getTime())) {
       return res.status(400).json({ error: "Invalid auction end time" });
     }
+
+    const now = new Date();
+
+    if (endTime <= now) {
+      return res.status(400).json({
+        error:
+          "End time must be a future date/time greater than the current time.",
+      });
+    }
+    console.log("endTime:", endTime.toLocaleString());
 
     const sellerId = req.user?.id;
     if (!sellerId) {
@@ -43,19 +52,21 @@ export const createAuction = async (req, res) => {
       imageUrl,
       category.trim(),
       startPrice,
-      startPrice, // current_price starts equal to start_price
+      startPrice,
       sellerId,
       endTime,
     ];
 
     const { rows } = await pool.query(insertSql, params);
 
+    console.log("createAuction success:", rows[0]);
+
     return res.status(201).json({
       message: "Auction created successfully",
       auction: rows[0],
     });
   } catch (error) {
-    console.error("createAuction error:", error);
+    console.error("create auction error:", error);
     return res
       .status(500)
       .json({ error: "Server error during auction creation" });
@@ -64,29 +75,132 @@ export const createAuction = async (req, res) => {
 
 export const getAuctions = async (req, res) => {
   try {
-    const { rows } = await pool.query(
-      "SELECT * FROM auctions WHERE is_active = true ORDER BY created_at DESC"
-    );
-    console.log("Fetched auctions:", rows);
-    res.status(200).json({ auctions: rows });
+    const {
+      categories = "",
+      startPrice = "",
+      endPrice = "",
+      search = "",
+      sortBy: rawSortBy = "newest",
+      order = "desc",
+      page = "1",
+      pageSize = "10",
+      activeOnly = "true",
+    } = req.query;
+
+    const sortBy = String(rawSortBy).trim();
+
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    // cap at 100, floor at 1
+    const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
+    const offset = (pageNum - 1) * sizeNum;
+
+    const params = [];
+    const where = [];
+
+    // price range
+    if (startPrice !== "") {
+      params.push(Number(startPrice));
+      where.push(`current_price >= $${params.length}`);
+    }
+    if (endPrice !== "") {
+      params.push(Number(endPrice));
+      where.push(`current_price <= $${params.length}`);
+    }
+
+    // active only
+    if (activeOnly === "true") {
+      where.push("is_active = true");
+      where.push("end_time > NOW()");
+    }
+
+    // search (reuse same placeholder for both columns is OK)
+    if (search) {
+      params.push(`%${search.trim()}%`);
+      const idx = params.length;
+      where.push(`(title ILIKE $${idx} OR description ILIKE $${idx})`);
+    }
+
+    // categories (PUSH ARRAY ONCE, then = ANY($n))
+    if (categories) {
+      const cats = categories
+        .split(",")
+        .map((c) => c.trim())
+        .filter(Boolean);
+
+      if (cats.length) {
+        params.push(cats);
+        where.push(`category = ANY($${params.length})`);
+      }
+    }
+
+    const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
+
+    // sorting
+    let orderBySql = "ORDER BY start_time DESC";
+    if (sortBy === "price") {
+      orderBySql = `ORDER BY current_price ${
+        order.toUpperCase() === "ASC" ? "ASC" : "DESC"
+      } NULLS LAST`;
+    } else if (sortBy === "end_time") {
+      orderBySql = `ORDER BY end_time ${
+        order.toUpperCase() === "ASC" ? "ASC" : "DESC"
+      }`;
+    }
+
+    // data query (uses LIMIT/OFFSET at the end)
+    const dataSql = `
+      SELECT id, title, description, image_url, category,
+             start_price, current_price, seller_id,
+             start_time, end_time, is_active
+      FROM auctions
+      ${whereSql}
+      ${orderBySql}
+      LIMIT $${params.length + 1} OFFSET $${params.length + 2}
+    `;
+    const dataParams = [...params, sizeNum, offset];
+
+    // count query (same filters, no pagination)
+    const countSql = `
+      SELECT COUNT(*)::int AS total
+      FROM auctions
+      ${whereSql}
+    `;
+
+    const [dataResult, countResult] = await Promise.all([
+      pool.query(dataSql, dataParams),
+      pool.query(countSql, params),
+    ]);
+
+    const totalAuctions = countResult.rows[0]?.total ?? 0;
+    const totalPages = Math.max(1, Math.ceil(totalAuctions / sizeNum));
+
+    res.status(200).json({
+      auctions: dataResult.rows,
+      pagination: {
+        totalAuctions,
+        totalPages,
+        currentPage: pageNum,
+        pageSize: sizeNum,
+      },
+    });
   } catch (error) {
     console.error("getAuctions error:", error);
     res.status(500).json({ error: "Server error fetching auctions" });
   }
 };
 
-export const getAuctionById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const { rows } = await pool.query("SELECT * FROM auctions WHERE id = $1", [
-      id,
-    ]);
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Auction not found" });
-    }
-    res.status(200).json({ auction: rows[0] });
-  } catch (error) {
-    console.error("getAuctionById error:", error);
-    res.status(500).json({ error: "Server error fetching auction" });
-  }
-};
+// export const getAuctionById = async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const { rows } = await pool.query("SELECT * FROM auctions WHERE id = $1", [
+//       id,
+//     ]);
+//     if (rows.length === 0) {
+//       return res.status(404).json({ error: "Auction not found" });
+//     }
+//     res.status(200).json({ auction: rows[0] });
+//   } catch (error) {
+//     console.error("getAuctionById error:", error);
+//     res.status(500).json({ error: "Server error fetching auction" });
+//   }
+// };
