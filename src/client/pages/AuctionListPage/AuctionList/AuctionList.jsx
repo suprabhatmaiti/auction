@@ -1,8 +1,7 @@
 import { RxCross1 } from "react-icons/rx";
 import Card from "../../../components/Card/Card";
 import api from "../../../utils/api";
-import { data } from "react-router-dom";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 function AuctionList({ selectedCategories }) {
   const [auctions, setAuctions] = useState([]);
@@ -30,20 +29,17 @@ function AuctionList({ selectedCategories }) {
 
   const BASE_URL = "http://localhost:3000";
 
-  const renderedAuctions = auctions.map(
-    (auction) => (
-      console.log("Auctions state:", `${BASE_URL}/${auction.image_url}`),
-      (
-        <Card
-          key={auction.id}
-          image={`${BASE_URL}/${auction.image_url.replace(/\\/g, "/")}`}
-          name={auction.title}
-          currentbid={auction.current_price}
-          button="Bid Now"
-        />
-      )
-    )
-  );
+  const renderedAuctions = auctions.map((auction) => (
+    <div key={auction.id} className="w-full sm:w-[48%] md:w-[32%] lg:w-[23%]">
+      <Card
+        key={auction.id}
+        image={`${BASE_URL}/${auction.image_url.replace(/\\/g, "/")}`}
+        name={auction.title}
+        currentbid={auction.current_price}
+        button="Bid Now"
+      />
+    </div>
+  ));
 
   const handleRemoveCategory = (category) => {
     console.log("Remove category:", category);

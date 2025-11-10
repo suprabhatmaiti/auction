@@ -19,7 +19,10 @@ export const createAuction = async (req, res) => {
     const compressedPath = originalPath.replace(/(\.\w+)$/, "_compressed$1");
 
     await sharp(originalPath)
-      .resize(1000)
+      .resize(800, 800, {
+        fit: sharp.fit.inside,
+        withoutEnlargement: true,
+      })
       .jpeg({ quality: 80 })
       .toFile(compressedPath);
 
