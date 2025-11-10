@@ -60,14 +60,15 @@ function AddAuctionPage() {
         },
         withCredentials: true,
       });
-
+      console.log("Auction created:", data);
       alert(data.message);
-      console.log("Auction created:", data.auction);
       dispatch({ type: "RESET_FORM" });
       setPreview(null);
     } catch (error) {
-      console.error("Error submitting auction:", error);
-      alert("Failed to submit auction. Please try again.");
+      console.log("Error submitting auction:", error);
+      const messege =
+        error.response?.data?.error || "Failed to submit auction.";
+      alert(messege);
     } finally {
       setSubmitting(false);
     }
