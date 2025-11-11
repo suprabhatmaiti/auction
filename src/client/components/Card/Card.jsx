@@ -12,7 +12,7 @@ function Card({
   return (
     <div
       {...rest}
-      className={`flex flex-col rounded-2xl shadow-lg overflow-hidden 
+      className={`flex flex-col rounded-2xl shadow-lg overflow-hidden hover:shadow-xl 
                   cursor-pointer active:shadow-xl bg-white
                   ${className}`}
     >

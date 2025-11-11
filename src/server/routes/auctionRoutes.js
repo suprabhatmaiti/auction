@@ -15,5 +15,6 @@ router.post(
   createAuction
 );
 router.get("/get-auctions", verifyToken, getAuctions);
+// router.get("/get-auction/:id", verifyToken, getAuctionsById);
 
 export default router;

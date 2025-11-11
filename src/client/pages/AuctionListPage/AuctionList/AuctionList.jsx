@@ -5,32 +5,61 @@ import { useEffect, useState } from "react";
 
 function AuctionList({ selectedCategories }) {
   const [auctions, setAuctions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const activeCategories = Object.keys(selectedCategories).filter(
-    (key) => selectedCategories[key]
-  );
+  const activeCategories = Object.keys(selectedCategories)
+    .filter((key) => selectedCategories[key])
+    .join(",");
+
+  useEffect(() => {
+    setAuctions([]);
+    setPage(1);
+    setTotalPages(1);
+  }, [activeCategories]);
+
   useEffect(() => {
     const fetchAuctions = async () => {
       try {
+        setLoading(true);
         const { data } = await api.get("/api/auction/get-auctions", {
           params: {
             categories: activeCategories,
+            activeOnly: true,
+            page,
+            pageSize: 12,
           },
           withCredentials: true,
         });
-        setAuctions(data.auctions);
+        const newItems = data?.auctions || [];
+        const pg = data?.pagination || {};
+        setAuctions((prev) => (page === 1 ? newItems : [...prev, ...newItems]));
+        if (pg.currentPage !== page) {
+          setPage(pg.currentPage);
+        }
+        setTotalPages(pg.totalPages || 1);
+        setLoading(false);
         console.log("Fetched auctions:", data.auctions);
       } catch (error) {
         console.log("Error fetching auctions:", error);
       }
     };
     fetchAuctions();
-  }, []);
+  }, [page, activeCategories]);
+
+  const hasMore = page < totalPages;
+
+  const handleLoadMore = () => {
+    if (hasMore && !loading) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   const BASE_URL = "http://localhost:3000";
 
   const renderedAuctions = auctions.map((auction) => (
-    <div key={auction.id} className="w-full sm:w-[48%] md:w-[32%] lg:w-[23%]">
+    <div key={auction.id} className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]">
       <Card
         key={auction.id}
         image={`${BASE_URL}/${auction.image_url.replace(/\\/g, "/")}`}
@@ -43,10 +72,17 @@ function AuctionList({ selectedCategories }) {
 
   const handleRemoveCategory = (category) => {
     console.log("Remove category:", category);
-    // Implement actual removal logic here
+    if (selectedCategories[category]) {
+      selectedCategories[category] = false;
+      setAuctions([...auctions]);
+    }
   };
 
-  const renderedSelectedCategories = activeCategories.map((category) => (
+  const activeCategoriesList = activeCategories
+    ? activeCategories.split(",")
+    : [];
+
+  const renderedSelectedCategories = activeCategoriesList.map((category) => (
     <div
       key={category}
       className="bg-violet-300 rounded-xl px-3 py-1 flex justify-center items-center gap-1 cursor-pointer"
@@ -76,12 +112,17 @@ function AuctionList({ selectedCategories }) {
         {renderedSelectedCategories}
       </div>
       {/* Auction Cards */}
-      <div className="flex flex-wrap  gap-6">{renderedAuctions}</div>
+      <div className="flex flex-wrap  gap-6">
+        {auctions.length === 0 ? "No Auctions Found" : renderedAuctions}
+      </div>
 
       {/* Load More Button */}
       <div className="flex justify-center mt-8 pb-20">
-        <button className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition">
-          Load More
+        <button
+          onClick={handleLoadMore}
+          className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold transition"
+        >
+          {loading ? "Loading..." : hasMore ? "Load More" : "No More"}
         </button>
       </div>
     </div>
