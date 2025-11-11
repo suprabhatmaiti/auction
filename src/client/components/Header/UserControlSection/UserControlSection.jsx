@@ -23,6 +23,11 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
     setIsOpen(false);
   };
 
+  const handleNotificationClick = () => {
+    setIsOpen(false);
+    navigate("/dashboard");
+  };
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (!dropdownRef.current?.contains(event.target)) {
@@ -67,7 +72,10 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
               <span className="font-medium">Settings</span>
             </div>
 
-            <div className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200">
+            <div
+              onClick={handleNotificationClick}
+              className="hover:bg-gray-100 px-3 py-2 flex items-center gap-2 cursor-pointer rounded-md transition-all duration-200"
+            >
               <CgBell className="size-5 text-gray-600" />
               <span className="font-medium">Notifications</span>
             </div>

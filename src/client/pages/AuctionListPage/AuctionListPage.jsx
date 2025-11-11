@@ -1,6 +1,6 @@
-import FilterSort from './FilterSort/FilterSort';
-import AuctionList from './AuctionList/AuctionList';
-import { useState } from 'react';
+import FilterSort from "./FilterSort/FilterSort";
+import AuctionList from "./AuctionList/AuctionList";
+import { useState } from "react";
 
 function AuctionListPage() {
   const [selectedCategories, setSelectedCategories] = useState({});
@@ -8,19 +8,17 @@ function AuctionListPage() {
 
   return (
     <div className="min-h-screen relative bg-gray-50">
-     
       {/* Mobile Filter & Sort Button */}
       <div className="md:hidden w-full text-white flex items-center justify-end px-4 py-1 shadow-md">
-            <button
-            onClick={() => setFilterSortMenuOpen(true)}
-            className='text-gray-700 border border-gray-400 hover:bg-white hover:shadow-lg cursor-pointer px-4 py-1 rounded-lg font-semibold flex items-center gap-2'
-            >
-            Filter & Sort
-            </button>
-        </div>
+        <button
+          onClick={() => setFilterSortMenuOpen(true)}
+          className="text-gray-700 border border-gray-400 hover:bg-white hover:shadow-lg cursor-pointer px-4 py-1 rounded-lg font-semibold flex items-center gap-2"
+        >
+          Filter & Sort
+        </button>
+      </div>
 
       <div className="flex gap-4">
-
         {/* Filter & Sort sidebar */}
         <div className="hidden md:block w-1/4 border-r border-gray-200 pt-8">
           <FilterSort
