@@ -1,5 +1,6 @@
 import React from "react";
 import tigerImage from "../../assets/tiger.svg";
+import { useNavigate } from "react-router-dom";
 
 function Card({
   image = "" || tigerImage,
@@ -7,8 +8,13 @@ function Card({
   currentbid = 90,
   button,
   className = "",
+  id = null,
   ...rest
 }) {
+  const navigate = useNavigate();
+  const handleBinNowClick = () => {
+    navigate(`/auction-desc/${id}`);
+  };
   return (
     <div
       {...rest}
@@ -37,6 +43,7 @@ function Card({
 
         {button && (
           <button
+            onClick={handleBinNowClick}
             className="cursor-pointer bg-violet-600 hover:bg-violet-700 
                        text-white text-xs sm:text-sm md:text-base
                        px-3 py-2 rounded-lg font-semibold transition"

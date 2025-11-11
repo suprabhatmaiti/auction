@@ -1,21 +1,22 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 dotenv.config();
 
 export const verifyToken = (req, res, next) => {
+  console.log("Verifying token...");
   try {
     const reqHeader = req.headers.authorization;
 
     if (!reqHeader) {
-      return res.status(401).json({ error: 'Unauthorized: No token provided' });
+      return res.status(401).json({ error: "Unauthorized: No token provided" });
     }
 
     // console.log(reqHeader);
 
-    const token = reqHeader.split(' ')[1];
+    const token = reqHeader.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ error: 'Unauthorized: malformed token' });
+      return res.status(401).json({ error: "Unauthorized: malformed token" });
     }
     // console.log(token);
 
@@ -25,6 +26,8 @@ export const verifyToken = (req, res, next) => {
     next();
   } catch (error) {
     console.log(error);
-    return res.status(401).json({ error: 'Unauthorized: Invalid or expired token' });
+    return res
+      .status(401)
+      .json({ error: "Unauthorized: Invalid or expired token" });
   }
 };

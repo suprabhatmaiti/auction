@@ -2,6 +2,7 @@ import express from "express";
 import {
   createAuction,
   getAuctions,
+  getAuctionById,
 } from "../controllers/auctionController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { uploadProductImages } from "../lib/upload.js";
@@ -15,6 +16,6 @@ router.post(
   createAuction
 );
 router.get("/get-auctions", verifyToken, getAuctions);
-// router.get("/get-auction/:id", verifyToken, getAuctionsById);
+router.get("/get-auction/:id", verifyToken, getAuctionById);
 
 export default router;

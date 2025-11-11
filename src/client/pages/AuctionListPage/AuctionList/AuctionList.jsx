@@ -66,6 +66,7 @@ function AuctionList({ selectedCategories }) {
         name={auction.title}
         currentbid={auction.current_price}
         button="Bid Now"
+        id={auction.id}
       />
     </div>
   ));

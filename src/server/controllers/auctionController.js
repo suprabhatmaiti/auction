@@ -204,12 +204,28 @@ export const getAuctions = async (req, res) => {
   }
 };
 
+// get auction by id
 export const getAuctionById = async (req, res) => {
+  console.log("getAuctionById called");
   const { id } = req.params;
   try {
-    const { rows } = await pool.query("SELECT * FROM auctions WHERE id = $1", [
-      id,
-    ]);
+    const idNum = Number(id);
+    if (Number.isNaN(idNum) || idNum <= 0) {
+      return res.status(400).json({ error: "Invalid auction ID" });
+    }
+
+    const sql = `
+      SELECT 
+        a.id, a.title, a.description, a.image_url, a.category,
+        a.start_price, a.current_price, a.seller_id,
+        a.start_time, a.end_time, a.is_active,
+        u.name AS seller_name
+      FROM auctions a
+      JOIN users u ON a.seller_id = u.id
+      WHERE a.id = $1
+      LIMIT 1;
+    `;
+    const { rows } = await pool.query(sql, [idNum]);
     if (rows.length === 0) {
       return res.status(404).json({ error: "Auction not found" });
     }
