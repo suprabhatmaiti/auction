@@ -1,24 +1,31 @@
-import { useState } from "react";
+import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
+import { useAuctionListContext } from "../context/useAuctionListContext";
 
-function PriceRange(){
-    const [sliderValue,setSliderValue] = useState(1000)
+function PriceRange() {
+  const { state, dispatch } = useAuctionListContext();
+  const handleChange = (event) => {
+    dispatch({ type: "SET_PRICE_RANGE", priceRange: event });
+  };
 
-    const handleChange = (event) => {
-        setSliderValue(event.target.value);
-    }
-
-    return(
-        <div className="mt-8 pr-4 border-b border-gray-200 pb-2"  >
-            <h2 className="font-semibold">Price Range</h2>
-            <div className="py-4 w-full ">
-                <input type="range" name="price-range" id="price-range" value={sliderValue} min={0} max={10000} onChange={handleChange} className="w-full cursor-pointer  accent-violet-600" />
-                <div className="flex justify-between">
-                    <p className="text-gray-600">$0</p>
-                    <p className="text-gray-600">${sliderValue}</p>
-                </div>
-            </div>
+  return (
+    <div className="mt-8 pr-4 border-b border-gray-200 pb-2">
+      <h2 className="font-semibold">Price Range</h2>
+      <div className="py-4 w-full flex flex-col gap-2">
+        <RangeSlider
+          min={0}
+          max={10000}
+          step={100}
+          value={state.priceRange}
+          onInput={handleChange}
+        />
+        <div className="flex justify-between">
+          <p className="text-gray-600">${state.priceRange[0]}</p>
+          <p className="text-gray-600">${state.priceRange[1]}</p>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
 export default PriceRange;

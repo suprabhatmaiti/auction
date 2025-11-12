@@ -1,20 +1,15 @@
-import { useState } from "react";
-import {
-  MdOutlineCheckBoxOutlineBlank,
-  MdOutlineCheckBox,
-  MdCheckBox,
-} from "react-icons/md";
+import { useReducer } from "react";
 import Categories from "./Categories";
 import PriceRange from "./PriceRange";
 import SortBy from "./SortBy";
+import { useAuctionListContext } from "../context/useAuctionListContext";
 
-function FilterSort({ selectedCategories, setSelectedCategories }) {
+function FilterSort({}) {
+  const { state } = useAuctionListContext();
+  console.log("Current State is : ", state);
   return (
     <div className="w-full px-8 py-6 ">
-      <Categories
-        selectedCategories={selectedCategories}
-        setSelectedCategories={setSelectedCategories}
-      />
+      <Categories />
       <PriceRange />
       <SortBy />
     </div>

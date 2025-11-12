@@ -206,7 +206,6 @@ export const getAuctions = async (req, res) => {
 
 // get auction by id
 export const getAuctionById = async (req, res) => {
-  console.log("getAuctionById called");
   const { id } = req.params;
   try {
     const idNum = Number(id);

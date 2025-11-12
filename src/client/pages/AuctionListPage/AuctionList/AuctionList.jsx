@@ -2,15 +2,43 @@ import { RxCross1 } from "react-icons/rx";
 import Card from "../../../components/Card/Card";
 import api from "../../../utils/api";
 import { useEffect, useState } from "react";
+import { useAuctionListContext } from "../context/useAuctionListContext";
+import PriceRange from "../FilterSort/PriceRange";
 
-function AuctionList({ selectedCategories }) {
-  const [auctions, setAuctions] = useState([]);
+function AuctionList({}) {
+  let [auctions, setAuctions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const activeCategories = Object.keys(selectedCategories)
-    .filter((key) => selectedCategories[key])
+  const { state } = useAuctionListContext();
+
+  const SortByValue =
+    Object.keys(state.SortByValue).find((key) => state.SortByValue[key]) ||
+    "newestFirst";
+
+  if (SortByValue === "endingSoonest") {
+    auctions.sort(
+      (a, b) => new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+    );
+  } else if (SortByValue === "highestBid") {
+    auctions.sort((a, b) => b.current_price - a.current_price);
+  } else if (SortByValue === "newestFirst") {
+    auctions.sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+  }
+  if (state.priceRange) {
+    const [minPrice, maxPrice] = state.priceRange;
+    auctions = auctions.filter(
+      (auction) =>
+        auction.current_price >= minPrice && auction.current_price <= maxPrice
+    );
+  }
+
+  const activeCategories = Object.keys(state.categories)
+    .filter((key) => state.categories[key])
     .join(",");
 
   useEffect(() => {
@@ -40,7 +68,6 @@ function AuctionList({ selectedCategories }) {
         }
         setTotalPages(pg.totalPages || 1);
         setLoading(false);
-        console.log("Fetched auctions:", data.auctions);
       } catch (error) {
         console.log("Error fetching auctions:", error);
       }
@@ -62,7 +89,7 @@ function AuctionList({ selectedCategories }) {
     <div key={auction.id} className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]">
       <Card
         key={auction.id}
-        image={`${BASE_URL}/${auction.image_url.replace(/\\/g, "/")}`}
+        image={`${BASE_URL}/${auction.image_url}`}
         name={auction.title}
         currentbid={auction.current_price}
         button="Bid Now"
@@ -72,9 +99,8 @@ function AuctionList({ selectedCategories }) {
   ));
 
   const handleRemoveCategory = (category) => {
-    console.log("Remove category:", category);
-    if (selectedCategories[category]) {
-      selectedCategories[category] = false;
+    if (state.categories[category]) {
+      state.categories[category] = false;
       setAuctions([...auctions]);
     }
   };

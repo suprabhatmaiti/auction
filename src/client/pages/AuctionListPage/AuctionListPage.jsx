@@ -1,6 +1,7 @@
 import FilterSort from "./FilterSort/FilterSort";
 import AuctionList from "./AuctionList/AuctionList";
 import { useState } from "react";
+import { useAuctionListContext } from "./context/useAuctionListContext";
 
 function AuctionListPage() {
   const [selectedCategories, setSelectedCategories] = useState({});
@@ -21,15 +22,12 @@ function AuctionListPage() {
       <div className="flex gap-4">
         {/* Filter & Sort sidebar */}
         <div className="hidden md:block w-1/4 border-r border-gray-200 pt-8">
-          <FilterSort
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-          />
+          <FilterSort />
         </div>
 
         {/* Auction list */}
         <div className="w-full md:pt-8">
-          <AuctionList selectedCategories={selectedCategories} />
+          <AuctionList />
         </div>
       </div>
 

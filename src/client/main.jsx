@@ -12,6 +12,7 @@ import AuctionListPage from "./pages/AuctionListPage/AuctionListPage";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AuctionDescPage from "./pages/AuctionDescPage/AuctionDescPage";
+import { AuctionProvider } from "./pages/AuctionListPage/context/useAuctionListContext";
 
 const router = createBrowserRouter([
   {
@@ -48,7 +49,9 @@ const router = createBrowserRouter([
         path: "auction-list",
         element: (
           <ProtectedRoutes>
-            <AuctionListPage />
+            <AuctionProvider>
+              <AuctionListPage />
+            </AuctionProvider>
           </ProtectedRoutes>
         ),
       },
