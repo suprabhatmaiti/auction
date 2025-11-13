@@ -17,12 +17,16 @@ function SortBy() {
         key={value.value}
         className="flex gap-2 items-center cursor-pointer text-violet-700"
       >
-        {state.SortByValue[value.value] ? (
-          <IoRadioButtonOn />
-        ) : (
-          <IoRadioButtonOffOutline />
-        )}
-        <h2 className="text-violet-500">{value.label}</h2>
+        <div>
+          {state.SortByValue[value.value] ? (
+            <IoRadioButtonOn />
+          ) : (
+            <IoRadioButtonOffOutline />
+          )}
+        </div>
+        <div>
+          <h2 className="text-violet-500">{value.label}</h2>
+        </div>
       </div>
     );
   });

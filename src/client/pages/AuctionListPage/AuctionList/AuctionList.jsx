@@ -3,39 +3,38 @@ import Card from "../../../components/Card/Card";
 import api from "../../../utils/api";
 import { useEffect, useState } from "react";
 import { useAuctionListContext } from "../context/useAuctionListContext";
-import PriceRange from "../FilterSort/PriceRange";
 
 function AuctionList({}) {
   let [auctions, setAuctions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const { state } = useAuctionListContext();
+  const { state, dispatch } = useAuctionListContext();
 
-  const SortByValue =
-    Object.keys(state.SortByValue).find((key) => state.SortByValue[key]) ||
-    "newestFirst";
+  // const SortByValue =
+  //   Object.keys(state.SortByValue).find((key) => state.SortByValue[key]) ||
+  //   "newestFirst";
 
-  if (SortByValue === "endingSoonest") {
-    auctions.sort(
-      (a, b) => new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
-    );
-  } else if (SortByValue === "highestBid") {
-    auctions.sort((a, b) => b.current_price - a.current_price);
-  } else if (SortByValue === "newestFirst") {
-    auctions.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-  }
-  if (state.priceRange) {
-    const [minPrice, maxPrice] = state.priceRange;
-    auctions = auctions.filter(
-      (auction) =>
-        auction.current_price >= minPrice && auction.current_price <= maxPrice
-    );
-  }
+  // if (SortByValue === "endingSoonest") {
+  //   auctions.sort(
+  //     (a, b) => new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
+  //   );
+  // } else if (SortByValue === "highestBid") {
+  //   auctions.sort((a, b) => b.current_price - a.current_price);
+  // } else if (SortByValue === "newestFirst") {
+  //   auctions.sort(
+  //     (a, b) =>
+  //       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  //   );
+  // }
+  // if (state.priceRange) {
+  //   const [minPrice, maxPrice] = state.priceRange;
+  //   auctions = auctions.filter(
+  //     (auction) =>
+  //       auction.current_price >= minPrice && auction.current_price <= maxPrice
+  //   );
+  // }
 
   const activeCategories = Object.keys(state.categories)
     .filter((key) => state.categories[key])
@@ -45,20 +44,39 @@ function AuctionList({}) {
     setAuctions([]);
     setPage(1);
     setTotalPages(1);
-  }, [activeCategories]);
+  }, [state.applyFilter]);
 
   useEffect(() => {
     const fetchAuctions = async () => {
       try {
-        setLoading(true);
+        dispatch({ type: "FETCH_AUCTIONS_START" });
         const { data } = await api.get("/api/auction/get-auctions", {
           params: {
             categories: activeCategories,
-            activeOnly: true,
+            activeOnly: false,
+            startPrice: state.priceRange[0],
+            endPrice: state.priceRange[1],
             page,
             pageSize: 12,
+            sortBy:
+              Object.keys(state.SortByValue).find(
+                (key) => state.SortByValue[key]
+              ) || "newest",
           },
           withCredentials: true,
+        });
+        if (!data) {
+          dispatch({
+            type: "FETCH_AUCTIONS_FAILURE",
+            error: "No data received from server",
+          });
+          return;
+        }
+        dispatch({
+          type: "FETCH_AUCTIONS_SUCCESS",
+          auctions: data.auctions || [],
+          totalPages: data.pagination?.totalPages || 1,
+          replace: page === 1,
         });
         const newItems = data?.auctions || [];
         const pg = data?.pagination || {};
@@ -67,18 +85,17 @@ function AuctionList({}) {
           setPage(pg.currentPage);
         }
         setTotalPages(pg.totalPages || 1);
-        setLoading(false);
       } catch (error) {
         console.log("Error fetching auctions:", error);
       }
     };
     fetchAuctions();
-  }, [page, activeCategories]);
+  }, [state.page, state.loading]);
 
   const hasMore = page < totalPages;
 
   const handleLoadMore = () => {
-    if (hasMore && !loading) {
+    if (hasMore) {
       setPage((prev) => prev + 1);
     }
   };
@@ -99,10 +116,10 @@ function AuctionList({}) {
   ));
 
   const handleRemoveCategory = (category) => {
-    if (state.categories[category]) {
-      state.categories[category] = false;
-      setAuctions([...auctions]);
-    }
+    dispatch({
+      type: "SET_CATEGORIES",
+      categories: category,
+    });
   };
 
   const activeCategoriesList = activeCategories
@@ -135,8 +152,12 @@ function AuctionList({}) {
       </div>
 
       {/* Selected Categories */}
-      <div className="flex flex-wrap gap-2 md:gap-4 mb-6">
-        {renderedSelectedCategories}
+      <div>
+        {state.categories && (
+          <div className="flex flex-wrap gap-2 md:gap-4 mb-6">
+            {renderedSelectedCategories}
+          </div>
+        )}
       </div>
       {/* Auction Cards */}
       <div className="flex flex-wrap  gap-6">
@@ -147,10 +168,10 @@ function AuctionList({}) {
       <div className="flex justify-center mt-8 pb-20">
         <button
           onClick={handleLoadMore}
-          disabled={!hasMore || loading}
+          disabled={!hasMore || state.loading}
           className="bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white px-6 py-2 rounded-lg font-semibold transition"
         >
-          {loading ? "Loading..." : hasMore ? "Load More" : "No More"}
+          {state.loading ? "Loading..." : hasMore ? "Load More" : "No More"}
         </button>
       </div>
     </div>

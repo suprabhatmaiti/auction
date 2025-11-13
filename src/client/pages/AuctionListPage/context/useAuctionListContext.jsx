@@ -9,6 +9,7 @@ const initialState = {
   page: 1,
   totalPages: 1,
   SortByValue: { newestFirst: true },
+  applyFilter: false,
 };
 
 const reducer = (state, action) => {
@@ -44,6 +45,14 @@ const reducer = (state, action) => {
           ...state.categories,
           [action.categories]: !state.categories[action.categories],
         },
+      };
+    case "RESET":
+      return initialState;
+
+    case "APPLY_FILTER":
+      return {
+        ...state,
+        applyFilter: action.applyFilter,
       };
     default:
       return state;

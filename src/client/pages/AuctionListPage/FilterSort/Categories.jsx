@@ -2,7 +2,7 @@ import { useState } from "react";
 import { MdCheckBox, MdOutlineCheckBoxOutlineBlank } from "react-icons/md";
 import { useAuctionListContext } from "../context/useAuctionListContext";
 
-function Categories({ selectedCategories, setSelectedCategories }) {
+function Categories({}) {
   const { state, dispatch } = useAuctionListContext();
 
   const categories = [
