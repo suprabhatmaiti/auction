@@ -13,7 +13,7 @@ function FilterSort({}) {
       <Categories />
       <PriceRange />
       <SortBy />
-      <ApplyButton />
+      {state.hasPendingChanges && <ApplyButton />}
     </div>
   );
 }

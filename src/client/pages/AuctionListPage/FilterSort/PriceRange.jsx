@@ -6,6 +6,7 @@ function PriceRange() {
   const { state, dispatch } = useAuctionListContext();
   const handleChange = (event) => {
     dispatch({ type: "SET_PRICE_RANGE", priceRange: event });
+    dispatch({ type: "MARK_PENDING_CHANGES" });
   };
 
   return (

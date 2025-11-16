@@ -95,19 +95,17 @@ export const getAuctions = async (req, res) => {
       startPrice = "",
       endPrice = "",
       search = "",
-      sortBy: rawSortBy = "newest",
-      order = "desc",
+      sortBy = "",
+      order = "DESC",
       page = "1",
       pageSize = "10",
       activeOnly = "true",
     } = req.query;
-
-    const sortBy = String(rawSortBy).trim();
-
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     // cap at 100, floor at 1
     const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
     const offset = (pageNum - 1) * sizeNum;
+    console.log(" pages calculation ", pageNum, sizeNum, offset);
 
     const params = [];
     const where = [];
@@ -131,8 +129,9 @@ export const getAuctions = async (req, res) => {
     // search (reuse same placeholder for both columns is OK)
     if (search) {
       params.push(`%${search.trim()}%`);
-      const idx = params.length;
-      where.push(`(title ILIKE $${idx} OR description ILIKE $${idx})`);
+      where.push(
+        `(title ILIKE $${params.length} OR description ILIKE $${params.length})`
+      );
     }
 
     // categories (PUSH ARRAY ONCE, then = ANY($n))
@@ -152,12 +151,16 @@ export const getAuctions = async (req, res) => {
 
     // sorting
     let orderBySql = "ORDER BY start_time DESC";
-    if (sortBy === "price") {
+    if (sortBy.trim() === "price") {
       orderBySql = `ORDER BY current_price ${
         order.toUpperCase() === "ASC" ? "ASC" : "DESC"
       } NULLS LAST`;
-    } else if (sortBy === "end_time") {
+    } else if (sortBy.trim() === "end_time") {
       orderBySql = `ORDER BY end_time ${
+        order.toUpperCase() === "ASC" ? "ASC" : "DESC"
+      }`;
+    } else if (sortBy.trim() === "newest") {
+      orderBySql = `ORDER BY start_time ${
         order.toUpperCase() === "ASC" ? "ASC" : "DESC"
       }`;
     }

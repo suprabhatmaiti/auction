@@ -19,6 +19,7 @@ function Categories({}) {
       type: "SET_CATEGORIES",
       categories: value,
     });
+    dispatch({ type: "MARK_PENDING_CHANGES" });
   };
 
   const renderedCategories = categories.map((category) => {

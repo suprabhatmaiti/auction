@@ -10,6 +10,7 @@ const initialState = {
   totalPages: 1,
   SortByValue: { newestFirst: true },
   applyFilter: false,
+  hasPendingChanges: false,
 };
 
 const reducer = (state, action) => {
@@ -20,10 +21,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         loading: false,
-        auctions:
-          action.page === 1
-            ? action.auctions
-            : [...state.auctions, ...action.auctions],
+        auctions: action.auctions,
         page: action.page,
         totalPages: action.totalPages,
       };
@@ -45,6 +43,7 @@ const reducer = (state, action) => {
           ...state.categories,
           [action.categories]: !state.categories[action.categories],
         },
+        applyFilter: true,
       };
     case "RESET":
       return initialState;
@@ -52,7 +51,26 @@ const reducer = (state, action) => {
     case "APPLY_FILTER":
       return {
         ...state,
-        applyFilter: action.applyFilter,
+        applyFilter: !state.applyFilter,
+      };
+    case "SET_PAGE":
+      return {
+        ...state,
+        page: action.page,
+        totalPages: action.totalPages,
+      };
+    case "MARK_PENDING_CHANGES":
+      return { ...state, hasPendingChanges: true };
+
+    case "CLEAR_PENDING_CHANGES":
+      return { ...state, hasPendingChanges: false };
+    case "CLEAR_FILTERS":
+      return {
+        ...state,
+
+        auctions: [],
+        totalPages: 1,
+        page: 1,
       };
     default:
       return state;

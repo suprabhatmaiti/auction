@@ -35,6 +35,7 @@ function SortBy() {
       type: "SET_SORT_BY",
       SortByValue: value,
     });
+    dispatch({ type: "MARK_PENDING_CHANGES" });
   };
 
   return (

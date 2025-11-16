@@ -5,45 +5,28 @@ import { useEffect, useState } from "react";
 import { useAuctionListContext } from "../context/useAuctionListContext";
 
 function AuctionList({}) {
-  let [auctions, setAuctions] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
+  const [reload, setReload] = useState(false);
   const { state, dispatch } = useAuctionListContext();
 
-  // const SortByValue =
-  //   Object.keys(state.SortByValue).find((key) => state.SortByValue[key]) ||
-  //   "newestFirst";
+  const SortByValue =
+    Object.keys(state.SortByValue).find((key) => state.SortByValue[key]) ||
+    "newestFirst";
+  let SortByParams;
 
-  // if (SortByValue === "endingSoonest") {
-  //   auctions.sort(
-  //     (a, b) => new Date(a.end_time).getTime() - new Date(b.end_time).getTime()
-  //   );
-  // } else if (SortByValue === "highestBid") {
-  //   auctions.sort((a, b) => b.current_price - a.current_price);
-  // } else if (SortByValue === "newestFirst") {
-  //   auctions.sort(
-  //     (a, b) =>
-  //       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  //   );
-  // }
-  // if (state.priceRange) {
-  //   const [minPrice, maxPrice] = state.priceRange;
-  //   auctions = auctions.filter(
-  //     (auction) =>
-  //       auction.current_price >= minPrice && auction.current_price <= maxPrice
-  //   );
-  // }
+  if (SortByValue === "endingSoonest") {
+    SortByParams = "end_time";
+  } else if (SortByValue === "highestBid") {
+    SortByParams = "price";
+  } else if (SortByValue === "newestFirst") {
+    SortByParams = "newest";
+  }
 
   const activeCategories = Object.keys(state.categories)
     .filter((key) => state.categories[key])
     .join(",");
 
   useEffect(() => {
-    setAuctions([]);
-    setPage(1);
-    setTotalPages(1);
+    dispatch({ type: "CLEAR_FILTERS" });
   }, [state.applyFilter]);
 
   useEffect(() => {
@@ -54,14 +37,11 @@ function AuctionList({}) {
           params: {
             categories: activeCategories,
             activeOnly: false,
+            sortBy: SortByParams,
+            page: state.page,
             startPrice: state.priceRange[0],
             endPrice: state.priceRange[1],
-            page,
             pageSize: 12,
-            sortBy:
-              Object.keys(state.SortByValue).find(
-                (key) => state.SortByValue[key]
-              ) || "newest",
           },
           withCredentials: true,
         });
@@ -72,37 +52,38 @@ function AuctionList({}) {
           });
           return;
         }
+        const newItems = data?.auctions || [];
         dispatch({
           type: "FETCH_AUCTIONS_SUCCESS",
-          auctions: data.auctions || [],
-          totalPages: data.pagination?.totalPages || 1,
-          replace: page === 1,
+          auctions:
+            state.page === 1 ? newItems : [...state.auctions, ...newItems],
+          page: data?.pagination?.currentPage || 1,
+          totalPages: data?.pagination?.totalPages || 1,
         });
-        const newItems = data?.auctions || [];
+
         const pg = data?.pagination || {};
-        setAuctions((prev) => (page === 1 ? newItems : [...prev, ...newItems]));
-        if (pg.currentPage !== page) {
-          setPage(pg.currentPage);
+
+        if (pg.currentPage !== state.page) {
+          dispatch({ type: "SET_PAGE", page: pg.currentPage });
         }
-        setTotalPages(pg.totalPages || 1);
       } catch (error) {
         console.log("Error fetching auctions:", error);
       }
     };
     fetchAuctions();
-  }, [state.page, state.loading]);
+  }, [state.page, state.applyFilter, reload]);
 
-  const hasMore = page < totalPages;
+  const hasMore = state.page < state.totalPages;
 
   const handleLoadMore = () => {
     if (hasMore) {
-      setPage((prev) => prev + 1);
+      dispatch({ type: "SET_PAGE", page: state.page + 1 });
     }
   };
 
   const BASE_URL = "http://localhost:3000";
 
-  const renderedAuctions = auctions.map((auction) => (
+  const renderedAuctions = state.auctions.map((auction) => (
     <div key={auction.id} className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]">
       <Card
         key={auction.id}
@@ -120,6 +101,7 @@ function AuctionList({}) {
       type: "SET_CATEGORIES",
       categories: category,
     });
+    setReload(!reload);
   };
 
   const activeCategoriesList = activeCategories
@@ -161,7 +143,7 @@ function AuctionList({}) {
       </div>
       {/* Auction Cards */}
       <div className="flex flex-wrap  gap-6">
-        {auctions.length === 0 ? "No Auctions Found" : renderedAuctions}
+        {state.auctions.length === 0 ? "No Auctions Found" : renderedAuctions}
       </div>
 
       {/* Load More Button */}
