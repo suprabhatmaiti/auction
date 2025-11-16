@@ -27,9 +27,10 @@ function AuctionList({}) {
 
   useEffect(() => {
     dispatch({ type: "CLEAR_FILTERS" });
-  }, [state.applyFilter]);
+  }, [state.applyFilter, reload]);
 
   useEffect(() => {
+    console.log("Fetching auctions with filters...");
     const fetchAuctions = async () => {
       try {
         dispatch({ type: "FETCH_AUCTIONS_START" });
@@ -86,7 +87,6 @@ function AuctionList({}) {
   const renderedAuctions = state.auctions.map((auction) => (
     <div key={auction.id} className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]">
       <Card
-        key={auction.id}
         image={`${BASE_URL}/${auction.image_url}`}
         name={auction.title}
         currentbid={auction.current_price}
