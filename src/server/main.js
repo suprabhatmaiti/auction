@@ -5,17 +5,15 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import auctionRoutes from "./routes/auctionRoutes.js";
 import cookieParser from "cookie-parser";
+import { createServer } from "http";
+import { Server as IOServer } from "socket.io";
+import { socketAuth } from "./socket/socketAuth.js";
+
+import { socketHandlers } from "./socket/handlers/socketHandler.js";
 
 dotenv.config();
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-
 const PORT = process.env.PORT || 3000;
 
 // app.use(cors());
@@ -37,7 +35,6 @@ const PORT = process.env.PORT || 3000;
 //   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 //   allowedHeaders: ["Content-Type", "Authorization"]
 // }));
-
 app.use(express.json());
 app.use(cookieParser());
 
@@ -50,6 +47,20 @@ app.get("/api", (req, res) => {
   res.send(" Vite + React!");
 });
 
-ViteExpress.listen(app, PORT, () =>
-  console.log("Server is listening on port 3000...")
+const httpServer = createServer(app);
+const io = new IOServer(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    withCredentials: true,
+  },
+});
+socketAuth(io);
+
+socketHandlers(io);
+
+ViteExpress.bind(app, httpServer);
+
+httpServer.listen(PORT, () =>
+  console.log(`Server is listening on port ${PORT}...`)
 );

@@ -1,7 +1,4 @@
-import jwt from "jsonwebtoken";
-// import dotenv from "dotenv";
-
-// dotenv.config();
+import { verifyAccessToken } from "./verifyAccessToken.js";
 
 export const verifyToken = (req, res, next) => {
   try {
@@ -19,7 +16,7 @@ export const verifyToken = (req, res, next) => {
     }
     // console.log(token);
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = verifyAccessToken(token);
     req.user = decoded;
     // console.log('Token verified, user:', decoded);
     next();

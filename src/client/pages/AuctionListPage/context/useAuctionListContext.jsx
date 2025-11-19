@@ -43,7 +43,6 @@ const reducer = (state, action) => {
           ...state.categories,
           [action.categories]: !state.categories[action.categories],
         },
-        applyFilter: true,
       };
     case "RESET":
       return initialState;

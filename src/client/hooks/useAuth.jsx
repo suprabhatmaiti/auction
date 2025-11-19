@@ -8,6 +8,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   const decodeAndSetUser = (token) => {
+    if (!token) {
+      setUser(null);
+      return;
+    }
     try {
       const decoded = jwtDecode(token);
       setUser(decoded);
@@ -59,7 +63,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.post("/api/auth/logout");
+      await api.post("/api/auth/logout", null, { withCredentials: true });
     } catch (error) {
       console.log("Error during logout:", error);
     } finally {

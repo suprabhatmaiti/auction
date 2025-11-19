@@ -13,6 +13,7 @@ import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AuctionDescPage from "./pages/AuctionDescPage/AuctionDescPage";
 import { AuctionProvider } from "./pages/AuctionListPage/context/useAuctionListContext";
+import SocketPage from "./Socket/SocketPage";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoutes>
             <AuctionDescPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
+        path: "/socket-test",
+        element: (
+          <ProtectedRoutes>
+            <SocketPage />
           </ProtectedRoutes>
         ),
       },

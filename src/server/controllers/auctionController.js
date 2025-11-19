@@ -105,7 +105,7 @@ export const getAuctions = async (req, res) => {
     // cap at 100, floor at 1
     const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
     const offset = (pageNum - 1) * sizeNum;
-    console.log(" pages calculation ", pageNum, sizeNum, offset);
+    // console.log(" pages calculation ", pageNum, sizeNum, offset);
 
     const params = [];
     const where = [];
