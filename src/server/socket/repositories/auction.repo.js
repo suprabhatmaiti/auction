@@ -14,7 +14,8 @@ export async function getAuctionSnapshot(auctionId) {
   );
   return {
     auctionId,
-    current_price: auction.current_price,
+    seq: Number(a.seq || 0),
+    current_highest_bid: auction.current_price,
     end_time: auction.end_time,
     recent_bids: bids.rows,
   };
