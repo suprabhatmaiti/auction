@@ -3,7 +3,6 @@ import { getSocket } from "../utils/getSocket.js";
 
 function SocketPage() {
   const socket = useRef();
-  const socketTest = getSocket();
 
   const handleClick = () => {
     socket.current.emit("ping", (response) => {
@@ -12,7 +11,8 @@ function SocketPage() {
   };
 
   const handleJoin = () => {
-    socket.current.emit("auction:join", { auctionId: 123 });
+    socket.current.emit("auction:join", { auctionId: 12 }, console.log);
+    socket.current.on("auction:snapshot", console.log);
   };
   const handleDisconnect = () => {
     socket.current.disconnect();

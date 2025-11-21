@@ -9,7 +9,7 @@ import { createServer } from "http";
 import { Server as IOServer } from "socket.io";
 import { socketAuth } from "./socket/socketAuth.js";
 
-import { socketHandlers } from "./socket/handlers/socketHandler.js";
+import { socketHandlers } from "./socket/handlers/index.js";
 
 dotenv.config();
 
