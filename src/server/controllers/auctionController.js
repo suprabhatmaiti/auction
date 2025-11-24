@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import { pool } from "../config/db.js";
 import fs from "fs";
+import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
 
 export const createAuction = async (req, res) => {
   try {
@@ -238,11 +239,15 @@ export const getAuctionById = async (req, res) => {
   }
 };
 
-export const getAuctionSnapshot = async (req, res) => {
+export const getAuctionSnap = async (req, res) => {
   try {
     const { id } = req.params;
-    const { data } = await getAuctionSnapshot(id);
-    res.status(200).json({ data });
+    const idNum = Number(id);
+    if (Number.isNaN(idNum) || idNum <= 0) {
+      return res.status(400).json({ error: "Invalid auction ID" });
+    }
+    const result = await getAuctionSnapshot(idNum);
+    res.status(200).json({ snapshot: result });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Server error fetching auction" });
