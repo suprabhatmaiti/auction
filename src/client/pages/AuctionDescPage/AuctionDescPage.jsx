@@ -15,11 +15,12 @@ function AuctionDescPage() {
   const [auction, setAuction] = useState(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-  const [bidAmount, setBidAmount] = useState(0);
+  const [bidAmount, setBidAmount] = useState("");
   const { user } = useAuth();
   const [seq, setSeq] = useState(0);
   const [recentBids, setRecentBids] = useState([]);
   // const [currentPrice, setCurrentPrice] = useState(null);
+  const [bidPlaced, setBidPlaced] = useState(false);
 
   const socket = useRef();
 
@@ -127,7 +128,7 @@ function AuctionDescPage() {
     return () => {
       canceled = true;
     };
-  }, [id]);
+  }, [id, bidPlaced]);
 
   if (!auction) return <div className="p-8">Auction not found.</div>;
 
@@ -155,8 +156,10 @@ function AuctionDescPage() {
           socket.current.emit("auction:join", { auctionId: Number(id) });
           return;
         }
+        setBidPlaced(true);
       }
     );
+    setBidAmount("");
   };
 
   const renderedBids = recentBids.map((bid) => {

@@ -30,7 +30,6 @@ function AuctionList({}) {
   }, [state.applyFilter, reload]);
 
   useEffect(() => {
-    console.log("Fetching auctions with filters...");
     const fetchAuctions = async () => {
       try {
         dispatch({ type: "FETCH_AUCTIONS_START" });
