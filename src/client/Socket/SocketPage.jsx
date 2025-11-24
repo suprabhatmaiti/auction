@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { getSocket } from "../utils/getSocket.js";
+import useAuth from "../hooks/useAuth";
 
 function SocketPage() {
   const socket = useRef();
+  const { user } = useAuth();
 
   const handleClick = () => {
     socket.current.emit("ping", (response) => {
@@ -11,13 +13,26 @@ function SocketPage() {
   };
 
   const handleJoin = () => {
-    socket.current.emit("auction:join", { auctionId: 12 }, console.log);
-    socket.current.on("auction:snapshot", console.log);
+    socket.current.emit("auction:join", { auctionId: 26 }, console.log);
+    socket.current.on("auction:snapshot", (payload) => {
+      console.log(payload);
+    });
   };
   const handleDisconnect = () => {
     socket.current.disconnect();
   };
 
+  const handlePlaceBid = () => {
+    socket.current.emit(
+      "place-bid",
+      {
+        auctionId: 26,
+        userId: user.id,
+        amount: 7222,
+      },
+      console.log
+    );
+  };
   useEffect(() => {
     if (!socket.current) {
       console.log("invalid Socket, assigning socket...");
@@ -41,6 +56,9 @@ function SocketPage() {
       </button>
       <button className="border" onClick={handleJoin}>
         join
+      </button>
+      <button className="border" onClick={handlePlaceBid}>
+        PlaceBid
       </button>
     </div>
   );

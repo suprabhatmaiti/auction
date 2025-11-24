@@ -3,7 +3,7 @@ import { createContext, use, useReducer } from "react";
 const initialState = {
   auctions: [],
   categories: {},
-  priceRange: [0, 5000],
+  priceRange: [],
   loading: false,
   error: null,
   page: 1,

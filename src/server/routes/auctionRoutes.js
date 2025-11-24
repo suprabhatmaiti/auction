@@ -3,6 +3,7 @@ import {
   createAuction,
   getAuctions,
   getAuctionById,
+  getAuctionSnapshot,
 } from "../controllers/auctionController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { uploadProductImages } from "../lib/upload.js";
@@ -17,5 +18,6 @@ router.post(
 );
 router.get("/get-auctions", verifyToken, getAuctions);
 router.get("/get-auction/:id", verifyToken, getAuctionById);
+router.get("get-auction/:id/snapshot", verifyToken, getAuctionSnapshot);
 
 export default router;

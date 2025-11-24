@@ -1,4 +1,3 @@
-// socketFactory.js
 import { io } from "socket.io-client";
 import { getAccessToken } from "./api.js";
 

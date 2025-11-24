@@ -237,3 +237,14 @@ export const getAuctionById = async (req, res) => {
     res.status(500).json({ error: "Server error fetching auction" });
   }
 };
+
+export const getAuctionSnapshot = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { data } = await getAuctionSnapshot(id);
+    res.status(200).json({ data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error fetching auction" });
+  }
+};
