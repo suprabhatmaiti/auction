@@ -6,6 +6,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  // const [accessToken, setAccessToken] = useState(null);
 
   const decodeAndSetUser = (token) => {
     if (!token) {
@@ -22,15 +24,21 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    let mounted = true;
     (async () => {
       try {
+        setLoading(true);
+
         const { data } = await api.post("/api/auth/refresh-token");
+        if (!mounted) return;
         setAccessToken(data.accessToken);
         decodeAndSetUser(data.accessToken);
       } catch (error) {
         console.log("Error refreshing token:", error);
         setUser(null);
         setAccessToken(null);
+      } finally {
+        if (mounted) setLoading(false);
       }
     })();
   }, []);
@@ -74,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn: !!user, register, login, logout }}
+      value={{ user, isLoggedIn: !!user, register, login, logout, loading }}
     >
       {children}
     </AuthContext.Provider>

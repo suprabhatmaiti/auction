@@ -87,7 +87,11 @@ export function auctionHandler(io) {
         });
       } catch (error) {
         console.log(error);
-        return cb?.({ ok: false, error: error });
+        const response = { ok: false, error: error.message };
+        if (error.minAccept) {
+          response.minAccept = error.minAccept;
+        }
+        return cb?.(response);
       }
     });
 

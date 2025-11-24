@@ -37,7 +37,7 @@ function AuctionList({}) {
         const { data } = await api.get("/api/auction/get-auctions", {
           params: {
             categories: activeCategories,
-            activeOnly: false,
+            activeOnly: true,
             sortBy: SortByParams,
             page: state.page,
             startPrice: state.priceRange[0],
