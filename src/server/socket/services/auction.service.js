@@ -80,9 +80,9 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
       bid: {
         id: bidRow.id,
         auctionId,
-        userId,
+        bidder_id: userId,
         amount: bidAmount,
-        createdAt: bidRow.created_at,
+        created_at: bidRow.created_at,
       },
       seq,
       endsAt: newEndTime,

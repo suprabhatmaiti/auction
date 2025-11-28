@@ -188,11 +188,11 @@ function AuctionDescPage() {
     setBidAmount("");
   };
 
-  const renderedBids = recentBids.slice(0, 3).map((bid) => {
+  const renderedBids = recentBids.slice(0, 20).map((bid) => {
     // console.log(bid.userId);
     return (
       <div key={bid.id} className="flex justify-between">
-        <div>{bid.userId}</div>
+        <div>{bid.bidder_id}</div>
         <div>{bid.amount}</div>
         <div className="hidden md:block">{bid.created_at}</div>
       </div>
@@ -243,7 +243,7 @@ function AuctionDescPage() {
               <div className="text-lg font-semibold">
                 Starting Bid: ₹{startingBid.toLocaleString("en-IN")}
               </div>
-              <div className="text-lg font-semibold">Current Bid: ₹00</div>
+              <div className="text-lg font-semibold">Current Bid: ₹{price}</div>
             </div>
 
             <div className="text-sm text-gray-600">
