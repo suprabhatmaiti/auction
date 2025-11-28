@@ -1,7 +1,7 @@
 // src/components/Auth/AuthForm.jsx
 import { useReducer, useEffect } from "react";
 import Input from "../../components/Input/Input";
-import axios from "../../utils/api";
+
 import useAuth from "../../hooks/useAuth";
 import {
   formReducer,
@@ -10,10 +10,11 @@ import {
   RESET_FORM,
   SET_ERROR,
 } from "./reducers/authReducer";
+import { toast } from "react-toastify";
 
 function AuthForm({ isLoginPageOpen, onClose }) {
   const [formData, dispatch] = useReducer(formReducer, initialState);
-  const { login,register } = useAuth();
+  const { login, register } = useAuth();
 
   useEffect(() => {
     if (
@@ -34,7 +35,6 @@ function AuthForm({ isLoginPageOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
 
     if (!isLoginPageOpen && formData.password !== formData.confirmPassword) {
       dispatch({ type: SET_ERROR, value: "Passwords do not match" });
@@ -52,18 +52,18 @@ function AuthForm({ isLoginPageOpen, onClose }) {
     // console.log(payload);
 
     try {
-      const endpoint = isLoginPageOpen ? login(payload) : register(payload) ;
-      await endpoint;
-
-
+      const response = isLoginPageOpen
+        ? await login(payload)
+        : await register(payload);
+      dispatch({ type: RESET_FORM });
+      onClose();
     } catch (error) {
       if (error.response?.data?.error) {
+        // console.log(error);
         dispatch({ type: SET_ERROR, value: error.response.data.error });
+        toast.error(error.response.data.error);
       }
     }
-
-    dispatch({ type: RESET_FORM });
-    onClose();
   };
 
   return (
