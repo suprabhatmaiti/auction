@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
-import LoadingOverlay from "./LoadingOverlay";
+import useAuth from "../hooks/useAuth";
+import LoadingOverlay from "../components/LoadingOverlay/LoadingOverlay";
 
 function ProtectedRoutes({ children }) {
   const { isLoggedIn, loading } = useAuth();

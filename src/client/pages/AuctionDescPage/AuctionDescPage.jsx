@@ -5,12 +5,15 @@ import tigerImage from "../../assets/tiger.svg";
 import Input from "../../components/Input/Input";
 import useAuth from "../../hooks/useAuth";
 import { getSocket } from "../../utils/getSocket.js";
-import LoadingOverlay from "../../LoadingOverlay.jsx";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay.jsx";
 import BiddingHistory from "./Biddinghistory.jsx";
 
 const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function AuctionDescPage() {
+  const seqRef = useRef(0);
+  const recentBidsRef = useRef([]);
+
   const { id } = useParams();
   const [auction, setAuction] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,8 +22,7 @@ function AuctionDescPage() {
   const { user } = useAuth();
   const [seq, setSeq] = useState(0);
   const [recentBids, setRecentBids] = useState([]);
-  // const [currentPrice, setCurrentPrice] = useState(null);
-  const [bidPlaced, setBidPlaced] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(null);
 
   const socket = useRef();
 
@@ -28,11 +30,22 @@ function AuctionDescPage() {
     if (!id) return;
     let canceled = false;
 
+    const safeSetSeq = (value) => {
+      const n = Number(value ?? 0);
+      seqRef.current = n;
+      setSeq(n);
+    };
+    const safeSetRecentBids = (arr) => {
+      recentBidsRef.current = arr ?? [];
+      setRecentBids(recentBidsRef.current);
+    };
+
     const onSnapshot = (snap) => {
       console.log("snapshot", snap);
       if (!snap) return;
-      setSeq(Number(snap.seq ?? 0));
-      setRecentBids(snap.recent_bids ?? []);
+      const newSeq = Number(snap.seq ?? 0);
+      safeSetSeq(newSeq);
+      safeSetRecentBids(snap.recent_bids ?? []);
       setAuction((prev) => ({
         ...(prev || {}),
         current_price: Number(snap.current_price),
@@ -42,26 +55,31 @@ function AuctionDescPage() {
 
     const onBidUpdate = async (payload) => {
       if (!payload) return;
-      const payloadAuctionId = Number(payload.auctionId);
+      const payloadAuctionId = payload.auctionId;
       if (String(payloadAuctionId) !== String(id)) return;
-      const incomingSeq = Number(payload.seq);
+      const incomingSeq = Number(payload.seq ?? 0);
       const bid = payload.bid;
 
-      if (incomingSeq && incomingSeq > seq + 1) {
-        await api
-          .get(`/api/auction/get-auction/${id}/snapshot`)
-          .then((res) => {
-            if (res?.data) {
-              console.log("second");
-              onSnapshot(res.data);
-            }
-          })
-          .catch((err) => {
-            console.error("snapshot fething failed", err);
-          });
+      const localSeq = Number(seqRef.current ?? 0);
+
+      if (incomingSeq && incomingSeq > localSeq + 1) {
+        try {
+          const res = await api.get(`/api/auction/get-auction/${id}/snapshot`);
+          if (res?.data) {
+            const snapSeq = Number(res.data.seq ?? 0);
+            setSeq(snapSeq);
+            seqRef.current = snapSeq;
+            console.log("second");
+            onSnapshot(res.data);
+          }
+        } catch (error) {
+          console.error("snapshot fething failed", err);
+        }
         return;
       }
-      if (incomingSeq) setSeq(incomingSeq);
+      if (incomingSeq) {
+        safeSetSeq(incomingSeq);
+      }
       if (bid) {
         setAuction((prev) => ({
           ...(prev || {}),
@@ -70,7 +88,9 @@ function AuctionDescPage() {
 
         setRecentBids((prev) => {
           const filtered = prev.filter((b) => String(b.id) !== String(bid.id));
-          return [bid, ...filtered];
+          const next = [bid, ...filtered];
+          recentBidsRef.current = next;
+          return next;
         });
       }
     };
@@ -106,8 +126,8 @@ function AuctionDescPage() {
               console.error("join failed", res);
             }
             // console.log("joined, snapshot:", res);
-            if (res.snapshot) onSnapshot(res.snapshot);
-            else if (res.recent_bids) setRecentBids(res.recent_bids);
+            if (res?.snapshot) onSnapshot(res.snapshot);
+            else if (res?.recent_bids) safeSetRecentBids(res.recent_bids);
           }
         );
         // console.log("recent Bids", recentBids);
@@ -127,8 +147,15 @@ function AuctionDescPage() {
 
     return () => {
       canceled = true;
+      const s = socket.current;
+      if (s) {
+        s.off("auction:snapshot", onSnapshot);
+      }
+      try {
+        e.emait("auction:leave", { auctionId: Number(id) });
+      } catch (error) {}
     };
-  }, [id, bidPlaced]);
+  }, [id]);
 
   if (!auction) return <div className="p-8">Auction not found.</div>;
 
@@ -156,16 +183,16 @@ function AuctionDescPage() {
           socket.current.emit("auction:join", { auctionId: Number(id) });
           return;
         }
-        setBidPlaced(true);
       }
     );
     setBidAmount("");
   };
 
-  const renderedBids = recentBids.map((bid) => {
+  const renderedBids = recentBids.slice(0, 3).map((bid) => {
+    // console.log(bid.userId);
     return (
       <div key={bid.id} className="flex justify-between">
-        <div>{bid.bidder_id}</div>
+        <div>{bid.userId}</div>
         <div>{bid.amount}</div>
         <div className="hidden md:block">{bid.created_at}</div>
       </div>
@@ -216,9 +243,7 @@ function AuctionDescPage() {
               <div className="text-lg font-semibold">
                 Starting Bid: ₹{startingBid.toLocaleString("en-IN")}
               </div>
-              <div className="text-lg font-semibold">
-                Current Bid: ₹{price.toLocaleString("en-IN")}
-              </div>
+              <div className="text-lg font-semibold">Current Bid: ₹00</div>
             </div>
 
             <div className="text-sm text-gray-600">

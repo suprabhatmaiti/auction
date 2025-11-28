@@ -2,7 +2,7 @@ import FilterSort from "./FilterSort/FilterSort";
 import AuctionList from "./AuctionList/AuctionList";
 import { useState } from "react";
 import { useAuctionListContext } from "./context/useAuctionListContext";
-import LoadingOverlay from "../../LoadingOverlay";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay";
 
 function AuctionListPage() {
   const [filterSortMenuOpen, setFilterSortMenuOpen] = useState(false);

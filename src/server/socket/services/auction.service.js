@@ -1,6 +1,6 @@
 import { pool } from "../../config/db.js"; // adjust path if needed
 
-export async function placeBid({ auctionId, userId, amount }) {
+export async function placeBid({ auctionId, userId, bidAmount }) {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
@@ -28,14 +28,15 @@ export async function placeBid({ auctionId, userId, amount }) {
 
     const current = Number(auction.current_price || 0);
     const minInc = Number(auction.min_increment || 1);
-    const bidAmount = Number(amount);
+    const amount = Number(bidAmount);
 
-    if (Number.isNaN(bidAmount) || bidAmount <= 0) {
+    console.log(amount);
+    if (Number.isNaN(amount) || amount <= 0) {
       const err = new Error("invalid_amount");
       throw err;
     }
 
-    if (bidAmount < current + minInc) {
+    if (amount < current + minInc) {
       const err = new Error("low_bid_amount");
       err.minAccept = current + minInc;
       throw err;
@@ -44,7 +45,7 @@ export async function placeBid({ auctionId, userId, amount }) {
     // insert bid
     const ins = await client.query(
       `INSERT INTO bids (auction_id, bidder_id, amount) VALUES ($1, $2, $3) RETURNING id, created_at`,
-      [auctionId, userId, bidAmount]
+      [auctionId, userId, amount]
     );
     const bidRow = ins.rows[0];
 

@@ -4,7 +4,7 @@ import { getAccessToken } from "./api.js";
 let socket = null;
 
 export function getSocket() {
-  // if (socket) return socket;
+  if (socket) return socket;
   const token = getAccessToken();
   socket = io("http://localhost:3000", {
     autoConnect: false,

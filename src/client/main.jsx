@@ -10,7 +10,7 @@ import DropdownPage from "./pages/DropdownPage";
 import AddAuctionPage from "./pages/AddAuctionPage/AddAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage/AuctionListPage";
 import { AuthProvider } from "./hooks/useAuth";
-import ProtectedRoutes from "./ProtectedRoutes";
+import ProtectedRoutes from "../client/components/ProtectedRoutes";
 import AuctionDescPage from "./pages/AuctionDescPage/AuctionDescPage";
 import { AuctionProvider } from "./pages/AuctionListPage/context/useAuctionListContext";
 import SocketPage from "./Socket/SocketPage";

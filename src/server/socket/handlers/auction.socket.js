@@ -68,9 +68,10 @@ export function auctionHandler(io) {
       try {
         if (!socket.user) return cb?.({ ok: false, error: "unauthenticated" });
         const userId = socket.user.id;
-        if (typeof amount !== "number" || amount <= 0)
-          return cb?.({ ok: false, error: "invalid_amount" });
-        const result = await placeBid({ auctionId, userId, amount });
+        const bidAmount = Number(amount);
+        if (typeof bidAmount !== "number" || bidAmount <= 0)
+          return cb?.({ ok: false, error: "invalid_bidAmount" });
+        const result = await placeBid({ auctionId, userId, bidAmount });
         console.log(result);
 
         io.to(`auction:${auctionId}`).emit("bid:update", {

@@ -10,15 +10,26 @@ export default function useAuctionSocket(auctionId) {
 
   const applySnapshot = useCallback((snap) => {
     if (!snap) return;
+    setLoading(true);
     setSeq(Number(snap.seq ?? 0));
-    setRecentBids(snap.recentBids ?? []);
+    setRecentBids(snap.recent_bids ?? []);
     setAuction((prev) => ({
       ...(prev || {}),
-      //   ...snap.raw,
-      current_price: snap.current_price,
+      current_price: Number(snap.current_price),
       end_time: snap.end_time,
     }));
+    setLoading(false);
+    setError(null);
   }, []);
 
-  const placeBid = async (amount) => {};
+  const fetchSnapshot = useCallback(async () => {
+    const snap = await fetchSnapshotDebounced(auctionId);
+    applySnapshot(snap);
+  }, [auctionId, applySnapshot]);
+
+  const emitWithAck = useCallback((event, data) => {
+    if (!socketRef.current) return;
+
+  useEffect(() => {
+  }, []);
 }

@@ -5,6 +5,12 @@ import useAuth from "../hooks/useAuth";
 function SocketPage() {
   const socket = useRef();
   const { user } = useAuth();
+  const [value, setValue] = useState("");
+  const [current, setCurrent] = useState("");
+
+  const handleCurrent = (res) => {
+    setCurrent(res.bid.amount);
+  };
 
   const handleClick = () => {
     socket.current.emit("ping", (response) => {
@@ -22,15 +28,18 @@ function SocketPage() {
     socket.current.disconnect();
   };
 
-  const handlePlaceBid = () => {
+  const handlePlaceBid = (e) => {
+    e.preventDefault();
     socket.current.emit(
       "place-bid",
       {
         auctionId: 26,
         userId: user.id,
-        amount: 7222,
+        amount: value,
       },
-      console.log
+      (res) => {
+        handleCurrent(res);
+      }
     );
   };
   useEffect(() => {
@@ -57,9 +66,17 @@ function SocketPage() {
       <button className="border" onClick={handleJoin}>
         join
       </button>
-      <button className="border" onClick={handlePlaceBid}>
-        PlaceBid
-      </button>
+      {current}
+      <form>
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <button className="border" onClick={handlePlaceBid}>
+          PlaceBid
+        </button>
+      </form>
     </div>
   );
 }
