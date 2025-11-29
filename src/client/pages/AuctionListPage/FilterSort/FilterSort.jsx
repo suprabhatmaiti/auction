@@ -7,7 +7,6 @@ import { ApplyButton } from "./ApplyButton";
 
 function FilterSort({}) {
   const { state } = useAuctionListContext();
-  // console.log("Current State is : ", state);
   return (
     <div className="w-full">
       <Categories />

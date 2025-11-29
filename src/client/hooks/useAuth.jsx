@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(token);
       setUser(decoded);
     } catch (error) {
-      console.log("Error decoding token:", error);
+      // console.log("Error decoding token:", error);
       setUser(null);
     }
   };
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }) => {
         setAccessToken(data.accessToken);
         decodeAndSetUser(data.accessToken);
       } catch (error) {
-        console.log("Error refreshing token:", error);
+        // console.log("Error refreshing token:", error);
         setUser(null);
         setAccessToken(null);
       } finally {
@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(accessToken);
       return { accessToken, user };
     } catch (err) {
-      console.log("Error during registration:", err);
       throw err;
     }
   };
@@ -64,7 +63,6 @@ export const AuthProvider = ({ children }) => {
       setAccessToken(accessToken);
       return { accessToken, user };
     } catch (err) {
-      console.log("Error during login:", err);
       throw err;
     }
   };
@@ -73,7 +71,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await api.post("/api/auth/logout", null, { withCredentials: true });
     } catch (error) {
-      console.log("Error during logout:", error);
     } finally {
       setUser(null);
       setAccessToken(null);

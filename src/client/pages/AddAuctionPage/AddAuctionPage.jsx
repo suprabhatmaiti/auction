@@ -8,6 +8,7 @@ import {
 } from "./reducer/useAuctionPageReducer.js";
 import api from "../../utils/api.js";
 import Dropdown from "../../components/Dropdown/Dropdown.jsx";
+import { toast } from "react-toastify";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
@@ -16,7 +17,6 @@ function AddAuctionPage() {
 
   const handleSetPreview = (event) => {
     const file = event.target.files[0];
-    console.log(URL.createObjectURL(file));
     if (file) {
       dispatch({ type: "SET_IMAGE", file: file });
       setPreview(URL.createObjectURL(file));
@@ -60,15 +60,13 @@ function AddAuctionPage() {
         },
         withCredentials: true,
       });
-      console.log("Auction created:", data);
-      alert(data.message);
+      toast.success(data.message);
       dispatch({ type: "RESET_FORM" });
       setPreview(null);
     } catch (error) {
-      console.log("Error submitting auction:", error);
       const messege =
         error.response?.data?.error || "Failed to submit auction.";
-      alert(messege);
+      toast.error(messege);
     } finally {
       setSubmitting(false);
     }
