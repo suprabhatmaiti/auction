@@ -3,6 +3,7 @@ import Card from "../../../components/Card/Card";
 import api from "../../../utils/api";
 import { useEffect, useState } from "react";
 import { useAuctionListContext } from "../context/useAuctionListContext";
+import { toast } from "react-toastify";
 
 function AuctionList({}) {
   const [reload, setReload] = useState(false);
@@ -67,7 +68,7 @@ function AuctionList({}) {
           dispatch({ type: "SET_PAGE", page: pg.currentPage });
         }
       } catch (error) {
-        console.log("Error fetching auctions:", error);
+        toast.error("Error fetching auctions");
       }
     };
     fetchAuctions();
@@ -83,17 +84,25 @@ function AuctionList({}) {
 
   const BASE_URL = "http://localhost:3000";
 
-  const renderedAuctions = state.auctions.map((auction) => (
-    <div key={auction.id} className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]">
-      <Card
-        image={`${BASE_URL}/${auction.image_url}`}
-        name={auction.title}
-        currentbid={auction.current_price}
-        button="Bid Now"
-        id={auction.id}
-      />
-    </div>
-  ));
+  const renderedAuctions = state.auctions.map((auction) => {
+    const endIn = new Date(auction.end_time) - new Date();
+
+    return (
+      <div
+        key={auction.id}
+        className="w-[40%] sm:w-[48%] md:w-[32%] lg:w-[23%]"
+      >
+        <Card
+          image={`${BASE_URL}/${auction.image_url}`}
+          name={auction.title}
+          currentbid={auction.current_price}
+          button="Bid Now"
+          id={auction.id}
+          endIn={endIn}
+        />
+      </div>
+    );
+  });
 
   const handleRemoveCategory = (category) => {
     dispatch({
