@@ -9,7 +9,16 @@ export async function getAuctionSnapshot(auctionId) {
   const auction = await getAuctionById(auctionId);
   if (!auction) return null;
   const bids = await pool.query(
-    "SELECT id,bidder_id,amount,created_at from bids WHERE auction_id=$1 ORDER BY created_at DESC LIMIT 20",
+    `SELECT 
+      b.id AS bid_id,
+      u.name AS bidder_name,
+      b.amount AS bid_amount,
+      b.created_at AS bid_time
+    FROM bids b
+    JOIN users u ON b.bidder_id = u.id
+    WHERE b.auction_id = $1
+    ORDER BY b.created_at DESC
+    LIMIT 20`,
     [auctionId]
   );
   return {

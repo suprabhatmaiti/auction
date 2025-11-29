@@ -30,7 +30,6 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
     const minInc = Number(auction.min_increment || 1);
     const amount = Number(bidAmount);
 
-    console.log(amount);
     if (Number.isNaN(amount) || amount <= 0) {
       const err = new Error("invalid_amount");
       throw err;
@@ -44,9 +43,21 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
 
     // insert bid
     const ins = await client.query(
-      `INSERT INTO bids (auction_id, bidder_id, amount) VALUES ($1, $2, $3) RETURNING id, created_at`,
+      `WITH inserted AS (
+      INSERT INTO bids (auction_id, bidder_id, amount)
+      VALUES ($1, $2, $3)
+      RETURNING id , auction_id, bidder_id, amount , created_at
+   )
+   SELECT i.*, u.name AS bidder_name
+   FROM inserted i
+   JOIN users u ON i.bidder_id = u.id;`,
       [auctionId, userId, amount]
     );
+
+    if (ins.rowCount === 0) {
+      throw new Error("bid_failed");
+    }
+
     const bidRow = ins.rows[0];
 
     // anti-sniping extension
@@ -80,9 +91,10 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
       bid: {
         id: bidRow.id,
         auctionId,
-        bidder_id: userId,
-        amount: bidAmount,
-        created_at: bidRow.created_at,
+        bidder_name: bidRow.bidder_name,
+        bidder_id: bidRow.bidder_id,
+        bid_amount: bidAmount,
+        bid_time: bidRow.created_at,
       },
       seq,
       endsAt: newEndTime,
