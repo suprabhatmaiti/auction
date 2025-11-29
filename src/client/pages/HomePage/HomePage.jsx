@@ -30,15 +30,6 @@ function HomePage() {
 
       <Categories />
 
-      <button
-        className="border"
-        onClick={() => {
-          navigate("socket-test");
-        }}
-      >
-        goto socket
-      </button>
-
       <AuthPage
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}

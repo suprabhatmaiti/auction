@@ -22,7 +22,7 @@ function AuctionDescPage() {
   const { user } = useAuth();
   const [seq, setSeq] = useState(0);
   const [recentBids, setRecentBids] = useState([]);
-  const [currentPrice, setCurrentPrice] = useState(null);
+  const [isSeller, setIsSeller] = useState(false);
 
   const socket = useRef();
 
@@ -41,7 +41,6 @@ function AuctionDescPage() {
     };
 
     const onSnapshot = (snap) => {
-      console.log("snapshot", snap);
       if (!snap) return;
       const newSeq = Number(snap.seq ?? 0);
       safeSetSeq(newSeq);
@@ -69,7 +68,6 @@ function AuctionDescPage() {
             const snapSeq = Number(res.data.seq ?? 0);
             setSeq(snapSeq);
             seqRef.current = snapSeq;
-            console.log("second");
             onSnapshot(res.data);
           }
         } catch (error) {
@@ -81,10 +79,10 @@ function AuctionDescPage() {
         safeSetSeq(incomingSeq);
       }
       if (bid) {
-        setAuction((prev) => ({
-          ...(prev || {}),
-          current_price: Number(bid.amount),
-        }));
+        // setAuction((prev) => ({
+        //   ...(prev || {}),
+        //   current_price: Number(bid.bid_amount),
+        // }));
 
         setRecentBids((prev) => {
           const filtered = prev.filter((b) => String(b.id) !== String(bid.id));
@@ -104,8 +102,9 @@ function AuctionDescPage() {
         });
 
         if (canceled) return;
-        // console.log(data);
         setAuction(data.auction || null);
+
+        if (data.auction.seller_id === user.id) setIsSeller(true);
 
         if (!socket.current) {
           socket.current = getSocket();
@@ -125,12 +124,11 @@ function AuctionDescPage() {
             if (!res?.ok) {
               console.error("join failed", res);
             }
-            // console.log("joined, snapshot:", res);
+
             if (res?.snapshot) onSnapshot(res.snapshot);
             else if (res?.recent_bids) safeSetRecentBids(res.recent_bids);
           }
         );
-        // console.log("recent Bids", recentBids);
       } catch (error) {
         console.log(error);
         if (canceled) return;
@@ -189,12 +187,11 @@ function AuctionDescPage() {
   };
 
   const renderedBids = recentBids.slice(0, 20).map((bid) => {
-    // console.log(bid.userId);
     return (
       <div key={bid.id} className="flex justify-between">
-        <div>{bid.bidder_id}</div>
-        <div>{bid.amount}</div>
-        <div className="hidden md:block">{bid.created_at}</div>
+        <div>{bid.bidder_name}</div>
+        <div>{bid.bid_amount}</div>
+        <div className="hidden md:block">{bid.bid_time}</div>
       </div>
     );
   });
@@ -252,21 +249,27 @@ function AuctionDescPage() {
               Ends: {new Date(auction.end_time).toLocaleString()}
             </div>
 
-            <div className="">
-              <Input
-                type="number"
-                label="Your Bid Amount (₹)"
-                placeholder="Enter your bid"
-                value={bidAmount}
-                onChange={handleBidAmountChange}
-              />
-              <button
-                onClick={handlePlaceBidClick}
-                className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition"
-              >
-                Place Bid
-              </button>
-            </div>
+            {!isSeller ? (
+              <div className="">
+                <Input
+                  type="number"
+                  label="Your Bid Amount (₹)"
+                  placeholder="Enter your bid"
+                  value={bidAmount}
+                  onChange={handleBidAmountChange}
+                />
+                <button
+                  onClick={handlePlaceBidClick}
+                  className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition"
+                >
+                  Place Bid
+                </button>
+              </div>
+            ) : (
+              <div className="text-gray-400 text-3xl flex justify-center mt-10">
+                Seller Can't join the auction.
+              </div>
+            )}
           </div>
         </div>
         {/* <BiddingHistory /> */}
