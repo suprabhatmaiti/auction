@@ -8,20 +8,15 @@ export const verifyToken = (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized: No token provided" });
     }
 
-    // console.log(reqHeader);
-
     const token = reqHeader.split(" ")[1];
     if (!token) {
       return res.status(401).json({ error: "Unauthorized: malformed token" });
     }
-    // console.log(token);
 
     const decoded = verifyAccessToken(token);
     req.user = decoded;
-    // console.log('Token verified, user:', decoded);
     next();
   } catch (error) {
-    console.log(error);
     return res
       .status(401)
       .json({ error: "Unauthorized: Invalid or expired token" });

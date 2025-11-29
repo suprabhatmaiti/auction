@@ -49,8 +49,6 @@ function AuthForm({ isLoginPageOpen, onClose }) {
           password: formData.password,
         };
 
-    // console.log(payload);
-
     try {
       const response = isLoginPageOpen
         ? await login(payload)
@@ -59,7 +57,6 @@ function AuthForm({ isLoginPageOpen, onClose }) {
       onClose();
     } catch (error) {
       if (error.response?.data?.error) {
-        // console.log(error);
         dispatch({ type: SET_ERROR, value: error.response.data.error });
         toast.error(error.response.data.error);
       }

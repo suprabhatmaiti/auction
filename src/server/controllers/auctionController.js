@@ -48,7 +48,7 @@ export const createAuction = async (req, res) => {
           "End time must be a future date/time greater than the current time.",
       });
     }
-    console.log("endTime:", endTime.toLocaleString());
+    // console.log("endTime:", endTime.toLocaleString());
 
     const sellerId = req.user?.id;
     if (!sellerId) {
@@ -103,10 +103,8 @@ export const getAuctions = async (req, res) => {
       activeOnly = "true",
     } = req.query;
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
-    // cap at 100, floor at 1
     const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
     const offset = (pageNum - 1) * sizeNum;
-    // console.log(" pages calculation ", pageNum, sizeNum, offset);
 
     const params = [];
     const where = [];

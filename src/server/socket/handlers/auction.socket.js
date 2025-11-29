@@ -6,10 +6,7 @@ import { placeBid } from "../services/auction.service.js";
 
 export function auctionHandler(io) {
   io.on("connection", (socket) => {
-    console.log("a user connected:", socket.id);
-
     socket.on("ping", (cb) => {
-      console.log("Ping received from client:", socket.id);
       cb(`Pong from server to ${socket.id}`);
     });
 
@@ -72,7 +69,6 @@ export function auctionHandler(io) {
         if (typeof bidAmount !== "number" || bidAmount <= 0)
           return cb?.({ ok: false, error: "invalid_bidAmount" });
         const result = await placeBid({ auctionId, userId, bidAmount });
-        console.log(result);
 
         io.to(`auction:${auctionId}`).emit("bid:update", {
           auctionId,
@@ -87,7 +83,6 @@ export function auctionHandler(io) {
           endsAt: result.endsAt,
         });
       } catch (error) {
-        console.log(error);
         const response = { ok: false, error: error.message };
         if (error.minAccept) {
           response.minAccept = error.minAccept;
