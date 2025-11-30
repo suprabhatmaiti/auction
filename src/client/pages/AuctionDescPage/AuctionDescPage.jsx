@@ -174,7 +174,7 @@ function AuctionDescPage() {
     };
   }, [id]);
 
-  if (!auction) return <div className="p-8">Auction not found.</div>;
+  if (!auction) return <LoadingOverlay loading={loading} />;
 
   const price = Number(auction.current_price ?? auction.start_price ?? 0);
 
@@ -207,16 +207,11 @@ function AuctionDescPage() {
   };
 
   const bidsList = recentBids.map((bid) => {
-    return (
-      <div key={bid.bid_id}>
-        <BiddingHistory bid={bid} />
-      </div>
-    );
+    return <BiddingHistory key={bid.bid_id} bid={bid} />;
   });
 
   return (
     <div className="min-h-screen pb-10">
-      <LoadingOverlay loading={loading} />
       <div className="p-8 space-y-6">
         <div className="text-sm text-gray-600">
           Home / Auctions / {auction.category} / {auction.title}
@@ -236,14 +231,25 @@ function AuctionDescPage() {
           <h2 className="text-lg font-semibold border-b border-gray-200 pb-2">
             Bidding History
           </h2>
-          <div className="text-sm mt-3 text-gray-700">
-            <div className="flex justify-between ">
-              <div className="font-medium">Bidder</div>
-              <div className="font-medium">Bid Amount</div>
-              <div className="font-medium hidden md:block">Time</div>
-            </div>
-            <div>{bidsList}</div>
-          </div>
+          <table className="w-full text-sm text-gray-700">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+              <tr>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Bidder
+                </th>
+                <th scope="col" className="px-6 py-3 text-center">
+                  Bid Amount
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-center hidden md:table-cell"
+                >
+                  Time
+                </th>
+              </tr>
+            </thead>
+            <tbody>{bidsList}</tbody>
+          </table>
         </div>
       </div>
     </div>

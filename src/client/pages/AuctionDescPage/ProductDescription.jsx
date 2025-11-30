@@ -85,7 +85,7 @@ function ProductDescription({
                 type="submit"
                 className="mt-4 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition"
               >
-                Place Bid
+                {loading ? "Placing Bid..." : "Place Bid"}
               </button>
             </div>
           </form>

@@ -1,10 +1,12 @@
 function BiddingHistory({ bid }) {
   return (
-    <div className="flex justify-between">
-      <div>{bid.bidder_name}</div>
-      <div>{bid.bid_amount}</div>
-      <div className="hidden md:block">{bid.bid_time.toLocaleString()}</div>
-    </div>
+    <tr className="bg-white border-b">
+      <td className="px-6 py-4 text-center">{bid.bidder_name}</td>
+      <td className="px-6 py-4 text-center">{bid.bid_amount}</td>
+      <td className="px-6 py-4 text-center hidden md:table-cell">
+        {new Date(bid.bid_time).toLocaleString()}
+      </td>
+    </tr>
   );
 }
 export default BiddingHistory;

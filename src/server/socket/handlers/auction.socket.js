@@ -91,8 +91,6 @@ export function auctionHandler(io) {
       }
     });
 
-    socket.on("disconnect", () => {
-      console.log("user disconnected:", socket.id);
-    });
+    socket.on("disconnect", () => {});
   });
 }

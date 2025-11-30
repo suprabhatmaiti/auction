@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { pool } from "../config/db.js";
+import { pool } from "../config/renderDb.js";
 import fs from "fs";
 import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
 
@@ -48,7 +48,6 @@ export const createAuction = async (req, res) => {
           "End time must be a future date/time greater than the current time.",
       });
     }
-    // console.log("endTime:", endTime.toLocaleString());
 
     const sellerId = req.user?.id;
     if (!sellerId) {
@@ -250,4 +249,27 @@ export const getAuctionSnap = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Server error fetching auction" });
   }
+};
+
+export const endAuction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const idNum = Number(id);
+    if (Number.isNaN(idNum) || idNum <= 0) {
+      return res.status(400).json({ error: "Invalid auction ID" });
+    }
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const sql = `
+      UPDATE auctions
+      SET is_active = false
+      WHERE id = $1`;
+    const { rows } = await pool.query(sql, [idNum]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Auction not found" });
+    }
+    res.status(200).json({ message: "Auction ended successfully" });
+  } catch (error) {}
 };

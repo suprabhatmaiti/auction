@@ -15,12 +15,14 @@ function AuthPage({ isOpen, onClose, mode = "login", onModeChange }) {
 
   return (
     <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-white rounded-2xl shadow-2xl relative 
+      <div
+        className="bg-white rounded-2xl shadow-2xl relative 
           w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 
           max-h-[90vh] overflow-y-auto 
           p-6 md:p-8 
           animate-fade-in-up
-        ">
+        "
+      >
         <button
           onClick={handleCloseBtn}
           className="absolute right-0 top-0 px-3 rounded-r-lg bg-gray-100 hover:shadow-lg hover:bg-gray-300 text-xl"

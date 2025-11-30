@@ -1,11 +1,9 @@
-import { pool } from "../../config/db.js"; // adjust path if needed
+import { pool } from "../../config/renderDb.js"; // adjust path if needed
 
 export async function placeBid({ auctionId, userId, bidAmount }) {
   const client = await pool.connect();
   try {
     await client.query("BEGIN");
-
-    // lock auction row
     const r = await client.query(
       `SELECT id, current_price , min_increment, end_time, status
        FROM auctions WHERE id = $1 FOR UPDATE`,
@@ -89,7 +87,7 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
     return {
       ok: true,
       bid: {
-        id: bidRow.id,
+        bid_id: bidRow.id,
         auctionId,
         bidder_name: bidRow.bidder_name,
         bidder_id: bidRow.bidder_id,

@@ -7,7 +7,6 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  // const [accessToken, setAccessToken] = useState(null);
 
   const decodeAndSetUser = (token) => {
     if (!token) {
@@ -45,35 +44,46 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (payload) => {
     try {
+      setLoading(true);
       const response = await api.post("/api/auth/register", payload);
       const { accessToken, user } = response.data;
       decodeAndSetUser(accessToken);
       setAccessToken(accessToken);
+      setLoading(false);
       return { accessToken, user };
     } catch (err) {
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const login = async (payload) => {
     try {
+      setLoading(true);
       const response = await api.post("/api/auth/login", payload);
       const { accessToken, user } = response.data;
       decodeAndSetUser(accessToken);
       setAccessToken(accessToken);
+      setLoading(false);
       return { accessToken, user };
     } catch (err) {
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const logout = async () => {
     try {
+      setLoading(true);
       await api.post("/api/auth/logout", null, { withCredentials: true });
+      setLoading(false);
     } catch (error) {
     } finally {
       setUser(null);
       setAccessToken(null);
+      setLoading(false);
     }
   };
 

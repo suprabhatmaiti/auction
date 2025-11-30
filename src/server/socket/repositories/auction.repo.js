@@ -1,4 +1,4 @@
-import { pool } from "../../config/db.js";
+import { pool } from "../../config/renderDb.js";
 export async function getAuctionById(auctionId) {
   const res = await pool.query("SELECT * FROM auctions WHERE id = $1", [
     auctionId,
@@ -23,6 +23,7 @@ export async function getAuctionSnapshot(auctionId) {
   );
   return {
     auctionId,
+    isActive: auction.is_active,
     seq: Number(auction.seq || 0),
     current_price: auction.current_price,
     end_time: auction.end_time,

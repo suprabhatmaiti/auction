@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { pool } from "../config/db.js";
+// import { pool } from "../config/db.js";
+import { pool } from "../config/renderDb.js";
 
 function generateAccessToken(user) {
   return jwt.sign(
@@ -34,9 +35,10 @@ export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
-    const userExist = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const userExist = await pool.query(
+      "SELECT * FROM public.users WHERE email = $1",
+      [email]
+    );
     if (userExist.rowCount > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
@@ -78,13 +80,11 @@ export const login = async (req, res) => {
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-    // console.log(result);
     if (result.rows.length === 0) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
     const user = result.rows[0];
-    // console.log(user);
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {

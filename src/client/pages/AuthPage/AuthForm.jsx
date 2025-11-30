@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 
 function AuthForm({ isLoginPageOpen, onClose }) {
   const [formData, dispatch] = useReducer(formReducer, initialState);
-  const { login, register } = useAuth();
+  const { login, register, loading } = useAuth();
 
   useEffect(() => {
     if (
@@ -116,10 +116,17 @@ function AuthForm({ isLoginPageOpen, onClose }) {
       )}
 
       <button
+        disabled={loading}
         type="submit"
-        className="bg-violet-600 text-white w-full rounded-lg h-10 font-bold hover:bg-violet-800 cursor-pointer my-2"
+        className="bg-violet-600 text-white w-full rounded-lg h-10 font-bold hover:bg-violet-800 cursor-pointer my-2 disabled:bg-gray-500 disabled:cursor-not-allowed"
       >
-        {isLoginPageOpen ? "Login" : "Sign Up"}
+        {loading && isLoginPageOpen
+          ? "Logging in..."
+          : loading && !isLoginPageOpen
+          ? "Signing up..."
+          : isLoginPageOpen
+          ? "Login"
+          : "Sign Up"}
       </button>
     </form>
   );

@@ -9,7 +9,7 @@ import { createServer } from "http";
 import { Server as IOServer } from "socket.io";
 import { socketAuth } from "./socket/socketAuth.js";
 
-import { socketHandlers } from "./socket/handlers/index.js";
+import { auctionHandler } from "./socket/handlers/auction.socket.js";
 
 dotenv.config();
 
@@ -57,7 +57,7 @@ const io = new IOServer(httpServer, {
 });
 socketAuth(io);
 
-socketHandlers(io);
+auctionHandler(io);
 
 ViteExpress.bind(app, httpServer);
 
