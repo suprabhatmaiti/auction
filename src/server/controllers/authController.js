@@ -35,19 +35,22 @@ export const register = async (req, res) => {
   const { name, email, password, role } = req.body;
 
   try {
+    const userEmail = email.toLowerCase().trim();
+    const userPassword = password.trim();
+
     const userExist = await pool.query(
-      "SELECT * FROM public.users WHERE email = $1",
-      [email]
+      "SELECT * FROM users WHERE email = $1 AND role = $2",
+      [userEmail, role]
     );
     if (userExist.rowCount > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(userPassword, 10);
 
     const newUser = await pool.query(
       "INSERT INTO users (name,email,password,role) VALUES ($1,$2,$3,$4) RETURNING id, name, email, role, created_at",
-      [name, email, hashedPassword, role || "buyer"]
+      [name, userEmail, hashedPassword, role || "buyer"]
     );
 
     const user = newUser.rows[0];
@@ -74,19 +77,24 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
 
   try {
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
+    const userEmail = email.toLowerCase().trim();
+    const userPassword = password.trim();
+
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email = $1 AND role = $2",
+      [userEmail, role]
+    );
+
     if (result.rows.length === 0) {
       return res.status(400).json({ error: "Invalid email or password" });
     }
 
     const user = result.rows[0];
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(userPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Invalid email or password" });
     }

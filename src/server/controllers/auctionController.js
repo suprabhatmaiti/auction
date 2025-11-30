@@ -101,6 +101,8 @@ export const getAuctions = async (req, res) => {
       pageSize = "10",
       activeOnly = "true",
     } = req.query;
+
+    console.log(req.user);
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
     const offset = (pageNum - 1) * sizeNum;
