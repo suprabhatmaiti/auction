@@ -1,5 +1,5 @@
 import { CgClose, CgMenu } from "react-icons/cg";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { initialState, reducer } from "./hooks/useAuthReducer";
 import { useEffect, useReducer, useRef } from "react";
 import useAuth from "../../hooks/useAuth";
@@ -8,6 +8,7 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { logout } = useAuth();
   const menuRef = useRef();
+  const navigate = useNavigate();
 
   const handleLoginClick = (e) => {
     onLoginClick();
@@ -45,16 +46,27 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
   const onNavLinkClick = () => {
     dispatch({ type: "TOGGLE_MENU" });
   };
+  const onAdminLoginClick = () => {
+    navigate("/admin-login");
+  };
 
   return (
     <div>
       {!isLoggedIn ? (
-        <button
-          onClick={handleLoginClick}
-          className=" bg-violet-700 hover:bg-violet-800 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer active:scale-95 md:hidden  "
-        >
-          Login
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onAdminLoginClick}
+            className="border border-gray-400 border-2 rounded-lg px-2 sm:py-2 text-gray-600 font-semibold bg-gray-200 hover:bg-gray-300 active:bg-gray-100 w-full"
+          >
+            Admin Login
+          </button>
+          <button
+            onClick={handleLoginClick}
+            className=" bg-violet-700 hover:bg-violet-800 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer active:scale-95 md:hidden  "
+          >
+            Login
+          </button>
+        </div>
       ) : (
         <div ref={menuRef}>
           <button

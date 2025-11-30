@@ -44,6 +44,11 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
     navigate("/profile");
   };
 
+  const onAdminLoginClick = () => {
+    setIsOpen(false);
+    navigate("/admin-login");
+  };
+
   return (
     <div>
       {isLoggedIn ? (
@@ -105,12 +110,20 @@ function UserControlSection({ isLoggedIn, onLoginClick }) {
           </div>
         </div>
       ) : (
-        <button
-          onClick={onLoginClick}
-          className="cursor-pointer bg-violet-600 hover:bg-violet-700 active:scale-95 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 shadow-md hover:shadow-lg"
-        >
-          Login
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onAdminLoginClick}
+            className="border border-gray-400 border-2 rounded-lg px-2 md:py-2 text-gray-600 font-semibold bg-gray-200 hover:bg-gray-300 active:bg-gray-100"
+          >
+            Admin Login
+          </button>
+          <button
+            onClick={onLoginClick}
+            className="cursor-pointer bg-violet-600 hover:bg-violet-700 active:scale-95 text-white px-6 py-3 rounded-lg font-bold transition-all duration-200 shadow-md hover:shadow-lg"
+          >
+            Login
+          </button>
+        </div>
       )}
     </div>
   );
