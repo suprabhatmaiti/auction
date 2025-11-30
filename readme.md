@@ -42,25 +42,28 @@
 
 ## 📂 Project Structure
 
-### Frontend (`client/`)
+The project separates client and server logic under the `src/` directory. Static files and the main server process live at the root.
 
 ```
-components/            # Reusable UI components (Button, Card, Header, Timer, etc.)
-hooks/                 # Custom React hooks (useAuth, useAuctionSockets)
-pages/                 # Application views/pages (AuctionListPage, AuthPage, AuctionDescPage)
-utils/                 # Utility functions (api.js, getSocket.js)
-```
-
-### Backend (`server/` or Root)
-
-```
-config/                # Database connection configuration
-controllers/           # Business logic for REST API endpoints
-lib/                   # File/Image upload utilities (Multer, Sharp)
-middleware/            # Express middleware (verifyToken, verifyAccessToken)
-routes/                # Express router definitions
-socket/                # Real-time bidding logic (handlers, repositories, services)
-main.js                # Server entry point (Express & Socket.IO initialization)
+.
+├── uploads/                    # 🖼️ User-uploaded files (images, avatars)
+│   ├── avatars/                # Stored user profile images
+│   └── product-images/         # Stored auction item images
+├── src/
+│   ├── client/                 # ⚛️ Frontend Source Code (Vite/React)
+│   │   ├── components/         # Reusable UI components
+│   │   ├── hooks/              # Custom React Hooks
+│   │   ├── pages/              # Application views/pages
+│   │   └── utils/              # Frontend utilities (API client, Socket setup)
+│   └── server/                 # 🌐 Backend Source Code (Node/Express)
+│       ├── config/             # DB connection
+│       ├── controllers/        # REST API business logic
+│       ├── lib/                # Backend utilities (Upload config)
+│       ├── middleware/         # Express middleware
+│       ├── routes/             # Express router definitions
+│       └── socket/             # Real-time bidding engine logic
+├── main.js                     # 🚀 Root Server Entry Point (Express, Socket.IO, ViteExpress)
+└── package.json                # Dependencies and scripts
 ```
 
 ## ⚙️ Setup and Installation
@@ -70,14 +73,14 @@ main.js                # Server entry point (Express & Socket.IO initialization)
 - Node.js (v14+)
 - PostgreSQL
 
-### 1. Backend Installation
+### 1. Installation
 
 ```bash
 # Clone the repository
-git clone [YOUR_REPO_URL]
+git clone [COPY_AND_PASTE THE _REPO_URL]
 cd [project-folder]
 
-# Install dependencies
+# Install dependencies for the full stack
 npm install
 ```
 
@@ -107,7 +110,7 @@ Use the following SQL commands to set up the necessary tables in your PostgreSQL
 
 ```sql
 -- USERS Table
-CREATE TABLE public.users (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name character varying(100),
     email character varying(100) NOT NULL UNIQUE,
@@ -117,7 +120,7 @@ CREATE TABLE public.users (
 );
 
 -- AUCTIONS Table
-CREATE TABLE public.auctions (
+CREATE TABLE auctions (
     id SERIAL PRIMARY KEY,
     title character varying(255),
     description text,
@@ -125,7 +128,7 @@ CREATE TABLE public.auctions (
     category character varying(100),
     start_price numeric,
     current_price numeric,
-    seller_id integer REFERENCES public.users(id),
+    seller_id integer REFERENCES users(id),
     start_time timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     end_time timestamp without time zone,
     is_active boolean DEFAULT true,
@@ -136,10 +139,10 @@ CREATE TABLE public.auctions (
 );
 
 -- BIDS Table
-CREATE TABLE public.bids (
+CREATE TABLE bids (
     id SERIAL PRIMARY KEY,
-    auction_id integer REFERENCES public.auctions(id),
-    bidder_id integer REFERENCES public.users(id),
+    auction_id integer REFERENCES auctions(id),
+    bidder_id integer REFERENCES users(id),
     amount numeric,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
@@ -150,10 +153,10 @@ CREATE TABLE public.bids (
 The `main.js` file uses `ViteExpress.bind` to serve the React frontend and run the Express backend simultaneously.
 
 ```bash
-npm run dev
+npm run dev # or the script configured to run main.js
 # Application will be accessible on http://localhost:3000
 ```
 
 ---
 
-Built with dedication and skill by **Suprabhat Maiti**
+**Built with dedication and skill by SUPRABHAT MAITI**
