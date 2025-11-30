@@ -15,7 +15,7 @@ function AuctionDescPage() {
   const [isActive, setIsActive] = useState(true);
   const { id } = useParams();
   const [auction, setAuction] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [currentPrice, setCurrentprice] = useState(0);
   const { user } = useAuth();
@@ -48,7 +48,7 @@ function AuctionDescPage() {
       setCurrentprice(n);
     };
 
-    const onSnapshot = (snap) => {
+    const onSnapshot = async (snap) => {
       if (!snap) return;
       const newSeq = Number(snap.seq ?? 0);
       safeSetSeq(newSeq);
@@ -89,7 +89,6 @@ function AuctionDescPage() {
         safeSetSeq(incomingSeq);
       }
       if (bid) {
-        console.log("bid update", bid);
         safeSetCurrentPrice(bid.bid_amount);
         const amount = Number(bid.bid_amount);
         setAuction((prev) => ({
@@ -118,7 +117,6 @@ function AuctionDescPage() {
         const { data } = await api.get(`/api/auction/get-auction/${id}`, {
           withCredentials: true,
         });
-        console.log(data);
 
         if (canceled) return;
         setAuction(data.auction || null);
@@ -179,12 +177,13 @@ function AuctionDescPage() {
   const price = Number(auction.current_price ?? auction.start_price ?? 0);
 
   const handlePlaceBidClick = async (bidAmount) => {
+    setLoading(true);
     try {
       if (bidAmount <= price) {
         alert("Bid amount must be greater than current price.");
         return;
       }
-      setLoading(true);
+
       socket.current.emit(
         "place-bid",
         { auctionId: Number(id), amount: Number(bidAmount) },
@@ -201,7 +200,6 @@ function AuctionDescPage() {
       );
     } catch (error) {
       console.log(error);
-    } finally {
       setLoading(false);
     }
   };

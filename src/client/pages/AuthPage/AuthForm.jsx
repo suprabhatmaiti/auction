@@ -11,10 +11,14 @@ import {
   SET_ERROR,
 } from "./reducers/authReducer";
 import { toast } from "react-toastify";
+import RoleCheckBox from "./RoleCheckBox";
+
+import { useNavigate } from "react-router-dom";
 
 function AuthForm({ isLoginPageOpen, onClose }) {
   const [formData, dispatch] = useReducer(formReducer, initialState);
   const { login, register, loading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -40,13 +44,15 @@ function AuthForm({ isLoginPageOpen, onClose }) {
       dispatch({ type: SET_ERROR, value: "Passwords do not match" });
       return;
     }
+    const role = Object.keys(formData.role || {})[0] || null;
 
     const payload = isLoginPageOpen
-      ? { email: formData.email, password: formData.password }
+      ? { email: formData.email, password: formData.password, role: role }
       : {
           name: formData.fullName,
           email: formData.email,
           password: formData.password,
+          role: role,
         };
 
     try {
@@ -54,7 +60,9 @@ function AuthForm({ isLoginPageOpen, onClose }) {
         ? await login(payload)
         : await register(payload);
       dispatch({ type: RESET_FORM });
+
       onClose();
+      navigate("/");
     } catch (error) {
       if (error.response?.data?.error) {
         dispatch({ type: SET_ERROR, value: error.response.data.error });
@@ -108,6 +116,8 @@ function AuthForm({ isLoginPageOpen, onClose }) {
           )}
         </div>
       )}
+
+      <RoleCheckBox />
 
       {isLoginPageOpen && (
         <p className="text-violet-600 cursor-pointer hover:text-violet-800">

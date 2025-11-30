@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { IoRadioButtonOffOutline, IoRadioButtonOn } from "react-icons/io5";
-import { useAuctionListContext } from "../context/useAuctionListContext";
+import {
+  formReducer,
+  initialState,
+  UPDATE_FIELD,
+  RESET_FORM,
+  SET_ERROR,
+  SET_ROLE,
+} from "./reducers/authReducer";
+function RoleCheckBox() {
+  const [state, dispatch] = useReducer(formReducer, initialState);
 
-function SortBy() {
-  const { state, dispatch } = useAuctionListContext();
+  console.log(state);
+
   const values = [
-    { label: "Ending Soonest", value: "endingSoonest" },
-    { label: "Highest Bid", value: "highestBid" },
-    { label: "Newest First", value: "newestFirst" },
+    { label: "Buyer", value: "buyer" },
+    { label: "Seller", value: "seller" },
   ];
 
   const checkboxesValues = values.map((value) => {
@@ -18,7 +26,7 @@ function SortBy() {
         className="flex gap-2 items-center cursor-pointer text-violet-700"
       >
         <div>
-          {state.SortByValue[value.value] ? (
+          {state.role[value.value] ? (
             <IoRadioButtonOn />
           ) : (
             <IoRadioButtonOffOutline />
@@ -33,18 +41,17 @@ function SortBy() {
 
   const toggleSortByValues = (value) => {
     dispatch({
-      type: "SET_SORT_BY",
-      SortByValue: value,
+      type: SET_ROLE,
+      role: value,
     });
-    dispatch({ type: "MARK_PENDING_CHANGES" });
   };
 
   return (
-    <div className="border-b border-gray-200 pb-2 mt-8 pr-4 ">
-      <h2 className="font-semibold">Sort By</h2>
-      <div className="mt-4">{checkboxesValues}</div>
+    <div className="border-b border-gray-200 pb-2  pr-4 ">
+      <h2 className="font-semibold">Role</h2>
+      <div className=" flex gap-4 flex-wrap">{checkboxesValues}</div>
     </div>
   );
 }
 
-export default SortBy;
+export default RoleCheckBox;
