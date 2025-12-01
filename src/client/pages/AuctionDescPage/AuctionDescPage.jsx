@@ -94,7 +94,6 @@ function AuctionDescPage() {
         setAuction((prev) => ({
           ...(prev || {}),
           current_price: amount,
-          end_time: bid.bid_time,
         }));
 
         setRecentBids((prev) => {

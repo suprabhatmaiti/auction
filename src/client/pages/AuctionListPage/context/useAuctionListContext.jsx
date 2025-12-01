@@ -11,6 +11,7 @@ const initialState = {
   SortByValue: { newestFirst: true },
   applyFilter: false,
   hasPendingChanges: false,
+  searchTerm: "",
 };
 
 const reducer = (state, action) => {
@@ -57,6 +58,12 @@ const reducer = (state, action) => {
         ...state,
         page: action.page,
         totalPages: action.totalPages,
+      };
+
+    case "SET_SEARCH":
+      return {
+        ...state,
+        searchTerm: action.searchTerm,
       };
     case "MARK_PENDING_CHANGES":
       return { ...state, hasPendingChanges: true };

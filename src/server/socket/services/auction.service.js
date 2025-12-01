@@ -66,7 +66,6 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
       newEndTime = new Date(newEndTime.getTime() + EXTEND_MS);
     }
 
-    // update auction row: current_price, highest bid id, seq, end_time
     await client.query(
       `UPDATE auctions
        SET current_price = $1,
