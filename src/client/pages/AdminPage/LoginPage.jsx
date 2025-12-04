@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Input from "../../components/Input/Input";
 import useAuth from "../../hooks/useAuth";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -9,6 +10,8 @@ export default function LoginPage() {
     role: "admin",
   });
   const { login, loading } = useAuth();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,6 +27,8 @@ export default function LoginPage() {
         password: "",
         role: "admin",
       });
+      toast.success("Logged in successfully");
+      navigate("/admin-home");
     } catch (error) {
       toast.error(error.response.data.error);
     }

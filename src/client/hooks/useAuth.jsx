@@ -7,6 +7,7 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const decodeAndSetUser = (token) => {
     if (!token) {
@@ -15,6 +16,11 @@ export const AuthProvider = ({ children }) => {
     }
     try {
       const decoded = jwtDecode(token);
+      if (decoded.role === "admin") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
       setUser(decoded);
     } catch (error) {
       // console.log("Error decoding token:", error);
@@ -89,7 +95,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoggedIn: !!user, register, login, logout, loading }}
+      value={{
+        user,
+        isLoggedIn: !!user,
+        register,
+        login,
+        logout,
+        loading,
+        isAdmin,
+      }}
     >
       {children}
     </AuthContext.Provider>

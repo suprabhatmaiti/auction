@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import LoadingOverlay from "../components/LoadingOverlay/LoadingOverlay";
 
 function ProtectedRoutes({ children }) {
-  const { isLoggedIn, loading } = useAuth();
+  const { isAdmin, isLoggedIn, loading } = useAuth();
 
   if (loading) {
     return <LoadingOverlay />;
@@ -11,6 +11,9 @@ function ProtectedRoutes({ children }) {
 
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
+  }
+  if (isAdmin) {
+    return <Navigate to="/admin-home" replace />;
   }
 
   return children;

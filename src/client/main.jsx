@@ -14,6 +14,8 @@ import ProtectedRoutes from "../client/components/ProtectedRoutes";
 import AuctionDescPage from "./pages/AuctionDescPage/AuctionDescPage";
 import { AuctionProvider } from "./pages/AuctionListPage/context/useAuctionListContext";
 import LoginPage from "./pages/AdminPage/LoginPage";
+import AdminRoute from "./components/AdminRoute";
+import AdminHomePage from "./pages/AdminPage/AdminHomePage";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +69,15 @@ const router = createBrowserRouter([
       {
         path: "/admin-login",
         element: <LoginPage />,
+      },
+
+      {
+        path: "/admin-home",
+        element: (
+          <AdminRoute>
+            <AdminHomePage />
+          </AdminRoute>
+        ),
       },
     ],
   },

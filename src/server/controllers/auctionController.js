@@ -275,3 +275,74 @@ export const endAuction = async (req, res) => {
     res.status(200).json({ message: "Auction ended successfully" });
   } catch (error) {}
 };
+
+export const getUnapprovedAuctions = async (req, res) => {
+  try {
+    const { page = "1", pageSize = "10" } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
+    const offset = (pageNum - 1) * sizeNum;
+
+    if (!req.user) return res.status(401).json({ error: "Unauthorized" });
+
+    const adminId = req.user.id;
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const dataSql = `SELECT a.id, a.title, a.description, a.image_url, a.category,
+             a.start_price,a.seller_id, 
+             a.start_time, a.end_time,u.name AS seller_name,
+             a.is_approved,u.email AS seller_email
+      FROM auctions a
+      JOIN users u ON a.seller_id = u.id
+      WHERE a.is_approved = false
+      ORDER BY start_time DESC
+      LIMIT $1 OFFSET $2`;
+    const dataParams = [sizeNum, offset];
+
+    const result = await pool.query(dataSql, dataParams);
+
+    const totalAuctions = result.rows.length;
+    const totalPages = Math.max(1, Math.ceil(totalAuctions / sizeNum));
+
+    res.status(200).json({
+      auctions: result.rows,
+      pagination: {
+        totalAuctions,
+        totalPages,
+        currentPage: pageNum,
+        pageSize: sizeNum,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error fetching auctions" });
+  }
+};
+
+export const approveAuction = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const idNum = Number(id);
+    if (Number.isNaN(idNum) || idNum <= 0) {
+      return res.status(400).json({ error: "Invalid auction ID" });
+    }
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    const adminId = req.user.id;
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    const sql = `
+      UPDATE auctions
+      SET is_approved = true
+      WHERE id = $1`;
+    const { rows } = await pool.query(sql, [idNum]);
+
+    res.status(200).json({ message: "Auction approved successfully" });
+  } catch (error) {
+    console.error(error);
+  }
+};
