@@ -6,7 +6,7 @@ function ProtectedRoutes({ children }) {
   const { isAdmin, isLoggedIn, loading } = useAuth();
 
   if (loading) {
-    return <LoadingOverlay />;
+    return <LoadingOverlay loading={loading} />;
   }
 
   if (!isLoggedIn) {
