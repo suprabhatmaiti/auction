@@ -7,7 +7,7 @@ export default function AdminRoute({ children }) {
   const { isLoggedIn, loading, isAdmin } = useAuth();
 
   if (loading) {
-    return <LoadingOverlay />;
+    return <LoadingOverlay loading={loading} />;
   }
 
   if (!isLoggedIn) {

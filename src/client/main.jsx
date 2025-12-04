@@ -75,7 +75,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin-login",
-        element: <LoginPage />,
+        element: (
+          <PublicUserOnlyroute>
+            <LoginPage />
+          </PublicUserOnlyroute>
+        ),
       },
 
       {
