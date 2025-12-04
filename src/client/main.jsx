@@ -16,13 +16,21 @@ import { AuctionProvider } from "./pages/AuctionListPage/context/useAuctionListC
 import LoginPage from "./pages/AdminPage/LoginPage";
 import AdminRoute from "./components/AdminRoute";
 import AdminHomePage from "./pages/AdminPage/AdminHomePage";
+import PublicUserOnlyroute from "./components/PublicUserOnlyRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      { index: true, element: <HomePage /> },
+      {
+        index: true,
+        element: (
+          <PublicUserOnlyroute>
+            <HomePage />
+          </PublicUserOnlyroute>
+        ),
+      },
       {
         path: "profile",
         element: (
@@ -39,7 +47,6 @@ const router = createBrowserRouter([
           </ProtectedRoutes>
         ),
       },
-      { path: "dropdown", element: <DropdownPage /> },
       {
         path: "add-auction",
         element: (
