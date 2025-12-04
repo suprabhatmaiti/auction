@@ -5,10 +5,11 @@ import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
 
 export const createAuction = async (req, res) => {
   try {
-    const { title, description, category, start_price, end_time } = req.body;
+    const { title, description, category, start_price, auction_run_time } =
+      req.body;
 
     // Basic validations
-    if (!title || !category || !start_price || !end_time) {
+    if (!title || !category || !start_price || !auction_run_time) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -35,17 +36,15 @@ export const createAuction = async (req, res) => {
       return res.status(400).json({ error: "Invalid starting bid amount" });
     }
 
-    const endTime = new Date(end_time);
-    if (Number.isNaN(endTime.getTime())) {
+    if (Number.isNaN(auction_run_time)) {
       return res.status(400).json({ error: "Invalid auction end time" });
     }
 
     const now = new Date();
 
-    if (endTime <= now) {
+    if (auction_run_time <= 600000) {
       return res.status(400).json({
-        error:
-          "End time must be a future date/time greater than the current time.",
+        error: "Auction Run Time time must be a greater than 10 minutes ",
       });
     }
 
@@ -56,10 +55,10 @@ export const createAuction = async (req, res) => {
 
     const insertSql = `
       INSERT INTO auctions
-        (title, description, image_url, category, start_price, current_price, seller_id, start_time, end_time, is_active)
+        (title, description, image_url, category, start_price, current_price, seller_id, auction_run_time)
       VALUES
-        ($1, $2, $3, $4,  $5, $6, $7, NOW(), $8, true)
-      RETURNING id, title, description, image_url, category, start_price, current_price, seller_id, start_time, end_time, is_active
+        ($1, $2, $3, $4,  $5, $6, $7, $8)
+      RETURNING id, title, description, image_url, category, start_price, current_price, seller_id, is_active
     `;
     const params = [
       title.trim(),
@@ -69,7 +68,7 @@ export const createAuction = async (req, res) => {
       startPrice,
       startPrice,
       sellerId,
-      endTime,
+      auction_run_time,
     ];
 
     const { rows } = await pool.query(insertSql, params);
@@ -146,6 +145,10 @@ export const getAuctions = async (req, res) => {
         where.push(`category = ANY($${params.length})`);
       }
     }
+
+    where.push("is_approved = true");
+    where.push("is_active = true");
+    where.push("end_time > NOW()");
 
     const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
@@ -335,14 +338,26 @@ export const approveAuction = async (req, res) => {
     if (req.user.role !== "admin") {
       return res.status(403).json({ error: "Forbidden" });
     }
+    const auction_run_time = pool.query(
+      `SELECT auction_run_time FROM auctions WHERE id = $1`,
+      [idNum]
+    );
+    const now = new Date();
+    const auctionRunTime = auction_run_time.rows[0].auction_run_time;
+    const end_time = new Date(now.getTime() + auctionRunTime);
+
     const sql = `
       UPDATE auctions
-      SET is_approved = true
-      WHERE id = $1`;
-    const { rows } = await pool.query(sql, [idNum]);
+      SET start_time = NOW(),
+         end_time = $1,
+         is_active = true,
+         is_approved = true
+      WHERE id = $2`;
+    const { rows } = await pool.query(sql, [end_time, idNum]);
 
     res.status(200).json({ message: "Auction approved successfully" });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ error: "Server error approving auction" });
   }
 };

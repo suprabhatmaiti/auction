@@ -15,7 +15,7 @@ function ProfilePage() {
   ];
 
   return (
-    <div className="min-h-screen md:bg-gray-100 md:py-6 ">
+    <div className="min-h-screen md:bg-gray-100 md:py-6 border-t border-gray-300 mt-1">
       <div className="max-w-6xl md:mx-auto md:bg-white md:shadow-lg rounded-lg md:px-12 md:py-6 mb-16 md:w-3/4">
         <div className=" w-full ">
           <Tabs activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />

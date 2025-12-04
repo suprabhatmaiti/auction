@@ -9,6 +9,7 @@ import {
 import api from "../../utils/api.js";
 import Dropdown from "../../components/Dropdown/Dropdown.jsx";
 import { toast } from "react-toastify";
+import TimeInput from "../../components/TimeInput.jsx";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
@@ -29,7 +30,7 @@ function AddAuctionPage() {
       title,
       startingBid,
       imageFile,
-      auctionEndTime,
+      auctionRunTime,
       category,
       description,
     } = state;
@@ -37,7 +38,7 @@ function AddAuctionPage() {
       !title.trim() ||
       !startingBid.trim() ||
       !imageFile ||
-      !auctionEndTime.trim() ||
+      !auctionRunTime ||
       !category.trim()
     ) {
       alert("Please fill all required fields and upload an image.");
@@ -49,7 +50,7 @@ function AddAuctionPage() {
     formData.append("description", description);
     formData.append("category", category);
     formData.append("start_price", startingBid);
-    formData.append("end_time", auctionEndTime);
+    formData.append("auction_run_time", auctionRunTime);
     formData.append("image", imageFile);
 
     try {
@@ -75,6 +76,9 @@ function AddAuctionPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     dispatch({ type: "UPDATE_FIELD", field: name, value });
+  };
+  const handleAuctionRunTimeChange = (value) => {
+    dispatch({ type: "UPDATE_FIELD", field: "auctionRunTime", value: value });
   };
   const handleDropdownChange = (value, name) => {
     dispatch({ type: "UPDATE_FIELD", field: name, value: value });
@@ -148,15 +152,17 @@ function AddAuctionPage() {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="w-full">
-              <Input
-                label="Auction End Time"
-                type="datetime-local"
-                name="auctionEndTime"
-                placeholder="Select end time"
-                value={state.auctionEndTime}
-                onChange={handleInputChange}
-              />
+
+            <div>
+              <label
+                htmlFor="auctionEndTime"
+                className="block text-base font-medium text-gray-600"
+              >
+                Auction Running Time
+              </label>
+              <div className="w-full border p-2 rounded border-gray-300">
+                <TimeInput onChange={handleAuctionRunTimeChange} />
+              </div>
             </div>
           </div>
 
