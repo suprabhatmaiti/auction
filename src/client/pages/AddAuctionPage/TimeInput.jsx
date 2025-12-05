@@ -1,25 +1,11 @@
-import React, { useState } from "react";
-import Input from "./Input/Input";
+import React, { useReducer, useState } from "react";
+import Input from "../../components/Input/Input";
 
-export default function TimeInput({ onChange }) {
-  const [time, setTime] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  function handleChange(e) {
-    setTime({ ...time, [e.target.name]: e.target.value });
-    const totalMs =
-      time.days * 86400000 +
-      time.hours * 3600000 +
-      time.minutes * 60000 +
-      time.seconds * 1000;
-    onChange(totalMs);
-    // console.log(totalMs);
-    // // onChange(time);
-  }
+export default function TimeInput({ onChange, auctionRunTime }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    onChange(name, value);
+  };
 
   return (
     <div className="flex gap-4">
@@ -28,7 +14,7 @@ export default function TimeInput({ onChange }) {
         name="days"
         label="Days"
         placeholder="Days"
-        value={time.days}
+        value={auctionRunTime.days}
         onChange={handleChange}
         className="border p-2 w-30 rounded "
       />
@@ -38,7 +24,7 @@ export default function TimeInput({ onChange }) {
         name="hours"
         label="Hours"
         placeholder="Hours"
-        value={time.hours}
+        value={auctionRunTime.hours}
         onChange={handleChange}
         className="border p-2 w-30 rounded"
       />
@@ -48,7 +34,7 @@ export default function TimeInput({ onChange }) {
         name="minutes"
         label="Minutes"
         placeholder="Minutes"
-        value={time.minutes}
+        value={auctionRunTime.minutes}
         onChange={handleChange}
         className="border p-2 w-30 rounded"
       />
@@ -58,7 +44,7 @@ export default function TimeInput({ onChange }) {
         name="seconds"
         label="Seconds"
         placeholder="Seconds"
-        value={time.seconds}
+        value={auctionRunTime.seconds}
         onChange={handleChange}
         className="border p-2 w-40 rounded"
       />

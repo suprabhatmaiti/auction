@@ -17,8 +17,6 @@ import LoginPage from "./pages/AdminPage/LoginPage";
 import AdminRoute from "./components/AdminRoute";
 import AdminHomePage from "./pages/AdminPage/AdminHomePage";
 import PublicUserOnlyroute from "./components/PublicUserOnlyRoute";
-import TimeInput from "./components/TimeInput";
-import TimePage from "./pages/TimePage";
 
 const router = createBrowserRouter([
   {
@@ -91,10 +89,6 @@ const router = createBrowserRouter([
             <AdminHomePage />
           </AdminRoute>
         ),
-      },
-      {
-        path: "/Ti",
-        element: <TimeInput />,
       },
     ],
   },

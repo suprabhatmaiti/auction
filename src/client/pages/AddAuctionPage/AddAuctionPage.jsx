@@ -1,7 +1,6 @@
 import { useState, useReducer } from "react";
 import Input from "../../components/Input/Input.jsx";
 import { RiImageAddLine } from "react-icons/ri";
-
 import {
   initialState,
   useAuctionPageReducer,
@@ -9,13 +8,13 @@ import {
 import api from "../../utils/api.js";
 import Dropdown from "../../components/Dropdown/Dropdown.jsx";
 import { toast } from "react-toastify";
-import TimeInput from "../../components/TimeInput.jsx";
+import TimeInput from "./TimeInput.jsx";
 
 function AddAuctionPage() {
   const [preview, setPreview] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [state, dispatch] = useReducer(useAuctionPageReducer, initialState);
-
+  // console.log(state);
   const handleSetPreview = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -26,34 +25,37 @@ function AddAuctionPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {
-      title,
-      startingBid,
-      imageFile,
-      auctionRunTime,
-      category,
-      description,
-    } = state;
-    if (
-      !title.trim() ||
-      !startingBid.trim() ||
-      !imageFile ||
-      !auctionRunTime ||
-      !category.trim()
-    ) {
-      alert("Please fill all required fields and upload an image.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("start_price", startingBid);
-    formData.append("auction_run_time", auctionRunTime);
-    formData.append("image", imageFile);
-
     try {
+      const totalMs =
+        Number(state.auctionRunTime.days) * 86400000 +
+        Number(state.auctionRunTime.hours) * 3600000 +
+        Number(state.auctionRunTime.minutes) * 60000 +
+        Number(state.auctionRunTime.seconds) * 1000;
+
+      console.log(totalMs);
+      const auctionRunTime = totalMs;
+      const { title, startingBid, imageFile, category, description } = state;
+      if (
+        !title.trim() ||
+        !startingBid ||
+        startingBid <= 0 ||
+        !imageFile ||
+        !auctionRunTime ||
+        auctionRunTime <= 0 ||
+        !category.trim()
+      ) {
+        alert("Please fill all required fields and upload an image.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", category);
+      formData.append("start_price", startingBid);
+      formData.append("auction_run_time", auctionRunTime);
+      formData.append("image", imageFile);
+
       setSubmitting(true);
       const { data } = await api.post("/api/auction/create", formData, {
         headers: {
@@ -77,9 +79,11 @@ function AddAuctionPage() {
     const { name, value } = e.target;
     dispatch({ type: "UPDATE_FIELD", field: name, value });
   };
-  const handleAuctionRunTimeChange = (value) => {
-    dispatch({ type: "UPDATE_FIELD", field: "auctionRunTime", value: value });
+
+  const handleAuctionRunTimeChange = (name, value) => {
+    dispatch({ type: "UPDATE_AUCTION_RUN_TIME", payload: { name, value } });
   };
+
   const handleDropdownChange = (value, name) => {
     dispatch({ type: "UPDATE_FIELD", field: name, value: value });
   };
@@ -145,7 +149,7 @@ function AddAuctionPage() {
             <div className="w-full">
               <Input
                 label="Starting Bid"
-                type="text"
+                type="number"
                 name="startingBid"
                 placeholder="e.g., 50.00"
                 value={state.startingBid}
@@ -155,13 +159,16 @@ function AddAuctionPage() {
 
             <div>
               <label
-                htmlFor="auctionEndTime"
+                htmlFor="auctionRunTime"
                 className="block text-base font-medium text-gray-600"
               >
                 Auction Running Time
               </label>
               <div className="w-full border p-2 rounded border-gray-300">
-                <TimeInput onChange={handleAuctionRunTimeChange} />
+                <TimeInput
+                  auctionRunTime={state.auctionRunTime}
+                  onChange={handleAuctionRunTimeChange}
+                />
               </div>
             </div>
           </div>
