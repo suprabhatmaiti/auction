@@ -1,9 +1,13 @@
 // src/components/Auth/AuthPage.jsx
 import AuthForm from "./AuthForm";
 import SocialLogin from "./SocialLogin";
+import { CiUser } from "react-icons/ci";
+import { useNavigate } from "react-router-dom";
 
 function AuthPage({ isOpen, onClose, mode = "login", onModeChange }) {
   const isLoginPageOpen = mode === "login";
+
+  const navigate = useNavigate();
 
   if (!isOpen) return null;
 
@@ -11,6 +15,10 @@ function AuthPage({ isOpen, onClose, mode = "login", onModeChange }) {
 
   const loginSignupToggle = () => {
     onModeChange(isLoginPageOpen ? "signup" : "login");
+  };
+  const onAdminLoginClick = () => {
+    onClose();
+    navigate("/admin-login");
   };
 
   return (
@@ -50,6 +58,15 @@ function AuthPage({ isOpen, onClose, mode = "login", onModeChange }) {
               {!isLoginPageOpen ? "Login" : "Sign up"}
             </span>
           </p>
+        </div>
+        <div className="flex justify-center items-center text-violet-700 m-auto ">
+          <div
+            onClick={onAdminLoginClick}
+            className="flex justify-center items-center gap-2 m-auto hover:shadow-lg hover:bg-violet-500 hover:text-white px-2 rounded-lg cursor-pointer"
+          >
+            <CiUser className="text-xl" />
+            <p>Admin Login {">"}</p>
+          </div>
         </div>
       </div>
     </div>

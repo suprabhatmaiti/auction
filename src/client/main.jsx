@@ -6,7 +6,6 @@ import App from "./App";
 import HomePage from "./pages/HomePage/HomePage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
-import DropdownPage from "./pages/DropdownPage";
 import AddAuctionPage from "./pages/AddAuctionPage/AddAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage/AuctionListPage";
 import { AuthProvider } from "./hooks/useAuth";

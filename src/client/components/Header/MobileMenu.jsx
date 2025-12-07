@@ -13,7 +13,6 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
   const handleLoginClick = (e) => {
     onLoginClick();
     e.preventDefault();
-    // dispatch({ type: 'TOGGLE_MENU' });
   };
 
   const handleOutsideClick = (e) => {
@@ -54,12 +53,6 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
     <div>
       {!isLoggedIn ? (
         <div className="flex items-center gap-2">
-          <button
-            onClick={onAdminLoginClick}
-            className="border border-gray-400 border-2 rounded-lg px-2 sm:py-2 text-gray-600 font-semibold bg-gray-200 hover:bg-gray-300 active:bg-gray-100 w-full"
-          >
-            Admin Login
-          </button>
           <button
             onClick={handleLoginClick}
             className=" bg-violet-700 hover:bg-violet-800 text-white px-6 py-2 rounded-lg font-semibold transition cursor-pointer active:scale-95 md:hidden  "
@@ -113,30 +106,3 @@ function MobileMenu({ isLoggedIn, onLoginClick }) {
 }
 
 export default MobileMenu;
-
-{
-  /* 
-      {state.isMenuOpen && (
-        <form className="absolute top-16 left-0 w-full bg-white shadow-md border-t border-gray-200 flex flex-col items-center py-4 space-y-3 md:hidden">
-          <NavLink
-            to="/"
-            onClick={() => dispatch({ type: 'TOGGLE_MENU' })}
-            className="text-violet-700 font-medium hover:text-violet-900"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/dashboard"
-            onClick={() => dispatch({ type: 'TOGGLE_MENU' })}
-            className="text-violet-700 font-medium hover:text-violet-900"
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/profile"
-            onClick={() => dispatch({ type: 'TOGGLE_MENU' })}
-            className="text-violet-700 font-medium hover:text-violet-900"
-          >
-            Profile
-          </NavLink> */
-}

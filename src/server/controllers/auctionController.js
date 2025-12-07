@@ -55,9 +55,9 @@ export const createAuction = async (req, res) => {
 
     const insertSql = `
       INSERT INTO auctions
-        (title, description, image_url, category, start_price, current_price, seller_id, auction_run_time)
+        (title, description, image_url, category, start_price, current_price, seller_id, auction_run_time,created_at)
       VALUES
-        ($1, $2, $3, $4,  $5, $6, $7, $8)
+        ($1, $2, $3, $4,  $5, $6, $7, $8, NOW())
       RETURNING id, title, description, image_url, category, start_price, current_price, seller_id, is_active
     `;
     const params = [
@@ -223,7 +223,8 @@ export const getAuctionById = async (req, res) => {
       SELECT 
         a.id, a.title, a.description, a.image_url, a.category,
         a.start_price, a.current_price, a.seller_id,
-        a.start_time, a.end_time, a.is_active,
+        a.start_time, a.end_time, a.is_active,a.created_at,
+        u.email AS seller_email,
         u.name AS seller_name
       FROM auctions a
       JOIN users u ON a.seller_id = u.id
@@ -296,7 +297,7 @@ export const getUnapprovedAuctions = async (req, res) => {
     const dataSql = `SELECT a.id, a.title, a.description, a.image_url, a.category,
              a.start_price,a.seller_id, 
              a.start_time, a.end_time,u.name AS seller_name,
-             a.is_approved,u.email AS seller_email
+             a.is_approved,u.email AS seller_email,a.created_at,a.auction_run_time
       FROM auctions a
       JOIN users u ON a.seller_id = u.id
       WHERE a.is_approved = false
@@ -325,8 +326,10 @@ export const getUnapprovedAuctions = async (req, res) => {
 };
 
 export const approveAuction = async (req, res) => {
+  console.log(req);
   try {
     const { id } = req.params;
+
     const idNum = Number(id);
     if (Number.isNaN(idNum) || idNum <= 0) {
       return res.status(400).json({ error: "Invalid auction ID" });
@@ -338,14 +341,14 @@ export const approveAuction = async (req, res) => {
     if (req.user.role !== "admin") {
       return res.status(403).json({ error: "Forbidden" });
     }
-    const auction_run_time = pool.query(
+    const result = await pool.query(
       `SELECT auction_run_time FROM auctions WHERE id = $1`,
       [idNum]
     );
-    const now = new Date();
-    const auctionRunTime = auction_run_time.rows[0].auction_run_time;
-    const end_time = new Date(now.getTime() + auctionRunTime);
 
+    const now = new Date();
+    const auctionRunTime = result.rows[0].auction_run_time;
+    const end_time = new Date(now.getTime() + Number(auctionRunTime));
     const sql = `
       UPDATE auctions
       SET start_time = NOW(),
@@ -353,7 +356,7 @@ export const approveAuction = async (req, res) => {
          is_active = true,
          is_approved = true
       WHERE id = $2`;
-    const { rows } = await pool.query(sql, [end_time, idNum]);
+    await pool.query(sql, [end_time, idNum]);
 
     res.status(200).json({ message: "Auction approved successfully" });
   } catch (error) {
