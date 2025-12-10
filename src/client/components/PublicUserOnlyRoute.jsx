@@ -3,13 +3,15 @@ import useAuth from "../hooks/useAuth";
 import LoadingOverlay from "../components/LoadingOverlay/LoadingOverlay";
 
 export default function PublicUserOnlyRoute({ children }) {
-  const { isAdmin, loading } = useAuth();
+  const { isLoggedIn, isAdmin, loading } = useAuth();
 
   if (loading) {
-    console.log("loading");
     return <LoadingOverlay loading={loading} />;
   }
-  if (isAdmin) return <Navigate to="/admin-home" replace />;
+  if (isLoggedIn) {
+    if (isAdmin) return <Navigate to="/admin-home" replace />;
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return children;
 }

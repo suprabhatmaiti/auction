@@ -12,9 +12,6 @@ function ProtectedRoutes({ children }) {
   if (!isLoggedIn) {
     return <Navigate to="/" replace />;
   }
-  if (isAdmin) {
-    return <Navigate to="/admin-home" replace />;
-  }
 
   return children;
 }

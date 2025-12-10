@@ -21,7 +21,7 @@ export default function Body() {
         const data = await getAuction(page);
         setAuctions(data.auctions);
         const pg = data.pagination;
-        setTotalpage(100);
+        setTotalpage(pg.totalPages);
         setPage(pg.currentPage);
         setError(null);
       } catch (error) {
@@ -35,10 +35,16 @@ export default function Body() {
   }, [reload]);
 
   const onPreviousClick = () => {
-    if (page > 1) setPage(page - 1);
+    if (page > 1) {
+      setPage(page - 1);
+      setReload(!reload);
+    }
   };
   const onNextClick = () => {
-    if (page < totalpage) setPage(page + 1);
+    if (page < totalpage) {
+      setPage(page + 1);
+      setReload(!reload);
+    }
   };
 
   const onApprove = async (id) => {
@@ -99,9 +105,9 @@ export default function Body() {
     return pageNumbers.map((number, index) => (
       <li
         key={index}
-        onClick={() => typeof number === "number" && pageChange(number)}
-        className={`flex items-center justify-center text-body bg-neutral-secondary-medium hover:bg-gray-100 transition-all cursor-pointer ${
-          number === page ? "bg-blue-500 text-white font-bold" : ""
+        onClick={pageChange}
+        className={`flex items-center justify-center text-body bg-neutral-secondary-medium hover:bg-blue-600 transition-all cursor-pointer ${
+          number === page ? "bg-blue-400 font-bold" : ""
         }`}
       >
         <a className="flex items-center justify-center w-9 h-9 text-sm border border-default-medium">
@@ -112,9 +118,10 @@ export default function Body() {
   };
 
   const pageChange = (e) => {
+    if (e.target.innerText === "...") return;
     const pageNum = Number(e.target.innerText);
     if (page === pageNum) return;
-    setPage(page);
+    setPage(Number(e.target.innerText));
     setReload(!reload);
   };
 
@@ -163,11 +170,11 @@ export default function Body() {
               <ul className="flex -space-x-px text-sm">
                 <li
                   onClick={onPreviousClick}
-                  className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 focus:outline-none  hover:bg-gray-100 transition-all active:bg-white cursor-pointer"
+                  className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-s-base text-sm px-3 h-9 focus:outline-none  hover:bg-blue-600 transition-all active:bg-white "
                 >
                   <button
                     disabled={page === 1}
-                    className="disabled:text-gray-300"
+                    className="disabled:text-gray-300 cursor-pointer disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -175,11 +182,11 @@ export default function Body() {
                 {renderPageNumbers()}
                 <li
                   onClick={onNextClick}
-                  className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 focus:outline-none cursor-pointer hover:bg-gray-100 transition-all active:bg-white"
+                  className="flex items-center justify-center text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading font-medium rounded-e-base text-sm px-3 h-9 focus:outline-none  hover:bg-blue-600 transition-all active:bg-white"
                 >
                   <button
                     disabled={page === totalpage}
-                    className=" disabled:text-gray-300"
+                    className=" disabled:text-gray-300 cursor-pointer disabled:cursor-not-allowed"
                   >
                     Next
                   </button>

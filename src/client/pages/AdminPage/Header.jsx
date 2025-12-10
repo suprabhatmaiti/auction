@@ -3,24 +3,25 @@ import { FaUser, FaSignOutAlt } from "react-icons/fa";
 import { HiViewGrid } from "react-icons/hi";
 import useAuth from "../../hooks/useAuth";
 import { FaListCheck } from "react-icons/fa6";
+import { LuTrophy } from "react-icons/lu";
+import { FaRegHandshake } from "react-icons/fa";
+
 import { IoMdMenu } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay";
 
 export default function Header() {
-  const { logout, user, loading } = useAuth();
+  const { logout, user, loading, isAdmin } = useAuth();
   const [mobilemenu, setMobileMenu] = useState(false);
-  const navigate = useNavigate();
 
   const onLogoutClick = async () => {
     await logout();
-    navigate("/");
   };
   const toggleMenu = () => {
     setMobileMenu(!mobilemenu);
   };
 
   return (
-    <>
+    <div>
       <button
         onClick={toggleMenu}
         className="text-2xl md:hidden cursor-pointer absolute top-6 left-1 hover:bg-gray-200 p-2 rounded-full"
@@ -39,7 +40,7 @@ export default function Header() {
 
       <div
         className={`
-    fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-200 p-5
+    fixed top-0 left-0 z-50 h-screen w-64 bg-white border-r border-gray-200
     transform transition-all duration-300 md:static md:translate-x-0
     ${mobilemenu ? "translate-x-0" : "-translate-x-full"}
   `}
@@ -53,31 +54,43 @@ export default function Header() {
           X
         </div>
 
-        <div className="flex items-center space-x-3 mb-8">
+        <div className="flex items-center space-x-3 mb-8 px-6 mt-4">
           <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center text-xl font-semibold">
             A
           </div>
           <div>
             <h2 className="text-lg font-semibold">{user.name}</h2>
-            <p className="text-sm text-gray-500">Administrator</p>
+            <p className="text-sm text-gray-500">{user.email}</p>
+            <p className="text-sm font-semibold text-gray-500">Administrator</p>
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-4">
-          <button className="flex items-center gap-2 p-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-all ">
-            <HiViewGrid className="text-lg" />
-            Dashboard
-          </button>
-
+        <div className="px-6">
+          <div className="space-y-2">
+            <button className="flex items-center gap-2 p-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-all ">
+              <HiViewGrid className="text-lg" />
+              Auction Approval
+            </button>
+            <button className="flex items-center gap-2 p-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-all ">
+              <LuTrophy className="text-lg" />
+              Manage Winner
+            </button>
+            <button className="flex items-center gap-2 p-3 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-all ">
+              <FaRegHandshake className="text-lg" />
+              Handle Disputes
+            </button>
+          </div>
+        </div>
+        <div className="fixed bottom-0 w-full px-6 py-4">
           <button
-            className="flex items-center gap-2 space-x-3 p-3 rounded-lg bg-red-100 hover:text-red-600 cursor-pointer transition-all "
             onClick={onLogoutClick}
+            className="flex items-center gap-2 p-3 rounded-lg hover:bg-red-50 text-red-600 cursor-pointer transition-all w-full"
           >
             <FaSignOutAlt className="text-lg" />
             Logout
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
