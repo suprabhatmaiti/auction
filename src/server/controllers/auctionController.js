@@ -73,7 +73,7 @@ export const createAuction = async (req, res) => {
 
     const { rows } = await pool.query(insertSql, params);
 
-    console.log("createAuction success:", rows[0]);
+    // console.log("createAuction success:", rows[0]);
 
     return res.status(201).json({
       message: "Auction created successfully",
@@ -101,7 +101,7 @@ export const getAuctions = async (req, res) => {
       activeOnly = "true",
     } = req.query;
 
-    console.log(req.user);
+    // console.log(req.user);
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
     const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 10));
     const offset = (pageNum - 1) * sizeNum;
@@ -326,7 +326,7 @@ export const getUnapprovedAuctions = async (req, res) => {
 };
 
 export const approveAuction = async (req, res) => {
-  console.log(req);
+  // console.log(req);
   try {
     const { id } = req.params;
 

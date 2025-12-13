@@ -3,7 +3,7 @@ export const initialState = {
   description: "",
   category: "",
   startingBid: "",
-  auctionRunTime: { days: 0, hours: 0, minutes: 0, seconds: 0 },
+  auctionRunTime: { days: "", hours: "", minutes: "", seconds: "" },
   imageFile: null,
 };
 
@@ -12,7 +12,6 @@ export function useAuctionPageReducer(state, action) {
     case "UPDATE_FIELD":
       return { ...state, [action.field]: action.value };
     case "UPDATE_AUCTION_RUN_TIME":
-      console.log(action.payload);
       return {
         ...state,
         auctionRunTime: {

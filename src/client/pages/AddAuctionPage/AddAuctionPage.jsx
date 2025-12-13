@@ -81,6 +81,19 @@ function AddAuctionPage() {
   };
 
   const handleAuctionRunTimeChange = (name, value) => {
+    if (name === "hours" || name === "minutes" || name === "seconds") {
+      if (value < 0) {
+        value = 0;
+      } else if (value > 59) {
+        value = 59;
+      }
+    } else if (name === "days") {
+      if (value < 0) {
+        value = 0;
+      } else if (value > 7) {
+        value = 7;
+      }
+    }
     dispatch({ type: "UPDATE_AUCTION_RUN_TIME", payload: { name, value } });
   };
 

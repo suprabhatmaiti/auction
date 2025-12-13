@@ -16,7 +16,6 @@ export default function TimeInput({ onChange, auctionRunTime }) {
         placeholder="Days"
         value={auctionRunTime.days}
         onChange={handleChange}
-        className="border p-2 w-30 rounded "
       />
 
       <Input
@@ -26,7 +25,6 @@ export default function TimeInput({ onChange, auctionRunTime }) {
         placeholder="Hours"
         value={auctionRunTime.hours}
         onChange={handleChange}
-        className="border p-2 w-30 rounded"
       />
 
       <Input
@@ -36,7 +34,6 @@ export default function TimeInput({ onChange, auctionRunTime }) {
         placeholder="Minutes"
         value={auctionRunTime.minutes}
         onChange={handleChange}
-        className="border p-2 w-30 rounded"
       />
 
       <Input
@@ -46,7 +43,6 @@ export default function TimeInput({ onChange, auctionRunTime }) {
         placeholder="Seconds"
         value={auctionRunTime.seconds}
         onChange={handleChange}
-        className="border p-2 w-40 rounded"
       />
     </div>
   );
