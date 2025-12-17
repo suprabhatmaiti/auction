@@ -364,3 +364,94 @@ export const approveAuction = async (req, res) => {
     res.status(500).json({ error: "Server error approving auction" });
   }
 };
+
+export async function finalizeExpiredAuctions(req, res) {
+  try {
+    const result = await pool.query(
+      `SELECT id FROM auctions
+       WHERE is_active = true
+       AND end_time <= NOW()`
+    );
+
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const auction of result.rows) {
+      try {
+        await finalizeAuction(auction.id);
+        successCount++;
+      } catch (error) {
+        console.error(`Failed to finalize auction ${auction.id}:`, error);
+        failCount++;
+      }
+    }
+
+    res.json({
+      message: "Expired auctions processing complete",
+      finalized: successCount,
+      failed: failCount,
+      total: result.rows.length,
+    });
+  } catch (error) {
+    console.error("Error in finalizeExpiredAuctions:", error);
+    res.status(500).json({ error: "Server error finalizing auctions" });
+  }
+}
+
+async function finalizeAuction(auctionId) {
+  const client = await pool.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    // lock auction row
+    const auctionRes = await client.query(
+      `SELECT id
+       FROM auctions
+       WHERE id = $1 AND is_active = true
+       FOR UPDATE`,
+      [auctionId]
+    );
+
+    if (auctionRes.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return;
+    }
+
+    const bidRes = await client.query(
+      `SELECT id, bidder_id, amount
+       FROM bids
+       WHERE auction_id = $1
+       ORDER BY amount DESC, created_at ASC
+       LIMIT 1`,
+      [auctionId]
+    );
+
+    if (bidRes.rowCount === 0) {
+      await client.query(
+        `UPDATE auctions
+         SET is_active = false
+         WHERE id = $1`,
+        [auctionId]
+      );
+    } else {
+      const bid = bidRes.rows[0];
+
+      await client.query(
+        `UPDATE auctions
+         SET is_active = false,
+             winner = $1
+         WHERE id = $2`,
+        [bid.bidder_id, auctionId]
+      );
+    }
+
+    await client.query("COMMIT");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Finalize auction error:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}

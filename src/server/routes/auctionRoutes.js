@@ -7,6 +7,7 @@ import {
   endAuction,
   getUnapprovedAuctions,
   approveAuction,
+  finalizeExpiredAuctions,
 } from "../controllers/auctionController.js";
 import { verifyToken } from "../middleware/verifyToken.js";
 import { uploadProductImages } from "../lib/upload.js";
@@ -25,5 +26,6 @@ router.get("/get-auction/:id/snapshot", verifyToken, getAuctionSnap);
 router.get("/end-auction/:id", verifyToken, endAuction);
 router.get("/get-unapproved-auctions", verifyToken, getUnapprovedAuctions);
 router.post("/approve-auction/:id", verifyToken, approveAuction);
+router.post("/finalize-expired-auction", finalizeExpiredAuctions);
 
 export default router;
