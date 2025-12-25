@@ -11,8 +11,6 @@ import { socketAuth } from "./socket/socketAuth.js";
 
 import { auctionHandler } from "./socket/handlers/auction.socket.js";
 
-dotenv.config();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 

@@ -1,4 +1,10 @@
 -- migrate:up
+CREATE TYPE auction_status AS ENUM (
+  'pending',
+  'active',
+  'ended'
+);
+
 CREATE TABLE auctions (
     id SERIAL PRIMARY KEY,
 
@@ -18,9 +24,7 @@ CREATE TABLE auctions (
     min_increment NUMERIC DEFAULT 1 CHECK (min_increment > 0),
     seq INTEGER DEFAULT 0,
 
-    status VARCHAR(20)
-      CHECK (status IN ('open', 'active', 'ended'))
-      DEFAULT 'open',
+    status auction_status NOT NULL DEFAULT 'pending',
 
     current_highest_bid_id INTEGER,
     is_approved BOOLEAN DEFAULT false,

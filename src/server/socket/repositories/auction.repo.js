@@ -23,7 +23,7 @@ export async function getAuctionSnapshot(auctionId) {
   );
   return {
     auctionId,
-    isActive: auction.is_active,
+    status: auction.status,
     seq: Number(auction.seq || 0),
     current_price: auction.current_price,
     end_time: auction.end_time,

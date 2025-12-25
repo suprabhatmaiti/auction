@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import { pool } from "../config/db.js";
 import fs from "fs";
-import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
+// import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
 
 export const createAuction = async (req, res) => {
   try {
@@ -55,10 +55,10 @@ export const createAuction = async (req, res) => {
 
     const insertSql = `
       INSERT INTO auctions
-        (title, description, image_url, category, start_price, current_price, seller_id, auction_run_time,created_at)
+        (title, description, image_url, category, start_price, current_price, seller_id, auction_run_time,created_at,updated_at)
       VALUES
-        ($1, $2, $3, $4,  $5, $6, $7, $8, NOW())
-      RETURNING id, title, description, image_url, category, start_price, current_price, seller_id, is_active
+        ($1, $2, $3, $4,  $5, $6, $7, $8, NOW(), NOW())
+      RETURNING id, title, description, image_url, category, start_price, current_price, seller_id, status
     `;
     const params = [
       title.trim(),
@@ -121,7 +121,8 @@ export const getAuctions = async (req, res) => {
 
     // active only
     if (activeOnly === "true") {
-      where.push("is_active = true");
+      params.push("active");
+      where.push(`status = $${params.length}`);
       where.push("end_time > NOW()");
     }
 
@@ -146,9 +147,9 @@ export const getAuctions = async (req, res) => {
       }
     }
 
-    where.push("is_approved = true");
-    where.push("is_active = true");
-    where.push("end_time > NOW()");
+    // where.push("is_approved = true");
+    // where.push("status = active");
+    // where.push("end_time > NOW()");
 
     const whereSql = where.length ? `WHERE ${where.join(" AND ")}` : "";
 
@@ -172,7 +173,7 @@ export const getAuctions = async (req, res) => {
     const dataSql = `
       SELECT id, title, description, image_url, category,
              start_price, current_price, seller_id,
-             start_time, end_time, is_active
+             start_time, end_time, status
       FROM auctions
       ${whereSql}
       ${orderBySql}
@@ -186,6 +187,8 @@ export const getAuctions = async (req, res) => {
       FROM auctions
       ${whereSql}
     `;
+    console.log("dataSql:", dataSql);
+    console.log("dataParams:", dataParams);
 
     const [dataResult, countResult] = await Promise.all([
       pool.query(dataSql, dataParams),
@@ -223,7 +226,7 @@ export const getAuctionById = async (req, res) => {
       SELECT 
         a.id, a.title, a.description, a.image_url, a.category,
         a.start_price, a.current_price, a.seller_id,
-        a.start_time, a.end_time, a.is_active,a.created_at,
+        a.start_time, a.end_time, a.status,a.created_at,
         u.email AS seller_email,
         u.name AS seller_name
       FROM auctions a
@@ -242,20 +245,20 @@ export const getAuctionById = async (req, res) => {
   }
 };
 
-export const getAuctionSnap = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const idNum = Number(id);
-    if (Number.isNaN(idNum) || idNum <= 0) {
-      return res.status(400).json({ error: "Invalid auction ID" });
-    }
-    const result = await getAuctionSnapshot(idNum);
-    res.status(200).json({ snapshot: result });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server error fetching auction" });
-  }
-};
+// export const getAuctionSnap = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const idNum = Number(id);
+//     if (Number.isNaN(idNum) || idNum <= 0) {
+//       return res.status(400).json({ error: "Invalid auction ID" });
+//     }
+//     const result = await getAuctionSnapshot(idNum);
+//     res.status(200).json({ snapshot: result });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Server error fetching auction" });
+//   }
+// };
 
 export const endAuction = async (req, res) => {
   try {
@@ -269,7 +272,7 @@ export const endAuction = async (req, res) => {
     }
     const sql = `
       UPDATE auctions
-      SET is_active = false
+      SET status = ended
       WHERE id = $1`;
     const { rows } = await pool.query(sql, [idNum]);
 
@@ -353,10 +356,10 @@ export const approveAuction = async (req, res) => {
       UPDATE auctions
       SET start_time = NOW(),
          end_time = $1,
-         is_active = true,
+         status = $2,
          is_approved = true
-      WHERE id = $2`;
-    await pool.query(sql, [end_time, idNum]);
+      WHERE id = $3`;
+    await pool.query(sql, [end_time, "active", idNum]);
 
     res.status(200).json({ message: "Auction approved successfully" });
   } catch (error) {
@@ -369,7 +372,7 @@ export async function finalizeExpiredAuctions(req, res) {
   try {
     const result = await pool.query(
       `SELECT id FROM auctions
-       WHERE is_active = true
+       WHERE status = 'active'
        AND end_time <= NOW()`
     );
 
@@ -408,9 +411,9 @@ async function finalizeAuction(auctionId) {
     const auctionRes = await client.query(
       `SELECT id
        FROM auctions
-       WHERE id = $1 AND is_active = true
+       WHERE id = $1 AND status = $2
        FOR UPDATE`,
-      [auctionId]
+      [auctionId, "active"]
     );
 
     if (auctionRes.rowCount === 0) {
@@ -430,19 +433,21 @@ async function finalizeAuction(auctionId) {
     if (bidRes.rowCount === 0) {
       await client.query(
         `UPDATE auctions
-         SET is_active = false
-         WHERE id = $1`,
-        [auctionId]
+         SET status = $1,
+         updated_at = NOW(),
+         WHERE id = $2`,
+        ["ended", auctionId]
       );
     } else {
       const bid = bidRes.rows[0];
 
       await client.query(
         `UPDATE auctions
-         SET is_active = false,
-             winner = $1
-         WHERE id = $2`,
-        [bid.bidder_id, auctionId]
+         SET status = $1,
+             updated_at = NOW(),
+             winner = $2
+         WHERE id = $3`,
+        ["ended", bid.bidder_id, auctionId]
       );
     }
 
