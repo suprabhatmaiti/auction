@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { pool } from "../config/renderDb.js";
+import { pool } from "../config/db.js";
 import fs from "fs";
 import { getAuctionSnapshot } from "../socket/repositories/auction.repo.js";
 

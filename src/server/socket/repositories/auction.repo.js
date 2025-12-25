@@ -1,4 +1,4 @@
-import { pool } from "../../config/renderDb.js";
+import { pool } from "../../config/db.js";
 export async function getAuctionById(auctionId) {
   const res = await pool.query("SELECT * FROM auctions WHERE id = $1", [
     auctionId,

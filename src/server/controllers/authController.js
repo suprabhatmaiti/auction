@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // import { pool } from "../config/db.js";
-import { pool } from "../config/renderDb.js";
+import { pool } from "../config/db.js";
 
 function generateAccessToken(user) {
   return jwt.sign(
