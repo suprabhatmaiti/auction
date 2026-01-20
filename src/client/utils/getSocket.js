@@ -6,7 +6,7 @@ let socket = null;
 export function getSocket() {
   if (socket) return socket;
   const token = getAccessToken();
-  socket = io("http://localhost:3000", {
+  socket = io(import.meta.env.VITE_API_BASE_URL, {
     autoConnect: false,
     withCredentials: true,
     auth: { token: token },

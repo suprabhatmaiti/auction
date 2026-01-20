@@ -10,7 +10,7 @@ function ProductDescription({
   isActive,
 }) {
   const [bidAmount, setBidAmount] = useState("");
-  const API_BASE = "http://localhost:3000";
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
   const imgSrc = `${API_BASE}/${auction.image_url}`;
   const startingBid = Number(auction.start_price);
 
@@ -22,7 +22,11 @@ function ProductDescription({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onPlaceBid(bidAmount);
+    const cleanAmount = parseFloat(parseFloat(bidAmount).toFixed(2));
+
+    if (isNaN(cleanAmount) || cleanAmount <= 0) return;
+
+    onPlaceBid(cleanAmount);
     setBidAmount("");
   };
 

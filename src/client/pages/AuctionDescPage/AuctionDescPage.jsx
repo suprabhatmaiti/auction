@@ -166,7 +166,7 @@ function AuctionDescPage() {
         s.off("auction:snapshot", onSnapshot);
       }
       try {
-        e.emait("auction:leave", { auctionId: Number(id) });
+        e.emit("auction:leave", { auctionId: Number(id) });
       } catch (error) {}
     };
   }, [id]);

@@ -187,8 +187,8 @@ export const getAuctions = async (req, res) => {
       FROM auctions
       ${whereSql}
     `;
-    console.log("dataSql:", dataSql);
-    console.log("dataParams:", dataParams);
+    // console.log("dataSql:", dataSql);
+    // console.log("dataParams:", dataParams);
 
     const [dataResult, countResult] = await Promise.all([
       pool.query(dataSql, dataParams),
@@ -306,15 +306,19 @@ export const getUnapprovedAuctions = async (req, res) => {
       WHERE a.is_approved = false
       ORDER BY start_time DESC
       LIMIT $1 OFFSET $2`;
-    const dataParams = [sizeNum, offset];
 
-    const result = await pool.query(dataSql, dataParams);
+    const countSql = `SELECT COUNT(*)::int as total FROM auctions WHERE is_approved = false`;
 
-    const totalAuctions = result.rows.length;
-    const totalPages = Math.max(1, Math.ceil(totalAuctions / sizeNum));
+    const [dataRes, countRes] = await Promise.all([
+      pool.query(dataSql, [sizeNum, offset]),
+      pool.query(countSql),
+    ]);
+
+    const totalAuctions = countRes.rows[0].total;
+    const totalPages = Math.ceil(totalAuctions / sizeNum);
 
     res.status(200).json({
-      auctions: result.rows,
+      auctions: dataRes.rows,
       pagination: {
         totalAuctions,
         totalPages,
