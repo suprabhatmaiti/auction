@@ -12,6 +12,7 @@ const initialState = {
   applyFilter: false,
   hasPendingChanges: false,
   searchTerm: "",
+  showOnlyEnded: false,
 };
 
 const reducer = (state, action) => {
@@ -64,6 +65,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         searchTerm: action.searchTerm,
+      };
+    case "SET_SHOW_ONLY_ENDED":
+      return {
+        ...state,
+        showOnlyEnded: action.showOnlyEnded,
       };
     case "MARK_PENDING_CHANGES":
       return { ...state, hasPendingChanges: true };

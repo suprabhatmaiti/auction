@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import Categories from "./Categories";
 import PriceRange from "./PriceRange";
 import SortBy from "./SortBy";
+import AuctionStatus from "./AuctionStatus";
 import { useAuctionListContext } from "../context/useAuctionListContext";
 import { ApplyButton } from "./ApplyButton";
 
@@ -12,6 +13,7 @@ function FilterSort({}) {
       <Categories />
       <PriceRange />
       <SortBy />
+      <AuctionStatus />
       {state.hasPendingChanges && <ApplyButton />}
     </div>
   );

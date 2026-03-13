@@ -99,6 +99,8 @@ export const getAuctions = async (req, res) => {
       page = "1",
       pageSize = "10",
       activeOnly = "true",
+      recentlyEnded = "false",
+      onlyEnded = "false",
     } = req.query;
 
     // console.log(req.user);
@@ -119,8 +121,17 @@ export const getAuctions = async (req, res) => {
       where.push(`current_price <= $${params.length}`);
     }
 
-    // active only
-    if (activeOnly === "true") {
+    // auction status filter
+    if (onlyEnded === "true") {
+      // Show only ended auctions (last 24 hours)
+      where.push(`end_time <= NOW()`);
+      where.push(`end_time > NOW() - INTERVAL '24 hours'`);
+    } else if (recentlyEnded === "true") {
+      // Show both active and recently ended auctions
+      where.push(
+        `(status = 'active' AND end_time > NOW()) OR (end_time <= NOW() AND end_time > NOW() - INTERVAL '24 hours')`,
+      );
+    } else if (activeOnly === "true") {
       params.push("active");
       where.push(`status = $${params.length}`);
       where.push("end_time > NOW()");
@@ -226,11 +237,17 @@ export const getAuctionById = async (req, res) => {
       SELECT 
         a.id, a.title, a.description, a.image_url, a.category,
         a.start_price, a.current_price, a.seller_id,
-        a.start_time, a.end_time, a.status,a.created_at,
+        a.start_time, a.end_time, a.status, a.created_at,
         u.email AS seller_email,
-        u.name AS seller_name
+        u.name AS seller_name,
+        w.name AS winner_name,
+        w.email AS winner_email,
+        aw.winning_amount,
+        aw.won_at
       FROM auctions a
       JOIN users u ON a.seller_id = u.id
+      LEFT JOIN auction_wins aw ON a.id = aw.auction_id
+      LEFT JOIN users w ON aw.winner_id = w.id
       WHERE a.id = $1
       LIMIT 1;
     `;

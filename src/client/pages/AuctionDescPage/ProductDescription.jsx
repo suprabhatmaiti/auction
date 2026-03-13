@@ -15,7 +15,7 @@ function ProductDescription({
   const startingBid = Number(auction.start_price);
 
   const { user } = useAuth();
-  console.log(auction.status);
+  // console.log(auction.status);
   const handleBidAmountChange = (e) => {
     setBidAmount((prev) => (prev = e.target.value));
   };
@@ -76,28 +76,43 @@ function ProductDescription({
 
         {!isSeller ? (
           <form onSubmit={handleSubmit}>
-            <div>
-              <Input
-                type="number"
-                label="Your Bid Amount (₹)"
-                placeholder="Enter your bid"
-                disabled={!isActive}
-                value={bidAmount}
-                onChange={handleBidAmountChange}
-              />
+            {isActive ? (
+              <div>
+                <Input
+                  type="number"
+                  label="Your Bid Amount (₹)"
+                  placeholder="Enter your bid"
+                  value={bidAmount}
+                  onChange={handleBidAmountChange}
+                />
 
-              <button
-                disabled={!isActive || loading}
-                type="submit"
-                className="mt-4 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition"
-              >
-                {isActive
-                  ? loading
-                    ? "Placing Bid..."
-                    : "Place Bid"
-                  : "Auction Ended"}
-              </button>
-            </div>
+                <button
+                  disabled={!isActive || loading}
+                  type="submit"
+                  className="mt-4 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition"
+                >
+                  {loading ? "Placing Bid..." : "Place Bid"}
+                </button>
+              </div>
+            ) : (
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <h3 className="font-semibold text-gray-700 mb-2">
+                  Auction Winner
+                </h3>
+                {auction.winner_name ? (
+                  <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-green-800 font-semibold">
+                      {auction.winner_name}
+                    </p>
+                    <p className="text-sm text-green-700">
+                      {auction.winner_email}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-gray-600">No Winner</p>
+                )}
+              </div>
+            )}
           </form>
         ) : (
           <div className="text-gray-400 text-3xl flex justify-center mt-10">

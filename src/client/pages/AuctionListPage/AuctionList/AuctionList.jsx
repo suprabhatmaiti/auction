@@ -43,7 +43,9 @@ function AuctionList({}) {
         const { data } = await api.get("/api/auction/get-auctions", {
           params: {
             categories: activeCategories,
-            activeOnly: true,
+            activeOnly: state.showOnlyEnded ? false : true,
+            recentlyEnded: false,
+            onlyEnded: state.showOnlyEnded,
             sortBy: SortByParams,
             page: state.page,
             startPrice: state.priceRange[0],
@@ -154,7 +156,8 @@ function AuctionList({}) {
             All Active Auctions
           </h2>
           <p className="text-gray-600 text-sm md:text-base">
-            Browse through our curated collection of items up for auction
+            Browse through our curated collection of items up for auction and
+            recently ended auctions
           </p>
         </div>
         <div>

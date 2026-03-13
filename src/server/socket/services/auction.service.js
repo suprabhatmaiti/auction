@@ -7,7 +7,7 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
     const r = await client.query(
       `SELECT id, current_price , min_increment, end_time, status
        FROM auctions WHERE id = $1 FOR UPDATE`,
-      [auctionId]
+      [auctionId],
     );
 
     if (r.rowCount === 0) {
@@ -16,7 +16,7 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
 
     const auction = r.rows[0];
 
-    if (auction.status !== "open") {
+    if (auction.status !== "active") {
       throw new Error("auction_closed");
     }
 
@@ -49,7 +49,7 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
    SELECT i.*, u.name AS bidder_name
    FROM inserted i
    JOIN users u ON i.bidder_id = u.id;`,
-      [auctionId, userId, amount]
+      [auctionId, userId, amount],
     );
 
     if (ins.rowCount === 0) {
@@ -73,7 +73,7 @@ export async function placeBid({ auctionId, userId, bidAmount }) {
            seq = COALESCE(seq, 0) + 1,
            end_time = $3
        WHERE id = $4`,
-      [bidAmount, bidRow.id, newEndTime, auctionId]
+      [bidAmount, bidRow.id, newEndTime, auctionId],
     );
 
     const seqR = await client.query(`SELECT seq FROM auctions WHERE id = $1`, [
