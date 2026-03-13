@@ -15,7 +15,7 @@ function ProductDescription({
   const startingBid = Number(auction.start_price);
 
   const { user } = useAuth();
-
+  console.log(auction.status);
   const handleBidAmountChange = (e) => {
     setBidAmount((prev) => (prev = e.target.value));
   };
@@ -76,20 +76,26 @@ function ProductDescription({
 
         {!isSeller ? (
           <form onSubmit={handleSubmit}>
-            <div className="">
+            <div>
               <Input
                 type="number"
                 label="Your Bid Amount (₹)"
                 placeholder="Enter your bid"
+                disabled={!isActive}
                 value={bidAmount}
                 onChange={handleBidAmountChange}
               />
+
               <button
                 disabled={!isActive || loading}
                 type="submit"
                 className="mt-4 w-full bg-blue-600 hover:bg-blue-500 disabled:bg-gray-500 disabled:cursor-not-allowed text-white px-4 py-2 rounded-lg font-semibold transition"
               >
-                {loading ? "Placing Bid..." : "Place Bid"}
+                {isActive
+                  ? loading
+                    ? "Placing Bid..."
+                    : "Place Bid"
+                  : "Auction Ended"}
               </button>
             </div>
           </form>

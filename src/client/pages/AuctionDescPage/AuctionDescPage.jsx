@@ -24,6 +24,14 @@ function AuctionDescPage() {
   const [isSeller, setIsSeller] = useState(false);
   const socket = useRef();
 
+  useEffect(() => {
+    if (auction?.status === "ended") {
+      setIsActive(false);
+    } else if (auction?.status === "active") {
+      setIsActive(true);
+    }
+  }, [auction?.status]);
+
   const setEndedAuction = () => {
     setIsActive(false);
   };
@@ -58,7 +66,12 @@ function AuctionDescPage() {
         ...(prev || {}),
         current_price: Number(snap.current_price),
         end_time: snap.end_time,
+        status: snap.status,
       }));
+      // Check if auction has ended
+      if (snap.status === "ended") {
+        setIsActive(false);
+      }
     };
 
     const onBidUpdate = async (payload) => {
@@ -98,7 +111,7 @@ function AuctionDescPage() {
 
         setRecentBids((prev) => {
           const filtered = prev.filter(
-            (b) => String(b.id) !== String(bid.bid_id)
+            (b) => String(b.id) !== String(bid.bid_id),
           );
 
           const next = [bid, ...filtered];
@@ -143,7 +156,7 @@ function AuctionDescPage() {
 
             if (res?.snapshot) onSnapshot(res.snapshot);
             else if (res?.recent_bids) safeSetRecentBids(res.recent_bids);
-          }
+          },
         );
       } catch (error) {
         console.log(error);
@@ -152,7 +165,7 @@ function AuctionDescPage() {
           error.response?.data?.error ||
             error.response?.data?.message ||
             error.message ||
-            "Failed to load auction"
+            "Failed to load auction",
         );
       } finally {
         if (!canceled) setLoading(false);
@@ -195,10 +208,11 @@ function AuctionDescPage() {
             socket.current.emit("auction:join", { auctionId: Number(id) });
             return;
           }
-        }
+        },
       );
     } catch (error) {
       console.log(error);
+    } finally {
       setLoading(false);
     }
   };
