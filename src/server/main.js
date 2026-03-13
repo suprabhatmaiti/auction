@@ -10,6 +10,8 @@ import { Server as IOServer } from "socket.io";
 import { socketAuth } from "./socket/socketAuth.js";
 
 import { auctionHandler } from "./socket/handlers/auction.socket.js";
+import { startEndAuctionJob } from "./jobs/startEndAuctionJob.js";
+import { startAddAuctionWinnerJob } from "./jobs/startAddAuctionWinnerJob.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,8 +59,13 @@ socketAuth(io);
 
 auctionHandler(io);
 
+// Start the cron job for ending auctions
+startEndAuctionJob();
+// Start the cron job for adding auction winners
+startAddAuctionWinnerJob();
+
 ViteExpress.bind(app, httpServer);
 
 httpServer.listen(PORT, () =>
-  console.log(`Server is listening on port ${PORT}...`)
+  console.log(`Server is listening on port ${PORT}...`),
 );
