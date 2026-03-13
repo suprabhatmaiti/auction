@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
       }
       setUser(decoded);
     } catch (error) {
-      // console.log("Error decoding token:", error);
+      // console.error("Error decoding token:", error);
       setUser(null);
     }
   };

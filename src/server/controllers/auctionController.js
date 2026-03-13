@@ -130,7 +130,7 @@ export const getAuctions = async (req, res) => {
     if (search) {
       params.push(`%${search.trim()}%`);
       where.push(
-        `(title ILIKE $${params.length} OR description ILIKE $${params.length})`
+        `(title ILIKE $${params.length} OR description ILIKE $${params.length})`,
       );
     }
 
@@ -315,7 +315,8 @@ export const getUnapprovedAuctions = async (req, res) => {
     ]);
 
     const totalAuctions = countRes.rows[0].total;
-    const totalPages = Math.ceil(totalAuctions / sizeNum);
+    // const totalPages = Math.ceil(totalAuctions / sizeNum);
+    const totalPages = Math.max(1, Math.ceil(totalAuctions / sizeNum));
 
     res.status(200).json({
       auctions: dataRes.rows,
@@ -350,7 +351,7 @@ export const approveAuction = async (req, res) => {
     }
     const result = await pool.query(
       `SELECT auction_run_time FROM auctions WHERE id = $1`,
-      [idNum]
+      [idNum],
     );
 
     const now = new Date();
@@ -377,7 +378,7 @@ export async function finalizeExpiredAuctions(req, res) {
     const result = await pool.query(
       `SELECT id FROM auctions
        WHERE status = 'active'
-       AND end_time <= NOW()`
+       AND end_time <= NOW()`,
     );
 
     let successCount = 0;
@@ -417,7 +418,7 @@ async function finalizeAuction(auctionId) {
        FROM auctions
        WHERE id = $1 AND status = $2
        FOR UPDATE`,
-      [auctionId, "active"]
+      [auctionId, "active"],
     );
 
     if (auctionRes.rowCount === 0) {
@@ -431,7 +432,7 @@ async function finalizeAuction(auctionId) {
        WHERE auction_id = $1
        ORDER BY amount DESC, created_at ASC
        LIMIT 1`,
-      [auctionId]
+      [auctionId],
     );
 
     if (bidRes.rowCount === 0) {
@@ -440,7 +441,7 @@ async function finalizeAuction(auctionId) {
          SET status = $1,
          updated_at = NOW(),
          WHERE id = $2`,
-        ["ended", auctionId]
+        ["ended", auctionId],
       );
     } else {
       const bid = bidRes.rows[0];
@@ -451,7 +452,7 @@ async function finalizeAuction(auctionId) {
              updated_at = NOW(),
              winner = $2
          WHERE id = $3`,
-        ["ended", bid.bidder_id, auctionId]
+        ["ended", bid.bidder_id, auctionId],
       );
     }
 
