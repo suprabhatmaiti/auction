@@ -482,3 +482,61 @@ async function finalizeAuction(auctionId) {
     client.release();
   }
 }
+
+export const getWonAuctions = async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = req.user.id;
+    const { page = "1", pageSize = "12" } = req.query;
+    const pageNum = Math.max(1, parseInt(page, 10) || 1);
+    const sizeNum = Math.min(100, Math.max(1, parseInt(pageSize, 10) || 12));
+    const offset = (pageNum - 1) * sizeNum;
+
+    const dataSql = `
+      SELECT 
+        a.id, a.title, a.description, a.image_url, a.category,
+        a.start_price, a.current_price, a.seller_id,
+        a.start_time, a.end_time, a.status,
+        u.name AS seller_name,
+        u.email AS seller_email,
+        aw.winning_amount,
+        aw.won_at
+      FROM auction_wins aw
+      JOIN auctions a ON aw.auction_id = a.id
+      JOIN users u ON a.seller_id = u.id
+      WHERE aw.winner_id = $1
+      ORDER BY aw.won_at DESC
+      LIMIT $2 OFFSET $3
+    `;
+
+    const countSql = `
+      SELECT COUNT(*)::int AS total
+      FROM auction_wins
+      WHERE winner_id = $1
+    `;
+
+    const [dataResult, countResult] = await Promise.all([
+      pool.query(dataSql, [userId, sizeNum, offset]),
+      pool.query(countSql, [userId]),
+    ]);
+
+    const totalWonItems = countResult.rows[0]?.total ?? 0;
+    const totalPages = Math.max(1, Math.ceil(totalWonItems / sizeNum));
+
+    res.status(200).json({
+      wonAuctions: dataResult.rows,
+      pagination: {
+        totalWonItems,
+        totalPages,
+        currentPage: pageNum,
+        pageSize: sizeNum,
+      },
+    });
+  } catch (error) {
+    console.error("getWonAuctions error:", error);
+    res.status(500).json({ error: "Server error fetching won auctions" });
+  }
+};

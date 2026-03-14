@@ -16,6 +16,7 @@ import LoginPage from "./pages/AdminPage/LoginPage";
 import AdminRoute from "./components/AdminRoute";
 import AdminHomePage from "./pages/AdminPage/AdminHomePage";
 import PublicUserOnlyroute from "./components/PublicUserOnlyRoute";
+import WonItemsPage from "./pages/WonItemsPage/WonItemsPage";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "won-items",
+        element: (
+          <ProtectedRoutes>
+            <WonItemsPage />
+          </ProtectedRoutes>
+        ),
+      },
+      {
         path: "/auction-desc/:id",
         element: (
           <ProtectedRoutes>
@@ -98,5 +107,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
